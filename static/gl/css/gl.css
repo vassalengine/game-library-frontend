@@ -1,0 +1,11 @@
+#index ol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; 
+  padding: 0;
+  gap: 0.4em;
+}
+
+#index li {
+  list-style: none;
+}
