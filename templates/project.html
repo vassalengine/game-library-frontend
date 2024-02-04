@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Module Library - Vassal{% endblock %}
+{% block description %}Vassal is an open-source game engine for building and playing online adaptations of board games and card games.{% endblock %}
+
+{% block head %}
+  {% call super() %}
+  <link rel="stylesheet" type="text/css" href="/gl/css/gl.css"/>
+{% endblock %}
+
+{% block content %}
+
+<header>
+  <form action="">
+    <input id="search" type="search" name="q" placeholder="Search...">
+  </form>
+  <a href="/projects">Browse All Projects</a>
+</header>
+
+<main>
+  <img id="box_image">
+  <div>
+    <h1 id="name"></h1>
+    <h2 id="game.title"></h2>
+    <div id="game.publisher"></div>
+    <div id="game.year"></div>
+    <div id="description"></div>
+    <div id="created_at"></div>
+    <div id="modified_at"></div>
+    <ul id="tags"></ul>
+    <ul id="owners"></ul>
+  </div>
+
+  <ul id="packages"></ul>
+
+  <div id="readme"></div>
+</main>
+
+<footer>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/lib/marked.umd.min.js"></script>
+<script type="module" src="/gl/js/project.js" id="project-script" data-project="{{ project }}"></script>
+
+{% endblock %}
