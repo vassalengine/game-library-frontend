@@ -55,13 +55,11 @@ function fillProjectsList(data) {
   }
 }
 
-async function populateTable() {
+async function populateTable(api) {
   const params = new URLSearchParams(window.location.search);
 
-  const api = '{{ api_url }}';
-
   // Construct API request 
-  const api_url = new URL(`${api}/projects');
+  const api_url = new URL(`${api}/projects`);
   // Pass on only params the API knows
   for (const k of ['q', 'sort', 'order', 'from', 'seek', 'limit']) {
     const v = params.get(k);
@@ -179,4 +177,6 @@ async function populateTable() {
   setNavLink(meta, 'next', s);
 }
 
-populateTable();
+const projects_script_data = document.getElementById("projects-script").dataset;
+const api = projects_script_data.api;
+populateTable(api);

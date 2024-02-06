@@ -1,6 +1,4 @@
-async function populateProject(project) {
-  const api = '{{ api_url }}';
-
+async function populateProject(api, project) {
   const presp = await fetch(`${api}/projects/${project}`);
 
   if (presp.status !== 200) {
@@ -89,5 +87,7 @@ async function populateProject(project) {
   e_readme.innerHTML = DOMPurify.sanitize(marked.parse(proj['readme']));
 }
 
-const project = document.getElementById("project-script").dataset.project;
-await populateProject(project);
+const project_script_data = document.getElementById("project-script").dataset;
+const project = project_script_data.project;
+const api = project_script_data.api;
+await populateProject(api, project);
