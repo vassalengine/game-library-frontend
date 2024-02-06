@@ -1,5 +1,5 @@
 async function populateProject(project) {
-  const api = 'http://localhost:3000/api/v1';
+  const api = '{{ api_url }}';
 
   const presp = await fetch(`${api}/projects/${project}`);
 

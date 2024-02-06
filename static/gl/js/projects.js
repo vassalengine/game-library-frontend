@@ -58,8 +58,10 @@ function fillProjectsList(data) {
 async function populateTable() {
   const params = new URLSearchParams(window.location.search);
 
+  const api = '{{ api_url }}';
+
   // Construct API request 
-  const api_url = new URL('http://localhost:3000/api/v1/projects');
+  const api_url = new URL(`${api}/projects');
   // Pass on only params the API knows
   for (const k of ['q', 'sort', 'order', 'from', 'seek', 'limit']) {
     const v = params.get(k);

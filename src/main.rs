@@ -9,6 +9,7 @@ use tower_http::services::ServeDir;
 
 const STATIC_DIR: &str = "static";
 
+const API_URL: &str = "http://localhost:3000/api/v1/projects";
 const YEAR: &str = "2024";
 const CURRENT_VERSION: &str = "3.7.8";
 const NEWS_LINK: &str = "https://forum.vassalengine.org/t/vassal-3-7-8-released/78867";
@@ -16,6 +17,7 @@ const NEWS_LINK: &str = "https://forum.vassalengine.org/t/vassal-3-7-8-released/
 #[derive(Template)]
 #[template(path = "projects.html")]
 struct ProjectsTemplate<'a> {
+    api_url: &'a str,
     year: &'a str,
     current_version: &'a str,
     news_link: &'a str
@@ -23,6 +25,7 @@ struct ProjectsTemplate<'a> {
 
 async fn get_projects() -> ProjectsTemplate<'static> {
     ProjectsTemplate {
+        api_url: API_URL,
         year: YEAR,
         current_version: CURRENT_VERSION,
         news_link: NEWS_LINK
@@ -32,6 +35,7 @@ async fn get_projects() -> ProjectsTemplate<'static> {
 #[derive(Template)]
 #[template(path = "project.html")]
 struct ProjectTemplate<'a> {
+    api_url: &'a str,
     year: &'a str,
     current_version: &'a str,
     news_link: &'a str,
@@ -43,6 +47,7 @@ async fn get_project(
 ) ->ProjectTemplate<'static>
 {
     ProjectTemplate {
+        api_url: API_URL,
         year: YEAR,
         current_version: CURRENT_VERSION,
         news_link: NEWS_LINK,
