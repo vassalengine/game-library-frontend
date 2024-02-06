@@ -9,37 +9,49 @@
 
 {% block content %}
 
-<header>
-  <form action="">
-    <input id="search" type="search" name="q" placeholder="Search...">
-  </form>
-  <a href="/projects">Browse All Projects</a>
-</header>
+<main class="container px-5 mb-5">
 
-<main>
-  <img id="box_image">
+<nav class="d-flex flex-wrap align-items-center my-3">
+  <div class="d-lg-block d-none w-25"></div>
+  <form class="mx-md-2 my-1 flex-grow-1" action="">
+    <input class="form-control" id="search" type="search" name="q" placeholder="Search...">
+  </form>
+  <div class="w-100 d-md-none"></div>
+  <div class="ms-auto mx-1 my-1 pe-0">
+    <a href="/projects">Browse All Projects</a>
+  </div>
+</nav>
+
+<div class="my-2 p-2 border rounded clearfix bg-light">
+  <img id="box_image" class="border float-start my-2 ms-2 me-3">
+  <h1 id="game.title"></h1>
+  <div class="mb-2">
+    <span id="game.publisher"></span>, <span id="game.year"></span>
+  </div>
   <div>
-    <h1 id="name"></h1>
-    <h2 id="game.title"></h2>
-    <div id="game.publisher"></div>
-    <div id="game.year"></div>
-    <div id="description"></div>
+    <span id="description">></span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed sollicitudin turpis, ut posuere ex.
+  </div>
+</div>
+
+<div class="my-2 pb-2 border rounded">
+  <div id="project_box_header" class="border-bottom m-0 p-1 text-white">Project</div>
+  <div class="px-3 pt-2 pb-2">
+    <h2 id="name"></h2>
     <div id="created_at"></div>
     <div id="modified_at"></div>
     <ul id="tags"></ul>
     <ul id="owners"></ul>
   </div>
+</div>
 
-  <ul id="packages"></ul>
+<ul id="packages"></ul>
 
-  <div id="readme"></div>
+<div id="readme"></div>
+
 </main>
 
-<footer>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/lib/marked.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" integrity="sha384-vdScihEZCfbPnBQf+lc7LgXUdJVYyhC3yWHUW5C5P5GpHRqVnaM6HJELJxT6IqwM" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/lib/marked.umd.min.js" integrity="sha384-9dUjyclywLkiW3FdYja7HWOMEGEgvuNY0MKlGtlABWtQcowS6ReVjJyaaL2hliGT" crossorigin="anonymous"></script>
 <script type="module" src="/gl/js/project.js" id="project-script" data-project="{{ project }}" data-api="{{ api_url }}"></script>
 
 {% endblock %}
