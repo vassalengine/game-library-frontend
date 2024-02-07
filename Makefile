@@ -1,5 +1,5 @@
 API_URL:="http://localhost:3000/api/v1"
-YEAR:=2024
+YEAR:=$(shell date +'%Y')
 CURRENT_VERSION:=3.7.8
 NEWS_LINK:="https://forum.vassalengine.org/t/vassal-3-7-8-released/78867"
 
