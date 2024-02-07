@@ -1,59 +1,10 @@
-use askama::Template;
 use axum::{
-    Router, serve,
-    extract::Path,
-    routing::get,
+    Router, serve
 };
 use tokio::net::TcpListener;
-use tower_http::services::ServeDir;
+use tower_http::services::{ServeDir, ServeFile};
 
-const STATIC_DIR: &str = "static";
-
-const API_URL: &str = "http://localhost:3000/api/v1/projects";
-const YEAR: &str = "2024";
-const CURRENT_VERSION: &str = "3.7.8";
-const NEWS_LINK: &str = "https://forum.vassalengine.org/t/vassal-3-7-8-released/78867";
-
-#[derive(Template)]
-#[template(path = "projects.html")]
-struct ProjectsTemplate<'a> {
-    api_url: &'a str,
-    year: &'a str,
-    current_version: &'a str,
-    news_link: &'a str
-}
-
-async fn get_projects() -> ProjectsTemplate<'static> {
-    ProjectsTemplate {
-        api_url: API_URL,
-        year: YEAR,
-        current_version: CURRENT_VERSION,
-        news_link: NEWS_LINK
-    }
-}
-
-#[derive(Template)]
-#[template(path = "project.html")]
-struct ProjectTemplate<'a> {
-    api_url: &'a str,
-    year: &'a str,
-    current_version: &'a str,
-    news_link: &'a str,
-    project: String
-}
-
-async fn get_project(
-    Path(proj): Path<String>
-) ->ProjectTemplate<'static>
-{
-    ProjectTemplate {
-        api_url: API_URL,
-        year: YEAR,
-        current_version: CURRENT_VERSION,
-        news_link: NEWS_LINK,
-        project: proj
-    }
-}
+const SITE_DIR: &str = "site";
 
 // TODO: client-side templating?
 // TODO: sanitize strings going into HTML
@@ -61,20 +12,22 @@ async fn get_project(
 
 #[tokio::main]
 async fn main() {
+    // set up router
     let app = Router::new()
-        .route(
+        .route_service(
             "/projects",
-            get(get_projects)
+            ServeFile::new(format!("{SITE_DIR}/projects.html"))
         )
-        .route(
+        .route_service(
             "/projects/:project",
-            get(get_project)
+            ServeFile::new(format!("{SITE_DIR}/project.html"))
         )
         .nest_service(
             "/",
-            ServeDir::new(STATIC_DIR)
+            ServeDir::new(SITE_DIR)
         );
 
+    // serve pages
     let listener = TcpListener::bind("0.0.0.0:8000").await.unwrap();
     serve(listener, app)
         .await
