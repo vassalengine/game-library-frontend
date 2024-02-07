@@ -161,11 +161,12 @@ async function populateTable(api) {
   const meta = data['meta'];
 
   // Set the result count
-  const limit_span = document.getElementById('limit');
-  limit_span.textContent = params.get('limit') ?? "10";
-
   const total_span = document.getElementById('total');
-  total_span.textContent = meta['total'];
+  const total = meta['total'];
+  total_span.textContent = total;
+
+  const limit_span = document.getElementById('limit');
+  limit_span.textContent = Math.min(params.get('limit') ?? 10, total);
 
   const result_type_span = document.getElementById('result_type');
   const result_type = params.has('q') ? "search result" : "module";
