@@ -1,6 +1,4 @@
-use axum::{
-    Router, serve
-};
+use axum::{Router, serve};
 use tokio::net::TcpListener;
 use tower_http::services::{ServeDir, ServeFile};
 
