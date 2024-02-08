@@ -145,6 +145,10 @@ async function populateTable(api) {
     url.searchParams.delete('from');
     url.searchParams.delete('s');
 
+    if (query !== null) {
+      url.searchParams.set('q', query);
+    }
+
     url.searchParams.set('sort', sort_selector.value);
     window.location.replace(url.toString());
   }); 
