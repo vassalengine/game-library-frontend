@@ -55,22 +55,7 @@ function fillProjectsList(data) {
   }
 }
 
-async function populateTable(api) {
-  const params = new URLSearchParams(window.location.search);
-
-  // Construct API request 
-  const api_url = new URL(`${api}/projects`);
-  // Pass on only params the API knows
-  for (const k of ['q', 'sort', 'order', 'from', 'seek', 'limit']) {
-    const v = params.get(k);
-    if (v !== null) {
-      api_url.searchParams.set(k, v);
-    }
-  }
-
-  // Call the GLS API
-  const response = await fetch(api_url);
-
+function pageSetup(params) {
   // Unpack parameters
   let sort = null;
   let query = null;
@@ -87,7 +72,7 @@ async function populateTable(api) {
     if (s === null) {
       // Invalid: we should have s set; go back to start
       window.location.href = window.location.origin + window.location.pathname;
-      return;
+      return null;
     }
     [sort, query] = b64decode(s)
       .split(',', 2)
@@ -103,7 +88,7 @@ async function populateTable(api) {
     s = b64encode(`${sort ?? ""},${query ?? ""}`);
   }
 
-  // Set page title and results header for All Modules or Search Results 
+  // Set page title and results header for All Modules or Search Results
   const results_header = document.getElementById('results_header');
   if (query !== null) {
     results_header.textContent = 'Search Results ';
@@ -151,15 +136,13 @@ async function populateTable(api) {
 
     url.searchParams.set('sort', sort_selector.value);
     window.location.replace(url.toString());
-  }); 
+  });
 
-// TODO: handle error
-  if (response.status !== 200) {
-    return;
-  }
+  return s;
+}
 
+function populateProjects(params, s, data) {
   // Fill projects list
-  const data = await response.json();
   fillProjectsList(data);
 
   const meta = data['meta'];
@@ -177,11 +160,28 @@ async function populateTable(api) {
   const result_type_plural = meta['total'] === 1 ? "" : "s";
   result_type_span.textContent = `${result_type}${result_type_plural}`;
 
-  // Set navigation links 
+  // Set navigation links
   setNavLink(meta, 'prev', s);
   setNavLink(meta, 'next', s);
 }
 
 const projects_script_data = document.getElementById("projects-script").dataset;
 const api = projects_script_data.api;
-populateTable(api);
+
+const params = new URLSearchParams(window.location.search);
+
+// Construct API request
+const api_url = new URL(`${api}/projects`);
+// Pass on only params the API knows
+for (const k of ['q', 'sort', 'order', 'from', 'seek', 'limit']) {
+  const v = params.get(k);
+  if (v !== null) {
+    api_url.searchParams.set(k, v);
+  }
+}
+
+const s = pageSetup(params);
+
+fetchJSON(api_url)
+  .then((result) => populateProjects(params, s, result))
+  .catch((error) => handleError(error, 'projects'));

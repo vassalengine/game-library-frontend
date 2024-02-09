@@ -22,10 +22,13 @@
   </div>
 </nav>
 
-<div class="my-2 p-2 border rounded clearfix bg-light">
+<div id="project_content">
+
+<div id="game_section" class="my-2 p-2 border rounded clearfix bg-light">
   <img id="box_image" class="border float-start my-2 ms-2 me-3">
   <h1 id="game.title"></h1>
   <div class="mb-2">
+<!-- TODO: omit comma when there is no publisher or year -->
     <span id="game.publisher"></span>, <span id="game.year"></span>
   </div>
   <div>
@@ -33,7 +36,7 @@
   </div>
 </div>
 
-<div class="my-2 pb-2 border rounded">
+<div id="project_section" class="my-2 pb-2 border rounded">
   <div id="project_box_header" class="border-bottom m-0 p-1 text-white">Project</div>
   <div class="px-3 pt-2 pb-2">
     <h2 id="name"></h2>
@@ -48,10 +51,17 @@
 
 <div id="readme"></div>
 
+</div>
+
+<div id="players_content">
+  <ul id="players" class="d-flex flex-wrap list-unstyled gap-1"></ul>
+</div>
+
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" integrity="sha384-vdScihEZCfbPnBQf+lc7LgXUdJVYyhC3yWHUW5C5P5GpHRqVnaM6HJELJxT6IqwM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/lib/marked.umd.min.js" integrity="sha384-9dUjyclywLkiW3FdYja7HWOMEGEgvuNY0MKlGtlABWtQcowS6ReVjJyaaL2hliGT" crossorigin="anonymous"></script>
+<script src="/gl/js/common.js"></script>
 <script type="module" src="/gl/js/project.js" id="project-script" data-api="{{ api_url }}"></script>
 
 {% endblock %}

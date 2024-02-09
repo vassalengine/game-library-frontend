@@ -17,6 +17,7 @@
   </form>
   <div class="w-100 d-md-none"></div>
   <div class="small me-auto mx-1 my-1 order-md-0">
+<!-- TODO: Is there some way to provide a range for the count? -->
     <span class="text-muted">Displaying</span>
     <b id="limit"></b>
     <span class="text-muted">of</span>
@@ -105,5 +106,6 @@
 
 </main>
 
+<script src="/gl/js/common.js"></script>
 <script type="module" src="/gl/js/projects.js" id="projects-script" data-api="{{ api_url }}"></script>
 {% endblock %}
