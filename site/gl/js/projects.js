@@ -153,7 +153,7 @@ function populateProjects(params, s, data) {
   total_span.textContent = total;
 
   const limit_span = document.getElementById('limit');
-  limit_span.textContent = Math.min(params.get('limit') ?? 10, total);
+  limit_span.textContent = Math.min(params.get('limit') ?? LIMIT, total);
 
   const result_type_span = document.getElementById('result_type');
   const result_type = params.has('q') ? "search result" : "module";
@@ -165,6 +165,8 @@ function populateProjects(params, s, data) {
   setNavLink(meta, 'next', s);
 }
 
+const LIMIT = 10;
+
 const projects_script_data = document.getElementById("projects-script").dataset;
 const api = projects_script_data.api;
 
@@ -172,12 +174,17 @@ const params = new URLSearchParams(window.location.search);
 
 // Construct API request
 const api_url = new URL(`${api}/projects`);
+
 // Pass on only params the API knows
 for (const k of ['q', 'sort', 'order', 'from', 'seek', 'limit']) {
   const v = params.get(k);
   if (v !== null) {
     api_url.searchParams.set(k, v);
   }
+}
+
+if (!api_url.searchParams.has('limit')) {
+  api_url.searchParams.set('limit', LIMIT);
 }
 
 const s = pageSetup(params);
