@@ -21,3 +21,31 @@
 #project_box_header {
   background-color: #a1c87c;
 }
+
+.current_release {
+  background-color: #008800;
+}
+
+.release {
+  background-color: #bbbbbb;
+}
+
+summary {
+  list-style: none;
+  display: flex;
+  align-items: center;
+}
+
+summary::before {
+  content: '';
+  width: 1em;
+  height: 0.5em;
+  background: url('/gl/images/chevron-down.svg');
+  background-size: cover;
+  margin-right: 0.5em;
+  transition: 0.2s;
+}
+
+details[open] > summary::before {
+  transform: rotate(180deg);
+}
