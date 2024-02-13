@@ -37,19 +37,26 @@ function fillProjectsList(data) {
   const proj_list = document.getElementById('projects');
   const itemTemplate = document.querySelector('#proj_item_tmpl');
 
+  const now = new Date();
+  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+
   for (let p of data['projects']) {
     const item = document.importNode(itemTemplate.content, true);
 
-    const a = item.querySelector('.proj_tmpl_link');
-    const val = p['name'];
-    a.textContent = val;
-    a.href = `${window.location.pathname}/${val}`;
+    const name = p['name'];
 
-    const tdiv = item.querySelector('.proj_tmpl_title');
-    tdiv.textContent = p['game']['title'];
+    const a = item.querySelector('.proj_tmpl_title');
+    a.textContent = p['game']['title'];
+    a.href = `${window.location.pathname}/${name}`;
+
+    const tdiv = item.querySelector('.proj_tmpl_proj');
+    tdiv.textContent = name; 
 
     const ddiv = item.querySelector('.proj_tmpl_desc');
     ddiv.textContent = p['description'];
+
+    const udiv = item.querySelector('.proj_tmpl_updated');
+    udiv.textContent = intlFormatDistance(rtf, new Date(p['modified_at']), now);
 
     proj_list.appendChild(item);
   }
