@@ -194,8 +194,9 @@ if (!api_url.searchParams.has('limit')) {
   api_url.searchParams.set('limit', LIMIT);
 }
 
+const p = fetchJSON(api_url);
 const s = pageSetup(params);
 
-fetchJSON(api_url)
+p
   .then((result) => populateProjects(params, s, result))
   .catch((error) => handleError(error, 'projects'));
