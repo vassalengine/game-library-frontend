@@ -18,7 +18,9 @@ function makeUserLink(username) {
   return a;
 }
 
-function populatePlayers(players) {
+function populatePlayers(players, username) {
+  let user_is_player = false;
+
   const e_players = document.getElementById('players');
 
   const get_avatars = [];
@@ -27,6 +29,10 @@ function populatePlayers(players) {
     const li = document.createElement('li');
     li.appendChild(makeUserLink(p));
     e_players.appendChild(li);
+
+    if (p === username) {
+      user_is_player = true;
+    }
 
 //    const img = document.createElement('img');
 
@@ -58,6 +64,15 @@ function populatePlayers(players) {
   }
 
 //  await Promise.all(get_avatars);
+
+  if (username !== null) {
+    const add_button = document.getElementById('add_player_button');
+    const remove_button = document.getElementById('remove_player_button');
+
+    add_button.style.display = user_is_player ? 'none' : 'inline';
+    remove_button.style.display = user_is_player ? 'inline' : 'none';
+  }
+
 }
 
 function hideEditLinks() {
@@ -78,9 +93,9 @@ function startEditGameSection(proj) {
   hideEditLinks();
 }
 
-function cancelEditGameSection(proj) {
+function cancelEditGameSection(proj, username) {
   const inner = document.getElementById('game_section_inner');
-  inner.replaceWith(makeGameSection(proj));
+  inner.replaceWith(makeGameSection(proj, username));
   showEditLinks();
 }
 
@@ -115,7 +130,7 @@ function cancelEditReadmeSection(proj) {
   showEditLinks();
 }
 
-function makeGameSection(proj) {
+function makeGameSection(proj, username) {
   const tmpl = document.querySelector('#game_section_tmpl');
   const inner = document.importNode(tmpl.content.firstElementChild, true);
 
@@ -144,13 +159,13 @@ function makeGameSection(proj) {
     // edit game section
     const ed = inner.querySelector('.edit_link');
     ed.classList.add('is_editable');
-    ed.addEventListener('click', (e) => startEditGameSection(proj));
+    ed.addEventListener('click', (e) => startEditGameSection(proj, username));
   }
 
   return inner;
 }
 
-function makeGameSectionEditor(proj) {
+function makeGameSectionEditor(proj, username) {
   const tmpl = document.querySelector('#game_section_edit_tmpl');
   const inner = document.importNode(tmpl.content.firstElementChild, true);
 
@@ -177,7 +192,43 @@ function makeGameSectionEditor(proj) {
 
   // cancel
   const cancel = inner.querySelector('#cancel');
-  cancel.addEventListener('click', (e) => cancelEditGameSection(proj));
+  cancel.addEventListener('click', (e) => cancelEditGameSection(proj, username));
+
+  return inner;
+}
+
+function makeProjectSection(proj, rtf, now) {
+  const tmpl = document.querySelector('#project_section_tmpl');
+  const inner = document.importNode(tmpl.content.firstElementChild, true);
+
+  const e_name = inner.querySelector('#name');
+  e_name.textContent = proj['name'];
+
+  const e_created_at = inner.querySelector('#project_created_at');
+  e_created_at.dateTime = proj.created_at;
+
+  const e_created_rel = inner.querySelector('#project_created_rel');
+  e_created_rel.textContent = intlFormatDistance(rtf, new Date(proj.created_at), now);
+
+  const e_modified_at = inner.querySelector('#project_modified_at');
+  e_modified_at.dateTime = proj.modified_at;
+
+  const e_modified_rel = inner.querySelector('#project_modified_rel');
+  e_modified_rel.textContent = intlFormatDistance(rtf, new Date(proj.modified_at), now);
+
+  const e_tags = inner.querySelector('#tags');
+  for (const t of proj['tags']) {
+    const li = document.createElement('li');
+    li.textContent = '#' + t;
+    e_tags.appendChild(li);
+  }
+
+  const e_owners = inner.querySelector('#owners');
+  for (const o of proj['owners']) {
+    const li = document.createElement('li');
+    li.appendChild(makeUserLink(o));
+    e_owners.appendChild(li);
+  }
 
   return inner;
 }
@@ -189,48 +240,23 @@ function makeNewPackageBox(proj) {
 }
 
 function populateProject(proj, username) {
-  const now = new Date();
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+  const now = new Date();
 
   //
   // game section
   //
 
   const game_section = document.getElementById('game_section');
-  game_section.appendChild(makeGameSection(proj));
+  game_section.appendChild(makeGameSection(proj, username));
 
   //
   // project section
   //
 
-  const e_name = document.getElementById('name');
-  e_name.textContent = proj['name'];
+  const project_section = document.getElementById('project_section');
+  project_section.appendChild(makeProjectSection(proj, rtf, now));
 
-  const e_created_at = document.getElementById('project_created_at');
-  e_created_at.dateTime = proj.created_at;
-
-  const e_created_rel = document.getElementById('project_created_rel');
-  e_created_rel.textContent = intlFormatDistance(rtf, new Date(proj.created_at), now);
-
-  const e_modified_at = document.getElementById('project_modified_at');
-  e_modified_at.dateTime = proj.modified_at;
-
-  const e_modified_rel = document.getElementById('project_modified_rel');
-  e_modified_rel.textContent = intlFormatDistance(rtf, new Date(proj.modified_at), now);
-
-  const e_tags = document.getElementById('tags');
-  for (const t of proj['tags']) {
-    const li = document.createElement('li');
-    li.textContent = '#' + t;
-    e_tags.appendChild(li);
-  }
-
-  const e_owners = document.getElementById('owners');
-  for (const o of proj['owners']) {
-    const li = document.createElement('li');
-    li.appendChild(makeUserLink(o));
-    e_owners.appendChild(li);
-  }
 
   //
   // packages section
@@ -345,12 +371,12 @@ const project = window.location.pathname.substring(window.location.pathname.last
 const sections = [
   [
     `${api}/projects/${project}`,
-    (p) => populateProject(p, username),
+    (proj) => populateProject(proj, username),
     'project_content'
   ],
   [
     `${api}/projects/${project}/players`,
-    populatePlayers,
+    (players) => populatePlayers(players, username),
     'players_content'
   ]
 ];

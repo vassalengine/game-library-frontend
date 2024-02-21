@@ -28,37 +28,6 @@
   </div>
 
   <div id="project_section" class="my-2 pb-2">
-    <h2>
-      <svg class="svg-icon"><use xlink:href="#person-digging"></use></svg>
-      Project
-      <a class="edit_link" href="#">
-        <svg class="svg-icon edit_icon"><use xlink:href="#pen-to-square"></use></svg>
-      </a>
-    </h2>
-    <div class="px-3 pt-2 pb-2 border rounded d-flex flex-wrap">
-      <h3 id="name"></h3>
-      
-      <ul id="tags"></ul>
-      <div class="d-flex align-items-center">
-        <svg class="svg-icon"><use xlink:href="#user"></use></svg>
-        Owners
-        <ul id="owners" class="d-flex flex-wrap list-unstyled m-0 gap-1"></ul>
-      </div>
-      <div class="ms-auto">
-        <div>
-          <time id="project_created_at" datetime="">
-            <svg class="svg-icon"><use xlink:href="#star"></use></svg>
-            Created <span id="project_created_rel"></span>
-          </time>
-        </div>
-        <div>
-          <time id="project_modified_at" datetime="">
-            <svg class="svg-icon"><use xlink:href="#arrows-rotate"></use></svg>
-            Updated <span id="project_modified_rel"></span>
-          </time>
-        </div>
-      </div>
-    </div>
   </div>
 
   <div id="packages_section">
@@ -146,6 +115,42 @@
   </div>
 </template>
 
+<template id="project_section_tmpl">
+  <div id="project_section_inner">
+    <h2>
+      <svg class="svg-icon"><use xlink:href="#person-digging"></use></svg>
+      Project
+      <a class="edit_link" href="#">
+        <svg class="svg-icon edit_icon"><use xlink:href="#pen-to-square"></use></svg>
+      </a>
+    </h2>
+    <div class="px-3 pt-2 pb-2 border rounded d-flex flex-wrap">
+      <h3 id="name"></h3>
+
+      <ul id="tags"></ul>
+      <div class="d-flex align-items-center">
+        <svg class="svg-icon"><use xlink:href="#user"></use></svg>
+        Owners
+        <ul id="owners" class="d-flex flex-wrap list-unstyled m-0 gap-1"></ul>
+      </div>
+      <div class="ms-auto">
+        <div>
+          <time id="project_created_at" datetime="">
+            <svg class="svg-icon"><use xlink:href="#star"></use></svg>
+            Created <span id="project_created_rel"></span>
+          </time>
+        </div>
+        <div>
+          <time id="project_modified_at" datetime="">
+            <svg class="svg-icon"><use xlink:href="#arrows-rotate"></use></svg>
+            Updated <span id="project_modified_rel"></span>
+          </time>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
 <template id="package_tmpl">
   <div class="package_tmpl_top border rounded p-3 my-2">
     <h3>
@@ -168,7 +173,7 @@
   <div class="package_tmpl_top border rounded p-3 my-2">
     <form>
       <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
-      <label for="pacakge_name_input">Package name</label> 
+      <label for="pacakge_name_input">Package name</label>
       <input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control">
     </form>
   </div>
@@ -201,12 +206,16 @@
   </li>
 </template>
 
-
-
 <div id="players_content">
   <h2>
     <svg class="svg-icon"><use xlink:href="#user-group"></use></svg>
     Players
+    {% match user_info %}
+      {% when Some with (ui) %}
+    <a id="add_player_button" class="btn btn-primary p-1 mx-1 rounded-0" href="" role="button"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Join</a>
+    <a id="remove_player_button" class="btn btn-primary p-1 mx-1 rounded-0" href="" role="button"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Leave</a>
+      {% else %}
+    {% endmatch %}
   </h2>
   <ul id="players" class="d-flex flex-wrap list-unstyled gap-1"></ul>
 </div>
