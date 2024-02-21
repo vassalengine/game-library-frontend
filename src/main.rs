@@ -38,7 +38,8 @@ const SITE_DIR: &str = "site";
 // TODO: client-side templating?
 // TODO: sanitize strings going into HTML
 // TODO: compression
-// TODO: shoule empty hrefs be # instead? something else?
+// TODO: should empty hrefs be # instead? something else?
+// TODO: look into tracing
 
 enum AppError {
     InternalError
