@@ -1,3 +1,5 @@
+/* Alphabetical index */
+
 #index ol {
   display: flex;
   flex-wrap: wrap;
@@ -18,9 +20,13 @@
   }
 }
 
+/* Miscellaneous project stuff */
+
 #project_box_header {
   background-color: #a1c87c;
 }
+
+/* Release pills */
 
 .current_release {
   background-color: #008800;
@@ -29,6 +35,8 @@
 .release {
   background-color: #bbbbbb;
 }
+
+/* Release accordion */
 
 summary {
   list-style: none;
@@ -48,4 +56,86 @@ summary::before {
 
 details[open] > summary::before {
   transform: rotate(180deg);
+}
+
+/* Edit icons */
+
+.is_editable {
+  visibility: visible !important;
+}
+
+.is_editing {
+  display: none;
+}
+
+.edit_link {
+  visibility: hidden;
+}
+
+.edit_icon {
+  width: 0.75em;
+  height: 0.75em;
+  fill: #bbbbbb;
+  vertical-align: 0;
+}
+
+.edit_icon:hover {
+  fill: var(--bs-link-hover-color);
+}
+
+/* User avatars */
+
+#current_user a img.avatar {
+  width: 2em;
+  height: 2em;
+  margin: 0.2em;
+}
+
+img.avatar {
+  border-radius: 50%;
+}
+
+/* Game box image editing */
+
+#box_image_input {
+  display: none;
+}
+
+#box_image_label {
+  position: relative;
+  pointer-events: none;
+}
+
+#box_image_label:hover #box_image {
+  filter: grayscale(100%) brightness(0.5) blur(1px);
+}
+
+#box_image_ovl {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  pointer-events: auto;
+}
+
+#box_image_ovl:hover {
+  opacity: 1;
+}
+
+#box_image_ovl svg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 25%;
+  height: auto;
+  fill: white;
+}
+
+@media only screen and (max-width:767px) {
+  #game_section_form {
+    clear: both;
+  }
 }

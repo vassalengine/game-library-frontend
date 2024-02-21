@@ -23,15 +23,32 @@
       <img class="wordmark" src="/images/wordmark-path.svg" width="529" height="180" alt="Vassal">
     </a>
 
-    <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+    <ul class="nav col-12 col-md-auto mb-2 justify-content-center align-items-center mb-md-0">
+      {% match user_info %}
+        {% when None %}
+      <li id="sign_up_user"><a class="btn btn-primary p-1 mx-1 rounded-0" href="{{ crate::DISCOURSE_URL }}/signup" role="button">Sign Up</a></li>
+      <li id="login_user"><a class="btn btn-primary p-1 mx-1 rounded-0" href="/login?returnto={{ returnto }}" role="button"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Log In</a></li>
+        {% else %}
+      {% endmatch %}
       <li><a class="nav-link px-2 link-dark" href="/about.html"><svg class="svg-icon"><use xlink:href="#info-circle"></use></svg> About</a></li>
-      <li>
-        <a class="nav-link px-2 link-dark" href="https://discord.gg/GDdfq9AkfM"><svg class="svg-icon"><use xlink:href="#fab-discord"></use></svg> Chat</a>
-      </li>
+      <li><a class="nav-link px-2 link-dark" href="https://discord.gg/GDdfq9AkfM"><svg class="svg-icon"><use xlink:href="#fab-discord"></use></svg> Chat</a></li>
       <li><a class="nav-link px-2 link-dark" href="https://forum.vassalengine.org"><svg class="svg-icon"><use xlink:href="#landmark"></use></svg> Forum</a></li>
       <li><a class="nav-link px-2 link-dark" href="/wiki/Category:Modules"><svg class="svg-icon"><use xlink:href="#chess-knight"></use></svg> Modules</a></li>
       <li><a class="nav-link px-2 link-dark" href="/wiki"><svg class="svg-icon"><use xlink:href="#book-open"></use></svg> Documentation</a></li>
       <li><a class="nav-link px-2 link-dark" href="https://forum.vassalengine.org/c/news/17"><svg class="svg-icon"><use xlink:href="#bullhorn"></use></svg> News</a></li>
+      {% match user_info %}
+        {% when Some with (ui) %}
+      <li id="current_user" class="nav-item dropdown">
+        <a id="userDropdown" href="" role="button" class="nav-link p-0 link-dark" data-bs-toggle="dropdown" aria-expanded="false" >
+          <img id="userAvatar" class="avatar" title="{{ ui.name }}" src="{{ ui.avatar_url }}">
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="userDropdown">
+          <li><a id="userProfile" class="dropdown-item" href="{{ crate::DISCOURSE_URL }}/u/{{ ui.username }}"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Profile</a></li>
+          <li><a id="userLogout" class="dropdown-item" href="/logout?returnto={{ returnto }}"><svg class="svg-icon"><use xlink:href="#right-from-bracket"></use></svg> Log Out</a></li>
+        </ul>
+      </li>
+        {% else %}
+      {% endmatch %}
     </ul>
   </header>
 
@@ -108,6 +125,18 @@
         </symbol>
         <symbol id="fab-discord" viewBox="0 0 448 512">
           <path d="M297.216 243.2c0 15.616-11.52 28.416-26.112 28.416-14.336 0-26.112-12.8-26.112-28.416s11.52-28.416 26.112-28.416c14.592 0 26.112 12.8 26.112 28.416zm-119.552-28.416c-14.592 0-26.112 12.8-26.112 28.416s11.776 28.416 26.112 28.416c14.592 0 26.112-12.8 26.112-28.416.256-15.616-11.52-28.416-26.112-28.416zM448 52.736V512c-64.494-56.994-43.868-38.128-118.784-107.776l13.568 47.36H52.48C23.552 451.584 0 428.032 0 398.848V52.736C0 23.552 23.552 0 52.48 0h343.04C424.448 0 448 23.552 448 52.736zm-72.96 242.688c0-82.432-36.864-149.248-36.864-149.248-36.864-27.648-71.936-26.88-71.936-26.88l-3.584 4.096c43.52 13.312 63.744 32.512 63.744 32.512-60.811-33.329-132.244-33.335-191.232-7.424-9.472 4.352-15.104 7.424-15.104 7.424s21.248-20.224 67.328-33.536l-2.56-3.072s-35.072-.768-71.936 26.88c0 0-36.864 66.816-36.864 149.248 0 0 21.504 37.12 78.08 38.912 0 0 9.472-11.52 17.152-21.248-32.512-9.728-44.8-30.208-44.8-30.208 3.766 2.636 9.976 6.053 10.496 6.4 43.21 24.198 104.588 32.126 159.744 8.96 8.96-3.328 18.944-8.192 29.44-15.104 0 0-12.8 20.992-46.336 30.464 7.68 9.728 16.896 20.736 16.896 20.736 56.576-1.792 78.336-38.912 78.336-38.912z"></path>
+        </symbol>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg">
+        <symbol id="user" viewBox="0 0 448 512">
+          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+          <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
+        </symbol>
+      </svg>
+      <svg xmlns="http://www.w3.org/2000/svg">
+        <symbol id="right-from-bracket" viewBox="0 0 512 512">
+          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+          <path d="M377.9 105.9L500.7 228.7c7.2 7.2 11.3 17.1 11.3 27.3s-4.1 20.1-11.3 27.3L377.9 406.1c-6.4 6.4-15 9.9-24 9.9c-18.7 0-33.9-15.2-33.9-33.9l0-62.1-128 0c-17.7 0-32-14.3-32-32l0-64c0-17.7 14.3-32 32-32l128 0 0-62.1c0-18.7 15.2-33.9 33.9-33.9c9 0 17.6 3.6 24 9.9zM160 96L96 96c-17.7 0-32 14.3-32 32l0 256c0 17.7 14.3 32 32 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32l-64 0c-53 0-96-43-96-96L0 128C0 75 43 32 96 32l64 0c17.7 0 32 14.3 32 32s-14.3 32-32 32z"/>
         </symbol>
       </svg>
     </div>

@@ -3,7 +3,7 @@
 {% block description %}Vassal is an open-source game engine for building and playing online adaptations of board games and card games.{% endblock %}
 
 {% block head %}
-  {{ super() }}
+  {% call super() %}
   <link rel="stylesheet" type="text/css" href="/gl/css/gl.css"/>
 {% endblock %}
 
@@ -24,54 +24,136 @@
 
 <div id="project_content">
 
-<div id="game_section" class="my-2 p-2 border rounded clearfix bg-light">
-  <img id="box_image" class="border float-start my-2 ms-2 me-3">
-  <h1 id="game.title"></h1>
-  <div class="mb-2">
-<!-- TODO: omit comma when there is no publisher or year -->
-    <span id="game.publisher"></span>, <span id="game.year"></span>
+  <div id="game_section" class="my-2 p-2 border rounded clearfix bg-light">
   </div>
-  <div>
-    <span id="description"></span> Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse sed sollicitudin turpis, ut posuere ex.
+
+  <div id="project_section" class="my-2 pb-2">
+    <h2>
+      <svg class="svg-icon"><use xlink:href="#person-digging"></use></svg>
+      Project
+      <a class="edit_link" href="#">
+        <svg class="svg-icon edit_icon"><use xlink:href="#pen-to-square"></use></svg>
+      </a>
+    </h2>
+    <div class="px-3 pt-2 pb-2 border rounded d-flex flex-wrap">
+      <h3 id="name"></h3>
+      
+      <ul id="tags"></ul>
+      <div class="d-flex align-items-center">
+        <svg class="svg-icon"><use xlink:href="#user"></use></svg>
+        Owners
+        <ul id="owners" class="d-flex flex-wrap list-unstyled m-0 gap-1"></ul>
+      </div>
+      <div class="ms-auto">
+        <div>
+          <time id="project_created_at" datetime="">
+            <svg class="svg-icon"><use xlink:href="#star"></use></svg>
+            Created <span id="project_created_rel"></span>
+          </time>
+        </div>
+        <div>
+          <time id="project_modified_at" datetime="">
+            <svg class="svg-icon"><use xlink:href="#arrows-rotate"></use></svg>
+            Updated <span id="project_modified_rel"></span>
+          </time>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <div id="packages_section">
+    <h2>
+      <svg class="svg-icon"><use xlink:href="#cubes"></use></svg>
+      Packages
+      <a class="edit_link" href="#">
+        <svg class="svg-icon edit_icon"><use xlink:href="#square-plus"></use></svg>
+      </a>
+    </h2>
+    <div id="packages_list">
+    </div>
+  </div>
+
+  <div id="readme_section">
+    <h2>
+      <svg class="svg-icon"><use xlink:href="#info-circle"></use></svg>
+      Readme
+      <a class="edit_link" href="#">
+        <svg class="svg-icon edit_icon"><use xlink:href="#pen-to-square"></use></svg>
+      </a>
+    </h2>
+    <div id="readme">
+    </div>
+  </div>
+
 </div>
 
-<div id="project_section" class="my-2 pb-2">
-  <h2>
-    <svg class="svg-icon"><use xlink:href="#person-digging"></use></svg>
-    Project
-  </h2>
-  <div class="px-3 pt-2 pb-2 border rounded d-flex flex-wrap">
-    <h3 id="name"></h3>
-    
-    <ul id="tags"></ul>
-    <div class="d-flex align-items-center">
-      <svg class="svg-icon"><use xlink:href="#user"></use></svg>
-      Owners
-      <ul id="owners" class="d-flex flex-wrap list-unstyled m-0 gap-1"></ul>
+<template id="game_section_tmpl">
+  <div id="game_section_inner">
+    <div id="box_image_container" class="float-start my-2 ms-2 me-3">
+      <img id="box_image" class="rounded border">
     </div>
-    <div class="ms-auto">
-      <div>
-        <time id="project_created_at" datetime="">
-          <svg class="svg-icon"><use xlink:href="#star"></use></svg>
-          Created <span id="project_created_rel"></span>
-        </time>
-      </div>
-      <div>
-        <time id="project_modified_at" datetime="">
-          <svg class="svg-icon"><use xlink:href="#arrows-rotate"></use></svg>
-          Updated <span id="project_modified_rel"></span>
-        </time>
-      </div>
+    <h1>
+      <span id="game_title" class="editable_field"></span>
+      <a class="edit_link" href="#">
+        <svg class="svg-icon edit_icon"><use xlink:href="#pen-to-square"></use></svg>
+      </a>
+    </h1>
+    <div class="mb-2">
+      <!-- TODO: omit comma when there is no publisher or year -->
+      <span id="game_publisher"></span>, <span id="game_year"></span>
+    </div>
+    <div>
+      <span id="description"></span>
     </div>
   </div>
-</div>
+</template>
+
+<template id="game_section_edit_tmpl">
+  <div id="game_section_inner">
+    <form id="game_section_form">
+      <div id="box_image_container" class="float-left my-2 ms-2 me-3">
+        <label id="box_image_label" for="box_image_input">
+          <img id="box_image" class="rounded border" src="">
+          <div id="box_image_ovl">
+            <svg id="box_image_ovl_img"><use xlink:href="#pen-to-square"></use></svg>
+          </div>
+        </label>
+        <input id="box_image_input" type="file" name="box_image_input" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/avif">
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <label for="game_title_input">Title</label>
+          <input id="game_title_input" type="text" name="game_title" class="form-control">
+        </div>
+        <div class="col-8">
+          <label for="game_publisher_input">Publisher</label>
+          <input id="game_publisher_input" type="text" name="game_publisher" class="form-control">
+        </div>
+        <div class="col-4">
+          <label for="game_year_input">Year</label>
+          <input id="game_year_input" type="text" name="game_year" class="form-control">
+        </div>
+        <div class="col-12">
+          <label for="description_input">Description</label>
+          <input id="description_input" type="text" name="description" class="form-control">
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</template>
 
 <template id="package_tmpl">
   <div class="package_tmpl_top border rounded p-3 my-2">
     <h3>
       <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
       <span class="package_tmpl_name"></span>
+      <a class="edit_link" href="#">
+        <svg class="svg-icon edit_icon"><use xlink:href="#square-plus"></use></svg>
+      </a>
     </h3>
     <div class="package_tmpl_description"></div>
     <ol class="package_tmpl_releases list-unstyled"></ol>
@@ -79,6 +161,16 @@
       <summary>Older releases...</summary>
       <ol class="package_tmpl_releases_older list-unstyled"></ol>
     </details>
+  </div>
+</template>
+
+<template id="package_new_tmpl">
+  <div class="package_tmpl_top border rounded p-3 my-2">
+    <form>
+      <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
+      <label for="pacakge_name_input">Package name</label> 
+      <input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control">
+    </form>
   </div>
 </template>
 
@@ -109,21 +201,7 @@
   </li>
 </template>
 
-<div id="packages">
-  <h2>
-    <svg class="svg-icon"><use xlink:href="#cubes"></use></svg>
-    Packages
-  </h2>
-</div>
 
-<div>
-  <h2>
-    <svg class="svg-icon"><use xlink:href="#info-circle"></use></svg>
-    Readme
-  </h2>
-  <div id="readme">
-  </div>
-</div>
 
 <div id="players_content">
   <h2>
@@ -179,16 +257,28 @@
         <path d="M287.9 0c9.2 0 17.6 5.2 21.6 13.5l68.6 141.3 153.2 22.6c9 1.3 16.5 7.6 19.3 16.3s.5 18.1-5.9 24.5L433.6 328.4l26.2 155.6c1.5 9-2.2 18.1-9.7 23.5s-17.3 6-25.3 1.7l-137-73.2L151 509.1c-8.1 4.3-17.9 3.7-25.3-1.7s-11.2-14.5-9.7-23.5l26.2-155.6L31.1 218.2c-6.5-6.4-8.7-15.9-5.9-24.5s10.3-14.9 19.3-16.3l153.2-22.6L266.3 13.5C270.4 5.2 278.7 0 287.9 0zm0 79L235.4 187.2c-3.5 7.1-10.2 12.1-18.1 13.3L99 217.9 184.9 303c5.5 5.5 8.1 13.3 6.8 21L171.4 443.7l105.2-56.2c7.1-3.8 15.6-3.8 22.6 0l105.2 56.2L384.2 324.1c-1.3-7.7 1.2-15.5 6.8-21l85.9-85.1L358.6 200.5c-7.8-1.2-14.6-6.1-18.1-13.3L287.9 79z"/>
       </symbol>
     </svg>
-      <svg xmlns="http://www.w3.org/2000/svg">
-        <symbol id="user" viewBox="0 0 448 512">
-          <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
-          <path d="M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512H418.3c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304H178.3z"/>
-      </symbol>
-    </svg>
     <svg xmlns="http://www.w3.org/2000/svg">
       <symbol id="user-group" viewBox="0 0 640 512">
         <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
         <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32v-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2h61.4C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z"/>
+      </symbol>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <symbol id="pen-to-square" viewBox="0 0 512 512">
+        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+        <path d="M441 58.9L453.1 71c9.4 9.4 9.4 24.6 0 33.9L424 134.1 377.9 88 407 58.9c9.4-9.4 24.6-9.4 33.9 0zM209.8 256.2L344 121.9 390.1 168 255.8 302.2c-2.9 2.9-6.5 5-10.4 6.1l-58.5 16.7 16.7-58.5c1.1-3.9 3.2-7.5 6.1-10.4zM373.1 25L175.8 222.2c-8.7 8.7-15 19.4-18.3 31.1l-28.6 100c-2.4 8.4-.1 17.4 6.1 23.6s15.2 8.5 23.6 6.1l100-28.6c11.8-3.4 22.5-9.7 31.1-18.3L487 138.9c28.1-28.1 28.1-73.7 0-101.8L474.9 25C446.8-3.1 401.2-3.1 373.1 25zM88 64C39.4 64 0 103.4 0 152V424c0 48.6 39.4 88 88 88H360c48.6 0 88-39.4 88-88V312c0-13.3-10.7-24-24-24s-24 10.7-24 24V424c0 22.1-17.9 40-40 40H88c-22.1 0-40-17.9-40-40V152c0-22.1 17.9-40 40-40H200c13.3 0 24-10.7 24-24s-10.7-24-24-24H88z"/>
+      </symbol>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <symbol id="plus" viewBox="0 0 448 512">
+        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+        <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/>
+      </symbol>
+    </svg>
+    <svg xmlns="http://www.w3.org/2000/svg">
+      <symbol id="square-plus" viewBox="0 0 448 512">
+        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2024 Fonticons, Inc.-->
+        <path d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM200 344V280H136c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V168c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H248v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/>
       </symbol>
     </svg>
     <svg xmlns="http://www.w3.org/2000/svg">
@@ -204,9 +294,17 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" integrity="sha384-vdScihEZCfbPnBQf+lc7LgXUdJVYyhC3yWHUW5C5P5GpHRqVnaM6HJELJxT6IqwM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/lib/marked.umd.min.js" integrity="sha384-9dUjyclywLkiW3FdYja7HWOMEGEgvuNY0MKlGtlABWtQcowS6ReVjJyaaL2hliGT" crossorigin="anonymous"></script>
 <script src="/gl/js/common.js"></script>
-<script type="module" src="/gl/js/project.js" id="project-script" data-api="{{ api_url }}"></script>
+<script type="module" src="/gl/js/project.js" id="project-script" data-api="{{ api_url }}"
+{% match user_info %}
+  {% when Some with (ui) %}
+    data-username="{{ ui.username }}"
+  {% when None %}
+{% endmatch %}
+></script>
 
 {% endblock %}

@@ -60,7 +60,135 @@ function populatePlayers(players) {
 //  await Promise.all(get_avatars);
 }
 
-function populateProject(proj) {
+function hideEditLinks() {
+  for (const ed of document.querySelectorAll('.edit_link')) {
+    ed.classList.remove('is_editable');
+  }
+}
+
+function showEditLinks() {
+  for (const ed of document.querySelectorAll('.edit_link')) {
+    ed.classList.add('is_editable');
+  }
+}
+
+function startEditGameSection(proj) {
+  const inner = document.getElementById('game_section_inner');
+  inner.replaceWith(makeGameSectionEditor(proj));
+  hideEditLinks();
+}
+
+function cancelEditGameSection(proj) {
+  const inner = document.getElementById('game_section_inner');
+  inner.replaceWith(makeGameSection(proj));
+  showEditLinks();
+}
+
+function startEditProjectSection(proj) {
+  console.log("PROJECT SECTION EDIT MODE!");
+  hideEditLinks();
+}
+
+function cancelEditProjectSection(proj) {
+  console.log("PROJECT SECTION EDIT MODE!");
+  showEditLinks();
+}
+
+function startEditPackagesSection(proj) {
+  const packages_list = document.getElementById('packages_list');
+  packages_list.prepend(makeNewPackageBox(proj));
+  hideEditLinks();
+}
+
+function cancelEditPackagesSection(proj) {
+
+  showEditLinks();
+}
+
+function startEditReadmeSection(proj) {
+  console.log("README SECTION EDIT MODE!");
+  hideEditLinks();
+}
+
+function cancelEditReadmeSection(proj) {
+  console.log("README SECTION EDIT MODE!");
+  showEditLinks();
+}
+
+function makeGameSection(proj) {
+  const tmpl = document.querySelector('#game_section_tmpl');
+  const inner = document.importNode(tmpl.content.firstElementChild, true);
+
+  // image
+  const e_box_image = inner.querySelector('#box_image');
+  e_box_image.src = `${api}/projects/${project}/images/${proj['image']}`;
+
+  // title
+  const e_title = inner.querySelector('#game_title');
+  e_title.textContent = proj['game']['title'];
+  document.title = `${proj['game']['title']} - Module Library - Vassal`;
+
+  // publisher 
+  const e_publisher = inner.querySelector('#game_publisher');
+  e_publisher.textContent = proj['game']['publisher'];
+
+  // year 
+  const e_year = inner.querySelector('#game_year');
+  e_year.textContent = proj['game']['year'];
+
+  // description 
+  const e_description =  inner.querySelector('#description');
+  e_description.textContent = proj['description'];
+
+  if (proj['owners'].includes(username)) {
+    // edit game section
+    const ed = inner.querySelector('.edit_link');
+    ed.classList.add('is_editable');
+    ed.addEventListener('click', (e) => startEditGameSection(proj));
+  }
+
+  return inner;
+}
+
+function makeGameSectionEditor(proj) {
+  const tmpl = document.querySelector('#game_section_edit_tmpl');
+  const inner = document.importNode(tmpl.content.firstElementChild, true);
+
+  // image
+  const e_box_image = inner.querySelector('#box_image');
+  e_box_image.src = `${api}/projects/${project}/images/${proj['image']}`;
+
+  // title
+  const e_title = inner.querySelector('#game_title_input');
+  e_title.value = proj['game']['title'];
+//  document.title = `${proj['game']['title']} - Module Library - Vassal`;
+
+  // publisher 
+  const e_publisher = inner.querySelector('#game_publisher_input');
+  e_publisher.value = proj['game']['publisher'];
+
+  // year 
+  const e_year = inner.querySelector('#game_year_input');
+  e_year.value = proj['game']['year'];
+
+  // description 
+  const e_description = inner.querySelector('#description_input');
+  e_description.value = proj['description'];
+
+  // cancel
+  const cancel = inner.querySelector('#cancel');
+  cancel.addEventListener('click', (e) => cancelEditGameSection(proj));
+
+  return inner;
+}
+
+function makeNewPackageBox(proj) {
+  const tmpl = document.querySelector('#package_new_tmpl');
+  const inner = document.importNode(tmpl.content.firstElementChild, true);
+  return inner;
+}
+
+function populateProject(proj, username) {
   const now = new Date();
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 
@@ -68,23 +196,10 @@ function populateProject(proj) {
   // game section
   //
 
-  const e_box_image = document.getElementById('box_image');
-  e_box_image.src = `${api}/projects/${project}/images/${proj['image']}`;
+  const game_section = document.getElementById('game_section');
+  game_section.appendChild(makeGameSection(proj));
 
-  const e_title = document.getElementById('game.title');
-  e_title.textContent = proj['game']['title'];
-  document.title = `${proj['game']['title']} - Module Library - Vassal`;
-
-  const e_publisher = document.getElementById('game.publisher');
-  e_publisher.textContent = proj['game']['publisher'];
-
-  const e_year = document.getElementById('game.year');
-  e_year.textContent = proj['game']['year'];
-
-  const e_description = document.getElementById('description');
-  e_description.textContent = proj['description'];
-
-  // 
+  //
   // project section
   //
 
@@ -124,14 +239,14 @@ function populateProject(proj) {
   const packageTemplate = document.querySelector('#package_tmpl');
   const releaseTemplate = document.querySelector('#release_tmpl');
 
-  const e_packages = document.getElementById('packages');
+  const e_packages = document.getElementById('packages_list');
 
   for (const [pi, p] of proj['packages'].entries()) {
     const pkg_t = document.importNode(packageTemplate.content, true);
 
-    const pkg = pkg_t.querySelector(".package_tmpl_top");
+    const pkg = pkg_t.querySelector('.package_tmpl_top');
 
-    const div_pkg_name = pkg.querySelector(".package_tmpl_name");
+    const div_pkg_name = pkg.querySelector('.package_tmpl_name');
     div_pkg_name.textContent = p.name;
 
     const div_pkg_desc = pkg.querySelector('.package_tmpl_description');
@@ -165,7 +280,7 @@ function populateProject(proj) {
       div_size.textContent = formatSizeWithUnit(v.size);
 
       const sp_requires = release.querySelector('.release_tmpl_requires');
-      sp_requires.textContent = v.requires === "" ? 'Unknown' : v.requires;
+      sp_requires.textContent = v.requires === '' ? 'Unknown' : v.requires;
 
       const sp_pub_by = release.querySelector('.release_tmpl_published_by');
       sp_pub_by.appendChild(makeUserLink(v.published_by));
@@ -190,16 +305,54 @@ function populateProject(proj) {
 
   // TODO: sanitize all input from JSON API
   e_readme.innerHTML = DOMPurify.sanitize(marked.parse(proj['readme']));
+
+  //
+  // enable edit links for owners
+  //
+
+  if (proj['owners'].includes(username)) {
+    {
+      // edit project section
+      const ed = document.querySelector('#project_section .edit_link');
+      ed.classList.add('is_editable');
+      ed.addEventListener('click', (e) => startEditProjectSection(proj));
+    }
+
+    // add package
+    {
+      const ed = document.querySelector('#packages_section .edit_link');
+      ed.classList.add('is_editable');
+      ed.addEventListener('click', (e) => startEditPackagesSection(proj));
+    }
+
+    // add release
+
+    {
+      // edit readme
+      const ed = document.querySelector('#readme_section .edit_link');
+      ed.classList.add('is_editable');
+      ed.addEventListener('click', (e) => startEditReadmeSection(proj));
+    }
+  }
 }
 
-const project_script_data = document.getElementById("project-script").dataset;
+const project_script_data = document.getElementById('project-script').dataset;
 const api = project_script_data.api;
+const username = project_script_data.username ?? null;
 
 const project = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
 
 const sections = [
-  [ `${api}/projects/${project}`, populateProject, 'project_content' ],
-  [ `${api}/projects/${project}/players`, populatePlayers, 'players_content' ]
+  [
+    `${api}/projects/${project}`,
+    (p) => populateProject(p, username),
+    'project_content'
+  ],
+  [
+    `${api}/projects/${project}/players`,
+    populatePlayers,
+    'players_content'
+  ]
 ];
 
 Promise.allSettled(
