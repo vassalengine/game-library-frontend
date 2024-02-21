@@ -27,7 +27,7 @@
       {% match user_info %}
         {% when None %}
       <li id="sign_up_user"><a class="btn btn-primary p-1 mx-1 rounded-0" href="{{ crate::DISCOURSE_URL }}/signup" role="button">Sign Up</a></li>
-      <li id="login_user"><a class="btn btn-primary p-1 mx-1 rounded-0" href="/login?returnto={{ returnto }}" role="button"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Log In</a></li>
+      <li id="login_user"><a class="btn btn-primary p-1 mx-1 rounded-0" href="{{ crate::GL_BASE }}/login?returnto={{ returnto }}" role="button"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Log In</a></li>
         {% else %}
       {% endmatch %}
       <li><a class="nav-link px-2 link-dark" href="/about.html"><svg class="svg-icon"><use xlink:href="#info-circle"></use></svg> About</a></li>
@@ -44,7 +44,7 @@
         </a>
         <ul class="dropdown-menu" aria-labelledby="userDropdown">
           <li><a id="userProfile" class="dropdown-item" href="{{ crate::DISCOURSE_URL }}/u/{{ ui.username }}"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Profile</a></li>
-          <li><a id="userLogout" class="dropdown-item" href="/logout?returnto={{ returnto }}"><svg class="svg-icon"><use xlink:href="#right-from-bracket"></use></svg> Log Out</a></li>
+          <li><a id="userLogout" class="dropdown-item" href="{{ crate::GL_BASE }}/logout?returnto={{ returnto }}"><svg class="svg-icon"><use xlink:href="#right-from-bracket"></use></svg> Log Out</a></li>
         </ul>
       </li>
         {% else %}
