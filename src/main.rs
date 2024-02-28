@@ -245,10 +245,7 @@ async fn main() {
     let app = Router::new()
         .route("/projects", get(handle_projects))
         .route("/projects/:project", get(handle_project))
-        .nest_service(
-            "/",
-            ServeDir::new(SITE_DIR)
-        );
+        .nest_service("/", ServeDir::new(SITE_DIR));
 
     // serve pages
     let listener = TcpListener::bind("0.0.0.0:8000").await.unwrap();
