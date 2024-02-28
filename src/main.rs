@@ -2,26 +2,18 @@ use askama::Template;
 use axum::{
     Router, serve,
     extract::{Path, Query},
-    http::{StatusCode, Uri},
-    response::{Html, IntoResponse, Redirect, Response},
+    http::StatusCode,
+    response::{Html, Json, IntoResponse, Response},
     routing::get
 };
-use axum_extra::extract::cookie::{Cookie, CookieJar};
-use base64::{Engine as _};
+use axum_extra::extract::cookie::CookieJar;
 use mime::APPLICATION_JSON;
-use hmac::{Hmac, Mac};
-use rand::{
-    self,
-    distributions::{Alphanumeric, DistString}
-};
 use reqwest::{
     Client, // StatusCode,
     header::ACCEPT
 };
 use serde::Deserialize;
-//use serde_json::json;
-use sha2::Sha256;
-use std::collections::HashMap;
+use serde_json::Value;
 use tokio::net::TcpListener;
 use tower_http::services::ServeDir;
 
@@ -29,9 +21,11 @@ const SHARED_SECRET: &[u8] = b"DSQh*Q`HQF$!hz2SuSl@";
 const DISCOURSE_URL: &str = "https://forum.vassalengine.org";
 
 const GL_URL: &str = "http://localhost:8000";
-const GL_BASE: &str = "";
+const GL_BASE: &str = GL_URL;
 //const GL_URL: &str = "https://vassalengine.org/test/gl";
 //const GL_BASE: &str = "/test/gl";
+
+const UMS_URL: &str = "http://localhost:4000/api/v1";
 
 const SITE_DIR: &str = "site";
 
@@ -69,168 +63,6 @@ struct User {
 #[derive(Deserialize)]
 struct UserReply {
     user: User
-}
-
-#[derive(Deserialize)]
-struct LoginParams {
-    returnto: String
-}
-
-#[derive(Debug, Deserialize)]
-struct LoginResponseParams {
-    sso: String,
-    sig: String,
-    returnto: String
-}
-
-#[derive(Debug, Deserialize)]
-struct LogoutResponseParams {
-    returnto: String
-}
-
-async fn handle_complete_logout(
-    Query(params): Query<LogoutResponseParams>,
-    jar: CookieJar
-) -> Result<(CookieJar, Redirect), AppError> {
-    Ok(
-        (
-            jar.remove(Cookie::from("nonce"))
-                .remove(Cookie::from("username"))
-                .remove(Cookie::from("name")),
-            Redirect::to(&params.returnto)
-        )
-    )
-}
-
-async fn handle_complete_login(
-    Query(params): Query<LoginResponseParams>,
-    jar: CookieJar
-) -> Result<(CookieJar, Redirect), AppError> {
-
-    let mut mac = Hmac::<Sha256>::new_from_slice(SHARED_SECRET)
-        .or(Err(AppError::InternalError))?;
-
-    mac.update(params.sso.as_bytes());
-
-    let code_bytes = hex::decode(params.sig)
-        .or(Err(AppError::InternalError))?;
-
-    mac.verify_slice(&code_bytes)
-        .or(Err(AppError::InternalError))?;
-
-    let b = base64::engine::general_purpose::STANDARD
-        .decode(params.sso)
-        .or(Err(AppError::InternalError))?;
-
-    let q = String::from_utf8(b)
-        .or(Err(AppError::InternalError))?;
-
-    let args = format!("/?{}", q);
-
-    let uri: Uri = args.parse()
-        .or(Err(AppError::InternalError))?;
-
-    let Query(qargs): Query<HashMap<String, String>> = Query::try_from_uri(&uri)
-        .or(Err(AppError::InternalError))?;
-
-//    println!("{}", serde_json::to_string_pretty(&json!(qargs)).unwrap());
-//    println!("{}", params.returnto);
-
-    let nonce_actual = qargs.get("nonce")
-        .ok_or(AppError::InternalError)?
-        .to_string();
-
-    let nonce_expected = jar.get("nonce")
-        .ok_or(AppError::InternalError)?
-        .value()
-        .to_owned();
-
-    // check that the nonce matches the one we sent
-    if nonce_actual != nonce_expected {
-        return Err(AppError::InternalError);
-    }
-
-    let jar = jar.remove(Cookie::from("nonce"));
-
-    // TODO: username can change! must use external_id!
-
-    let username = qargs.get("username")
-        .ok_or(AppError::InternalError)?
-        .to_string();
-
-    let jar = if let Some(name) = qargs.get("name") {
-        jar.add(Cookie::new("name", name.to_string()))
-    }
-    else {
-        jar
-    };
-
-    Ok(
-        (
-            jar.add(Cookie::new("username", username)),
-            Redirect::to(&params.returnto)
-        )
-    )
-}
-
-fn make_sso_request(
-    params: LoginParams,
-    jar: CookieJar,
-    login: bool
-) -> Result<(CookieJar, Redirect), AppError> {
-    // generate a nonce
-    let mut rng = rand::thread_rng();
-    let nonce = Alphanumeric.sample_string(&mut rng, 20);
-
-    // create a payload with the nonce and a return URL
-    let returnto = params.returnto;
-
-    let payload = if login {
-        format!("nonce={nonce}&return_sso_url={returnto}")
-    }
-    else {
-        format!("nonce={nonce}&return_sso_url={returnto}&logout=true")
-    };
-
-    let b64_payload = base64::engine::general_purpose::STANDARD.encode(payload);
-    let enc_payload = urlencoding::encode(&b64_payload);
-
-    let mut mac = Hmac::<Sha256>::new_from_slice(SHARED_SECRET)
-        .or(Err(AppError::InternalError))?;
-    mac.update(b64_payload.as_bytes());
-
-    let result = mac.finalize();
-    let code_bytes = result.into_bytes();
-
-    let hex_signature = hex::encode(code_bytes);
-
-    Ok(
-        (
-            jar.add(Cookie::new("nonce", nonce)),
-            Redirect::to(
-                &format!(
-                    "{}/session/sso_provider?sso={}&sig={}",
-                    DISCOURSE_URL,
-                    enc_payload,
-                    hex_signature
-                )
-            )
-        )
-    )
-}
-
-async fn handle_logout(
-    Query(params): Query<LoginParams>,
-    jar: CookieJar
-) -> Result<(CookieJar, Redirect), AppError> {
-    make_sso_request(params, jar, false)
-}
-
-async fn handle_login(
-   Query(params): Query<LoginParams>,
-    jar: CookieJar
-) -> Result<(CookieJar, Redirect), AppError> {
-    make_sso_request(params, jar, true)
 }
 
 struct UserInfo {
@@ -314,10 +146,10 @@ async fn setup_user_info(
     jar: CookieJar
 ) -> Result<(String, Option<UserInfo>), AppError>
 {
-   let username: Option<String> = jar.get("username")
+    let username: Option<String> = jar.get("username")
         .map(|cookie| cookie.value().to_owned());
 
-    let enc_real_returnto = urlencoding::encode(&here);
+    let enc_real_returnto = urlencoding::encode(here);
 
     match username {
         Some(username) => {
@@ -334,7 +166,7 @@ async fn setup_user_info(
             );
 
             let sso_returnto = format!(
-                "{GL_URL}/completeLogout?returnto={}",
+                "{UMS_URL}/sso/completeLogout?returnto={}",
                 enc_real_returnto
             );
 
@@ -355,7 +187,7 @@ async fn setup_user_info(
         },
         _ => {
             let sso_returnto = format!(
-                "{GL_URL}/completeLogin?returnto={}",
+                "{UMS_URL}/sso/completeLogin?returnto={}",
                 enc_real_returnto
             );
 
@@ -411,10 +243,6 @@ async fn handle_project(
 async fn main() {
     // set up router
     let app = Router::new()
-        .route("/completeLogin", get(handle_complete_login))
-        .route("/completeLogout", get(handle_complete_logout))
-        .route("/login", get(handle_login))
-        .route("/logout", get(handle_logout))
         .route("/projects", get(handle_projects))
         .route("/projects/:project", get(handle_project))
         .nest_service(
