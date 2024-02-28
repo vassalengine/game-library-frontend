@@ -55,16 +55,6 @@ impl IntoResponse for AppError {
     }
 }
 
-#[derive(Deserialize)]
-struct User {
-    avatar_template: String
-}
-
-#[derive(Deserialize)]
-struct UserReply {
-    user: User
-}
-
 struct UserInfo {
     username: String,
     name: String,
@@ -116,31 +106,6 @@ const YEAR: &str = "2024";
 const CURRENT_VERSION: &str = "3.7.8";
 const NEWS_LINK: &str = "https://forum.vassalengine.org/t/vassal-3-7-8-released/78867";
 
-async fn get_avatar(url: &str) -> Result<String, AppError> {
-    let client = Client::builder().build().unwrap();
-
-    // do the GET
-    let response = client.get(url)
-        .header(ACCEPT, APPLICATION_JSON.as_ref())
-        .send()
-        .await
-        .or(Err(AppError::InternalError))?
-        .error_for_status()
-        .or(Err(AppError::InternalError))?;
-
-    // non-200 results are errors
-    if response.status() != reqwest::StatusCode::OK {
-        return Err(AppError::InternalError);
-    }
-
-    Ok(
-        response.json::<UserReply>()
-            .await
-            .or(Err(AppError::InternalError))?
-            .user.avatar_template
-    )
-}
-
 async fn setup_user_info(
     here: &str,
     jar: CookieJar
@@ -157,13 +122,7 @@ async fn setup_user_info(
                 .map(|cookie| cookie.value().to_owned())
                 .unwrap_or_else(|| username.clone());
 
-            let user_url = format!("{DISCOURSE_URL}/u/{username}.json");
-            let avatar_template = get_avatar(&user_url).await?;
-
-            let avatar_url = format!(
-                "{DISCOURSE_URL}/{}",
-                avatar_template.replace("{size}", "48")
-            );
+            let avatar_url = format!("{UMS_URL}/users/{username}/avatar/48");
 
             let sso_returnto = format!(
                 "{UMS_URL}/sso/completeLogout?returnto={}",

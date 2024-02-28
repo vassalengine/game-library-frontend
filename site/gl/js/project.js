@@ -5,15 +5,20 @@ function formatSizeWithUnit(n) {
   return `${count} ${unit}`;
 }
 
-function makeUserLink(username) {
+function makeUserLink(username, forum) {
+  const ums_url = 'http://localhost:4000/api/v1';
+
   const img = document.createElement('img');
+  img.classList.add('avatar', `avatar_${username}`);
+  img.loading = "lazy";
+  img.src = `${ums_url}/users/${username}/avatar/24`;
 
   const a = document.createElement('a');
   a.appendChild(img);
 
   const username_text = document.createTextNode(username);
   a.appendChild(username_text);
-  a.href = `https://forum.vassalengine.org/u/${username}`;
+  a.href = `${forum}/u/${username}`;
 
   return a;
 }
