@@ -14,10 +14,10 @@ use reqwest::{
 };
 use serde::Deserialize;
 use serde_json::Value;
+use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use tower_http::services::ServeDir;
 
-const SHARED_SECRET: &[u8] = b"DSQh*Q`HQF$!hz2SuSl@";
 const DISCOURSE_URL: &str = "https://forum.vassalengine.org";
 
 const GL_URL: &str = "http://localhost:8000";
@@ -200,6 +200,9 @@ async fn handle_project(
 
 #[tokio::main]
 async fn main() {
+    let listen_ip = [0, 0, 0, 0];
+    let listen_port = 8000;
+
     // set up router
     let app = Router::new()
         .route("/projects", get(handle_projects))
@@ -207,7 +210,10 @@ async fn main() {
         .nest_service("/", ServeDir::new(SITE_DIR));
 
     // serve pages
-    let listener = TcpListener::bind("0.0.0.0:8000").await.unwrap();
+    let addr = SocketAddr::from((listen_ip, listen_port));
+    let listener = TcpListener::bind(addr)
+        .await
+        .unwrap();
     serve(listener, app)
         .await
         .unwrap();
