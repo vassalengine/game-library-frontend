@@ -12,6 +12,8 @@ function makeUserLink(username, forum) {
   img.classList.add('avatar', `avatar_${username}`);
   img.loading = "lazy";
   img.src = `${ums_url}/users/${username}/avatar/24`;
+  img.width = 24;
+  img.height = 24;
 
   const a = document.createElement('a');
   a.appendChild(img);
