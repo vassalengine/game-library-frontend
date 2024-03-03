@@ -28,15 +28,22 @@
   </div>
 
   <div id="project_section" class="my-2 pb-2">
+    <h2>
+      <svg class="svg-icon"><use xlink:href="#person-digging"></use></svg>
+      Project
+      <button class="edit_button">
+        <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
+      </button>
+    </h2>
   </div>
 
   <div id="packages_section">
     <h2>
       <svg class="svg-icon"><use xlink:href="#cubes"></use></svg>
       Packages
-      <a class="edit_link" href="#">
-        <svg class="svg-icon edit_icon"><use xlink:href="#square-plus"></use></svg>
-      </a>
+      <button class="edit_button">
+        <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
+      </button>
     </h2>
     <div id="packages_list">
     </div>
@@ -46,12 +53,10 @@
     <h2>
       <svg class="svg-icon"><use xlink:href="#info-circle"></use></svg>
       Readme
-      <a class="edit_link" href="#">
-        <svg class="svg-icon edit_icon"><use xlink:href="#pen-to-square"></use></svg>
-      </a>
+      <button class="edit_button">
+        <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
+      </button>
     </h2>
-    <div id="readme">
-    </div>
   </div>
 
 </div>
@@ -63,9 +68,9 @@
     </div>
     <h1>
       <span id="game_title" class="editable_field"></span>
-      <a class="edit_link" href="#">
-        <svg class="svg-icon edit_icon"><use xlink:href="#pen-to-square"></use></svg>
-      </a>
+      <button class="edit_button">
+        <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
+      </button>
     </h1>
     <div class="mb-2">
       <!-- TODO: omit comma when there is no publisher or year -->
@@ -107,8 +112,8 @@
           <input id="description_input" type="text" name="description" class="form-control">
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-primary">Save</button>
-          <button id="cancel" type="button" class="btn btn-primary">Cancel</button>
+          <button type="submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+          <button id="cancel" type="button" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
         </div>
       </div>
     </form>
@@ -156,9 +161,9 @@
     <h3>
       <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
       <span class="package_tmpl_name"></span>
-      <a class="edit_link" href="#">
-        <svg class="svg-icon edit_icon"><use xlink:href="#square-plus"></use></svg>
-      </a>
+      <button class="edit_button">
+        <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
+      </button>
     </h3>
     <div class="package_tmpl_description"></div>
     <ol class="package_tmpl_releases list-unstyled"></ol>
@@ -175,6 +180,8 @@
       <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
       <label for="pacakge_name_input">Package name</label>
       <input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control">
+      <button id="add_new_package" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+      <button id="cancel_new_package" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
     </form>
   </div>
 </template>
@@ -206,19 +213,55 @@
   </li>
 </template>
 
+<template id="release_new_tmpl">
+  <div class="release_tmpl_top border rounded p-3 my-2">
+    <form>
+      <input id="release_file_input" class="release_tmpl_name form-control" type="file" name="release_file_input">
+      <button id="add_new_release" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+      <button id="cancel_new_release" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+    </form>
+  </div>
+</template>
+
+<template id="readme_edit_tmpl">
+  <div id="readme" class="container">
+    <div class="row">
+      <div class="col-6">
+        <textarea id="readme_source" class="source full-height">
+        </textarea>
+      </div>
+      <section class="col-6">
+        <div id="readme_result" class="result full-height"></div>
+      </section>
+    </div>
+    <div class="row">
+      <form>
+        <button type="submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+        <button id="cancel" type="button" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+      </form>
+    </div>
+  </div>
+</template>
+
 <div id="players_content">
   <h2>
     <svg class="svg-icon"><use xlink:href="#user-group"></use></svg>
     Players
     {% match user_info %}
       {% when Some with (ui) %}
-    <a id="add_player_button" class="btn btn-primary p-1 mx-1 rounded-0" href="" role="button"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Join</a>
-    <a id="remove_player_button" class="btn btn-primary p-1 mx-1 rounded-0" href="" role="button"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Leave</a>
+    <button id="add_player_button" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#user-plus"></use></svg></button>
+    <button id="remove_player_button" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#user-minus"></use></svg></button>
       {% else %}
     {% endmatch %}
   </h2>
   <ul id="players" class="d-flex flex-wrap list-unstyled gap-1"></ul>
 </div>
+
+  {% match user_info %}
+    {% when Some with (ui) %}
+    <button id="flag_button" class="btn bg-secondary-subtle p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#flag"></use></svg> Flag</button>
+    {% else %}
+  {% endmatch %}
 
 </main>
 
@@ -303,8 +346,6 @@
   </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" integrity="sha384-vdScihEZCfbPnBQf+lc7LgXUdJVYyhC3yWHUW5C5P5GpHRqVnaM6HJELJxT6IqwM" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/lib/marked.umd.min.js" integrity="sha384-9dUjyclywLkiW3FdYja7HWOMEGEgvuNY0MKlGtlABWtQcowS6ReVjJyaaL2hliGT" crossorigin="anonymous"></script>
 <script src="/gl/js/common.js"></script>

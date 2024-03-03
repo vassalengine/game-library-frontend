@@ -68,7 +68,10 @@ details[open] > summary::before {
   display: none;
 }
 
-.edit_link {
+.edit_button {
+  background: none;
+  border: none;
+  padding: 0;
   visibility: hidden;
 }
 
@@ -85,7 +88,7 @@ details[open] > summary::before {
 
 /* User avatars */
 
-#current_user a img.avatar {
+#current_user button img.avatar {
   width: 2em;
   height: 2em;
   margin: 0.2em;
