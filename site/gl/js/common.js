@@ -38,7 +38,7 @@ function intlFormatDistance(rtf, date, base) {
   return rtf.format(Math.floor(dsec / divisor), units[unitIndex]);
 }
 
-function replaceWithErrorBox(section_to_replace, msg) {
+function makeErrorBox(msg) {
   const e_error = document.createElement('div');
   e_error.classList.add(
     'border', 'rounded', 'border-danger', 'border-3',
@@ -50,7 +50,17 @@ function replaceWithErrorBox(section_to_replace, msg) {
   e_msg.textContent = msg;
   e_error.appendChild(e_msg);
 
-  section_to_replace.replaceWith(e_error);
+  return e_error;
+}
+
+function replaceWithErrorBox(el, msg) {
+  const e_error = makeErrorBox(msg);
+  el.replaceWith(e_error);
+}
+
+function insertErrorBoxBefore(el, msg) {
+  const e_error = makeErrorBox(msg);
+  el.before(e_error);
 }
 
 class APIError extends Error {
@@ -67,22 +77,37 @@ APIError.prototype.toString = function () {
   return `${this.name}: ${this.status} ${this.statusText}: ${this.message}`;
 };
 
-async function fetchJSON(url) {
-  const response = await fetch(url);
-
+async function checkError(response) {
   if (!response.ok) {
     const json = await response.json();
     const message = json?.['error'] ?? json.toString();
     throw new APIError(response.status, response.statusText, message);
   }
+}
 
+async function fetchJSON(url, options={}) {
+  const response = await fetch(url, options);
+  checkError(response);
   return await response.json();
 }
 
-function handleError(err, section_id) {
+async function fetchOK(url, options={}) {
+  const response = await fetch(url, options);
+  checkError(response);
+}
+
+function handleErrorReplace(err, id) {
   console.log(err);
   replaceWithErrorBox(
-    document.getElementById(section_id),
+    document.getElementById(id),
+    err.toString()
+  );
+}
+
+function handleErrorBefore(err, id) {
+  console.log(err);
+  insertErrorBoxBefore(
+    document.getElementById(id),
     err.toString()
   );
 }

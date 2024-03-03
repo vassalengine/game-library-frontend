@@ -199,4 +199,4 @@ const s = pageSetup(params);
 
 p
   .then((result) => populateProjects(params, s, result))
-  .catch((error) => handleError(error, 'projects'));
+  .catch((error) => handleErrorReplace(error, 'projects'));
