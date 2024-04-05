@@ -16,7 +16,10 @@ use serde::Deserialize;
 use serde_json::Value;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
-use tower_http::services::ServeDir;
+use tower_http::{
+    compression::CompressionLayer,
+    services::ServeDir
+};
 
 const DISCOURSE_URL: &str = "https://forum.vassalengine.org";
 
@@ -31,7 +34,6 @@ const SITE_DIR: &str = "site";
 
 // TODO: client-side templating?
 // TODO: sanitize strings going into HTML
-// TODO: compression
 // TODO: should empty hrefs be # instead? something else?
 // TODO: look into tracing
 
@@ -207,7 +209,8 @@ async fn main() {
     let app = Router::new()
         .route("/projects", get(handle_projects))
         .route("/projects/:project", get(handle_project))
-        .nest_service("/", ServeDir::new(SITE_DIR));
+        .nest_service("/", ServeDir::new(SITE_DIR))
+        .layer(CompressionLayer::new());
 
     // serve pages
     let addr = SocketAddr::from((listen_ip, listen_port));
