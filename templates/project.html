@@ -99,7 +99,7 @@
       <div class="row">
         <div class="col-12">
           <label for="game_title_input">Title</label>
-          <input id="game_title_input" type="text" name="game_title" class="form-control">
+          <input id="game_title_input" type="text" name="game_title" class="form-control" required>
         </div>
         <div class="col-8">
           <label for="game_publisher_input">Publisher</label>
@@ -173,7 +173,7 @@
     <form id="package_new_form" action="">
       <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
       <label for="package_name_input">Package name</label>
-      <input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control">
+      <input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control" required>
       <button id="add_new_package" class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
       <button id="cancel_new_package" class="btn btn-primary p-1 mx-1 rounded-0" type="button"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
     </form>
@@ -210,7 +210,7 @@
 <template id="release_new_tmpl">
   <div class="release_tmpl_top border rounded p-3 my-2">
     <form>
-      <input id="release_file_input" class="release_tmpl_name form-control" type="file" name="release_file_input">
+      <input id="release_file_input" class="release_tmpl_name form-control" type="file" name="release_file" required>
       <button id="add_new_release" class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
       <button id="cancel_new_release" class="btn btn-primary p-1 mx-1 rounded-0" type="button"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
     </form>
