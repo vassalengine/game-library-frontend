@@ -86,7 +86,7 @@
 
 <template id="game_section_edit_tmpl">
   <div id="game_section_inner">
-    <form id="game_section_form">
+    <form id="game_section_form" action="">
       <div id="box_image_container" class="float-left my-2 ms-2 me-3">
         <label id="box_image_label" for="box_image_input">
           <img id="box_image" class="rounded border" src="">
@@ -170,7 +170,7 @@
 
 <template id="package_new_tmpl">
   <div class="package_tmpl_top border rounded p-3 my-2">
-    <form>
+    <form id="package_new_form" action="">
       <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
       <label for="package_name_input">Package name</label>
       <input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control">
@@ -229,7 +229,7 @@
       </section>
     </div>
     <div class="row">
-      <form>
+      <form id="readme_form" action="">
         <button type="submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
         <button id="cancel" type="button" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </form>
