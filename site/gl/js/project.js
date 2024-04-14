@@ -150,15 +150,15 @@ function makeGameSection(proj, username) {
   e_title.textContent = proj['game']['title'];
   document.title = `${proj['game']['title']} - Module Library - Vassal`;
 
-  // publisher 
+  // publisher
   const e_publisher = inner.querySelector('#game_publisher');
-  e_publisher.textContent = proj['game']['publisher'];
+  e_publisher.textContent = proj.game.publisher;
 
-  // year 
+  // year
   const e_year = inner.querySelector('#game_year');
-  e_year.textContent = proj['game']['year'];
+  e_year.textContent = proj.game.year;
 
-  // description 
+  // description
   const e_description =  inner.querySelector('#description');
   e_description.textContent = proj['description'];
 
@@ -185,15 +185,15 @@ function makeGameSectionEditor(proj, username) {
   e_title.value = proj['game']['title'];
 //  document.title = `${proj['game']['title']} - Module Library - Vassal`;
 
-  // publisher 
+  // publisher
   const e_publisher = inner.querySelector('#game_publisher_input');
-  e_publisher.value = proj['game']['publisher'];
+  e_publisher.value = proj.game.publisher;
 
-  // year 
+  // year
   const e_year = inner.querySelector('#game_year_input');
-  e_year.value = proj['game']['year'];
+  e_year.value = proj.game.year;
 
-  // description 
+  // description
   const e_description = inner.querySelector('#description_input');
   e_description.value = proj['description'];
 
@@ -209,7 +209,7 @@ function makeProjectSection(proj, rtf, now) {
   const inner = document.importNode(tmpl.content.firstElementChild, true);
 
   const e_name = inner.querySelector('#name');
-  e_name.textContent = proj['name'];
+  e_name.textContent = proj.name;
 
   const e_created_at = inner.querySelector('#project_created_at');
   e_created_at.dateTime = proj.created_at;
