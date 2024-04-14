@@ -31,7 +31,7 @@
     <h2>
       <svg class="svg-icon"><use xlink:href="#person-digging"></use></svg>
       Project
-      <button class="edit_button">
+      <button class="edit_button" type="button">
         <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
       </button>
     </h2>
@@ -41,7 +41,7 @@
     <h2>
       <svg class="svg-icon"><use xlink:href="#cubes"></use></svg>
       Packages
-      <button class="edit_button">
+      <button class="edit_button" type="button">
         <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
       </button>
     </h2>
@@ -53,7 +53,7 @@
     <h2>
       <svg class="svg-icon"><use xlink:href="#info-circle"></use></svg>
       Readme
-      <button class="edit_button">
+      <button class="edit_button" type="button">
         <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
       </button>
     </h2>
@@ -68,7 +68,7 @@
     </div>
     <h1>
       <span id="game_title" class="editable_field"></span>
-      <button class="edit_button">
+      <button class="edit_button" type="button">
         <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
       </button>
     </h1>
@@ -153,7 +153,7 @@
     <h3>
       <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
       <span class="package_tmpl_name"></span>
-      <button class="edit_button">
+      <button class="edit_button" type="button">
         <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
       </button>
     </h3>
@@ -172,8 +172,8 @@
       <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
       <label for="package_name_input">Package name</label>
       <input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control">
-      <button id="add_new_package" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-      <button id="cancel_new_package" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+      <button id="add_new_package" class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+      <button id="cancel_new_package" class="btn btn-primary p-1 mx-1 rounded-0" type="button"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
     </form>
   </div>
 </template>
@@ -209,8 +209,8 @@
   <div class="release_tmpl_top border rounded p-3 my-2">
     <form>
       <input id="release_file_input" class="release_tmpl_name form-control" type="file" name="release_file_input">
-      <button id="add_new_release" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-      <button id="cancel_new_release" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+      <button id="add_new_release" class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+      <button id="cancel_new_release" class="btn btn-primary p-1 mx-1 rounded-0" type="button"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
     </form>
   </div>
 </template>
@@ -241,8 +241,8 @@
     Players
     {% match user_info %}
       {% when Some with (ui) %}
-    <button id="add_player_button" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#user-plus"></use></svg></button>
-    <button id="remove_player_button" class="btn btn-primary p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#user-minus"></use></svg></button>
+    <button id="add_player_button" class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#user-plus"></use></svg></button>
+    <button id="remove_player_button" class="btn btn-primary p-1 mx-1 rounded-0" type="button"><svg class="svg-icon"><use xlink:href="#user-minus"></use></svg></button>
       {% else %}
     {% endmatch %}
   </h2>
@@ -251,7 +251,7 @@
 
   {% match user_info %}
     {% when Some with (ui) %}
-    <button id="flag_button" class="btn bg-secondary-subtle p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#flag"></use></svg> Flag</button>
+    <button id="flag_button" type="button" class="btn bg-secondary-subtle p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#flag"></use></svg> Flag</button>
     {% else %}
   {% endmatch %}
 
