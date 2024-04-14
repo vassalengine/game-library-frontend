@@ -105,8 +105,8 @@ where
 const API_URL: &str = "http://localhost:3000/api/v1";
 //const API_URL: &str = "https://vassalengine.org/test/gls/api/v1";
 const YEAR: &str = "2024";
-const CURRENT_VERSION: &str = "3.7.8";
-const NEWS_LINK: &str = "https://forum.vassalengine.org/t/vassal-3-7-8-released/78867";
+const CURRENT_VERSION: &str = "3.7.9";
+const NEWS_LINK: &str = "https://forum.vassalengine.org/t/vassal-3-7-9-released/79096";
 
 async fn setup_user_info(
     here: &str,
