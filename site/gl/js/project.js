@@ -258,13 +258,13 @@ async function populatePlayers(players, config) {
 }
 
 function hideEditLinks() {
-  for (const ed of document.querySelectorAll('.edit_link')) {
+  for (const ed of document.querySelectorAll('.edit_button')) {
     ed.classList.remove('is_editable');
   }
 }
 
 function showEditLinks() {
-  for (const ed of document.querySelectorAll('.edit_link')) {
+  for (const ed of document.querySelectorAll('.edit_button')) {
     ed.classList.add('is_editable');
   }
 }
