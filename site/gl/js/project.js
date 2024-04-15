@@ -212,22 +212,21 @@ function formatSizeWithUnit(n) {
   return `${count} ${unit}`;
 }
 
-function makeUserLink(username, forum) {
-  const ums_url = 'http://localhost:4000/api/v1';
-
+function makeUserLink(username, ums) {
   const img = document.createElement('img');
   img.classList.add('avatar', `avatar_${username}`);
   img.loading = "lazy";
-  img.src = `${ums_url}/users/${username}/avatar/24`;
-  img.width = 24;
-  img.height = 24;
+  const size = 24;
+  img.src = `${ums}/users/${username}/avatar/${size}`;
+  img.width = size;
+  img.height = size;
 
   const a = document.createElement('a');
   a.appendChild(img);
 
   const username_text = document.createTextNode(username);
   a.appendChild(username_text);
-  a.href = `${forum}/u/${username}`;
+  a.href = `${ums}/users/${username}`;
 
   return a;
 }
