@@ -63,6 +63,11 @@ function insertErrorBoxBefore(el, msg) {
   el.before(e_error);
 }
 
+function insertErrorBoxAfter(el, msg) {
+  const e_error = makeErrorBox(msg);
+  el.after(e_error);
+}
+
 class APIError extends Error {
   constructor(status, statusText, message) {
     super(message);
@@ -80,20 +85,20 @@ APIError.prototype.toString = function () {
 async function checkError(response) {
   if (!response.ok) {
     const json = await response.json();
-    const message = json?.['error'] ?? json.toString();
+    const message = json?.error ?? json.toString();
     throw new APIError(response.status, response.statusText, message);
   }
 }
 
 async function fetchJSON(url, options={}) {
   const response = await fetch(url, options);
-  checkError(response);
-  return await response.json();
+  await checkError(response);
+  return response.json();
 }
 
-async function fetchOK(url, options={}) {
+async function fetchOk(url, options={}) {
   const response = await fetch(url, options);
-  checkError(response);
+  await checkError(response);
 }
 
 function handleErrorReplace(err, id) {
@@ -107,6 +112,14 @@ function handleErrorReplace(err, id) {
 function handleErrorBefore(err, id) {
   console.log(err);
   insertErrorBoxBefore(
+    document.getElementById(id),
+    err.toString()
+  );
+}
+
+function handleErrorAfter(err, id) {
+  console.log(err);
+  insertErrorBoxAfter(
     document.getElementById(id),
     err.toString()
   );
