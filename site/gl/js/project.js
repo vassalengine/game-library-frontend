@@ -252,46 +252,9 @@ async function populatePlayers(players, config) {
     if (p === username) {
       user_is_player = true;
     }
-
-//    const img = document.createElement('img');
-
-/*
-//    const user_url = `https://forum.vassalengine.org/u/${p}.json`;
-    const user_url = `http://localhost:4000/api/v1/user/${p}/avatar`;
-    get_avatars.push(
-      fetch(user_url)
-        .then((response) => response.json())
-        .then((user_json) => {
-          const img_path = user_json.replace('{size}', '48');
-          img.src = `https://forum.vassalengine.org/${img_path}`;
-        })
-    );
-*/
-
-/*
-    const a = document.createElement('a');
-    a.appendChild(img);
-
-    const p_name = document.createTextNode(p);
-    a.appendChild(p_name);
-    a.href = `https://forum.vassalengine.org/u/${p}`;
-
-    const li = document.createElement('li');
-    li.appendChild(a);
-    e_players.appendChild(li);
-*/
   }
 
-//  await Promise.all(get_avatars);
-
-  if (username !== null) {
-    const add_button = document.getElementById('add_player_button');
-    const remove_button = document.getElementById('remove_player_button');
-
-    add_button.style.display = user_is_player ? 'none' : 'inline';
-    remove_button.style.display = user_is_player ? 'inline' : 'none';
-  }
-
+  return user_is_player;
 }
 
 function hideEditLinks() {
