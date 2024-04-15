@@ -269,61 +269,25 @@ function showEditLinks() {
   }
 }
 
-function startEditGameSection(proj) {
-  const inner = document.getElementById('game_section_inner');
-  inner.replaceWith(makeGameSectionEditor(proj));
-  hideEditLinks();
-}
-
-function cancelEditGameSection(proj, username) {
-  const inner = document.getElementById('game_section_inner');
-  inner.replaceWith(makeGameSection(proj, username));
-  showEditLinks();
-}
-
-function startEditProjectSection(proj) {
-  console.log("PROJECT SECTION EDIT MODE!");
-  hideEditLinks();
-}
-
-function cancelEditProjectSection(proj) {
-  console.log("PROJECT SECTION EDIT MODE!");
-  showEditLinks();
-}
-
-function startEditPackagesSection(proj) {
-  const packages_list = document.getElementById('packages_list');
-  packages_list.prepend(makeNewPackageBox(proj));
-  hideEditLinks();
-}
-
-function cancelEditPackagesSection(proj) {
-
-  showEditLinks();
-}
-
-function startEditReadmeSection(proj) {
-  console.log("README SECTION EDIT MODE!");
-  hideEditLinks();
-}
-
-function cancelEditReadmeSection(proj) {
-  console.log("README SECTION EDIT MODE!");
-  showEditLinks();
-}
-
-function makeGameSection(proj, username) {
+function makeGameSection(proj, client) {
   const tmpl = document.querySelector('#game_section_tmpl');
   const inner = document.importNode(tmpl.content.firstElementChild, true);
+  updateGameSection(inner, proj, client);
+  return inner;
+}
 
+function updateGameSection(inner, proj, client) {
   // image
   const e_box_image = inner.querySelector('#box_image');
-  e_box_image.src = `${api}/projects/${project}/images/${proj['image']}`;
+  e_box_image.src = client.imageUrl(proj.image);
+
+// TODO: field for sort key
+// TODO: suggest sort key
 
   // title
   const e_title = inner.querySelector('#game_title');
-  e_title.textContent = proj['game']['title'];
-  document.title = `${proj['game']['title']} - Module Library - Vassal`;
+  e_title.textContent = proj.game.title;
+  document.title = `${proj.game.title} - Module Library - Vassal`;
 
   // publisher
   const e_publisher = inner.querySelector('#game_publisher');
@@ -339,30 +303,20 @@ function makeGameSection(proj, username) {
 
   // description
   const e_description =  inner.querySelector('#description');
-  e_description.textContent = proj['description'];
-
-  if (proj['owners'].includes(username)) {
-    // edit game section
-    const ed = inner.querySelector('.edit_link');
-    ed.classList.add('is_editable');
-    ed.addEventListener('click', (e) => startEditGameSection(proj, username));
-  }
-
-  return inner;
+  e_description.textContent = proj.description;
 }
 
-function makeGameSectionEditor(proj, username) {
+function makeGameSectionEditor(proj, client) {
   const tmpl = document.querySelector('#game_section_edit_tmpl');
   const inner = document.importNode(tmpl.content.firstElementChild, true);
 
   // image
   const e_box_image = inner.querySelector('#box_image');
-  e_box_image.src = `${api}/projects/${project}/images/${proj['image']}`;
+  e_box_image.src = client.imageUrl(proj.image);
 
   // title
   const e_title = inner.querySelector('#game_title_input');
-  e_title.value = proj['game']['title'];
-//  document.title = `${proj['game']['title']} - Module Library - Vassal`;
+  e_title.value = proj.game.title;
 
   // publisher
   const e_publisher = inner.querySelector('#game_publisher_input');
@@ -374,19 +328,142 @@ function makeGameSectionEditor(proj, username) {
 
   // description
   const e_description = inner.querySelector('#description_input');
-  e_description.value = proj['description'];
-
-  // cancel
-  const cancel = inner.querySelector('#cancel');
-  cancel.addEventListener('click', (e) => cancelEditGameSection(proj, username));
+  e_description.value = proj.description;
 
   return inner;
 }
 
-function makeProjectSection(proj, rtf, now) {
-  const tmpl = document.querySelector('#project_section_tmpl');
-  const inner = document.importNode(tmpl.content.firstElementChild, true);
+function startEditGameSection(proj, client) {
+  const game_sec = document.getElementById('game_section_inner');
+  const game_ed = makeGameSectionEditor(proj, client);
 
+// TODO: make box image accept drops
+// TODO: provide a way to clear the box image
+// TODO: disable submit button when there are no changes
+
+  // set box image
+  const box_img_input = game_ed.querySelector('#box_image_input');
+  const box_img_label = game_ed.querySelector('#box_image_label');
+  const box_img = game_ed.querySelector('#box_image');
+
+  box_img_label.addEventListener('dragenter', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+  });
+
+  box_img_label.addEventListener('dragover', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+  });
+
+  box_img_label.addEventListener('drop', (e) => {
+    e.stopPropagation();
+    e.preventDefault();
+
+// FIXME: Why don't drags from browsers work?
+    const dt = e.dataTransfer;
+    const file = dt.files[0];
+    console.log(dt);
+
+    if (file.type.startsWith('image/')) {
+      box_img.src = URL.createObjectURL(file);
+      box_img.onload = () => URL.revokeObjectURL(box_img.src);
+    }
+  });
+
+  box_img_input.addEventListener('change', () => {
+    const file = box_img_input.files[0];
+    if (file.type.startsWith('image/')) {
+      box_img.src = URL.createObjectURL(file);
+      box_img.onload = () => URL.revokeObjectURL(box_img.src);
+    }
+  });
+
+  // update
+  const form = game_ed.querySelector('#game_section_form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await submitEditGameSection(form, proj, client, game_sec);
+  });
+
+  // cancel
+  const cancel = game_ed.querySelector('#cancel');
+  cancel.addEventListener('click', () => stopEditGameSection(game_sec));
+
+  game_sec.replaceWith(game_ed);
+  hideEditLinks();
+}
+
+async function submitEditGameSection(form, proj, client, game_sec) {
+  // build the request
+  const fdata = new FormData(form);
+  const data = { game: {} };
+
+  const description = fdata.get('description');
+  if (description !== proj.description) {
+    data.description = description;
+  }
+
+  for (const k of ['title', 'publisher', 'year']) {
+    const fv = fdata.get(`game_${k}`);
+    if (fv !== proj.game[k]) {
+      data.game[k] = fv;
+    }
+  }
+
+  const token = getCookie('token');
+
+// TODO: distinguish between no change and setting no image
+// TODO: do something to actually upload the image
+  const box_image = fdata.get('box_image');
+  console.log(box_image);
+  if (box_image.name !== "") {
+    data.image = box_image.name;
+
+    try {
+      await client.addImage(
+        box_image.name,
+        box_image,
+        box_image.type,
+        token
+      );
+    }
+    catch (error) {
+      handleErrorBefore(error, 'game_section_form');
+      return;
+    }
+  }
+
+  try {
+    await client.updateProject(data, token);
+  }
+  catch (error) {
+    handleErrorBefore(error, 'game_section_form');
+    return;
+  }
+
+  // update the project data
+  proj.game = { ...proj.game, ...data.game };
+
+  if (data.description) {
+    proj.description = data.description;
+  }
+
+  if (data.image) {
+    proj.image = data.image;
+  }
+
+  updateGameSection(game_sec, proj, client);
+  stopEditGameSection(game_sec);
+}
+
+function stopEditGameSection(game_sec) {
+  const game_ed = document.getElementById('game_section_inner');
+  game_ed.replaceWith(game_sec);
+  showEditLinks();
+}
+
+function updateProjectSection(inner, proj, rtf, now, ums) {
   const e_name = inner.querySelector('#name');
   e_name.textContent = proj.name;
 
@@ -403,46 +480,439 @@ function makeProjectSection(proj, rtf, now) {
   e_modified_rel.textContent = intlFormatDistance(rtf, new Date(proj.modified_at), now);
 
   const e_tags = inner.querySelector('#tags');
-  for (const t of proj['tags']) {
-    const li = document.createElement('li');
-    li.textContent = '#' + t;
-    e_tags.appendChild(li);
-  }
+  e_tags.replaceChildren(
+    ...proj.tags.map((t) => {
+      const li = document.createElement('li');
+      li.textContent = '#' + t;
+      return li;
+    })
+  );
 
   const e_owners = inner.querySelector('#owners');
-  for (const o of proj['owners']) {
-    const li = document.createElement('li');
-    li.appendChild(makeUserLink(o));
-    e_owners.appendChild(li);
+  e_owners.replaceChildren(
+    ...proj.owners.map((o) => {
+      const li = document.createElement('li');
+      li.appendChild(makeUserLink(o, ums));
+      return li;
+    })
+  );
+}
+
+function makeProjectSection(proj, rtf, now, ums) {
+  const tmpl = document.querySelector('#project_section_tmpl');
+  const inner = document.importNode(tmpl.content.firstElementChild, true);
+  updateProjectSection(inner, proj, rtf, now, ums);
+  return inner;
+}
+
+function makeProjectSectionEditor(proj) {
+  const tmpl = document.querySelector('#project_section_edit_tmpl');
+  const inner = document.importNode(tmpl.content.firstElementChild, true);
+
+  const owners = UseBootstrapTag(inner.querySelector('#owners_input'));
+  owners.addValue(proj.owners);
+
+  return [inner, owners];
+}
+
+function startEditProjectSection(proj, username, rtf, now, ums, client) {
+  const proj_sec = document.getElementById('project_section_inner');
+  const [proj_ed, owners] = makeProjectSectionEditor(proj);
+
+// TODO: make autocomplete look like Discourse's, with avatars
+// FIXME: Enter doesn't create chit
+  const input = proj_ed.querySelector('.input-wrapper input');
+  input.id = 'newowner';
+  input.name = 'newowner';
+
+  const ac = document.createElement('auto-complete');
+  ac.id = 'newownerauto';
+  ac.resultdata = 'users';
+  ac.resultname = 'username';
+  ac.querymin = 2;
+  ac.optionmax = 100;
+  ac.inputdelay = 200;
+
+  const par = input.parentNode;
+  ac.appendChild(input);
+  par.appendChild(ac);
+
+  // TODO: prevent removal of last owner
+  // TODO: prevent addition of duplicate owners
+
+  // update
+  const form = proj_ed.querySelector('#project_section_form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await submitEditProjectSection(proj, owners, client, proj_sec, rtf, now, ums);
+  });
+
+  // cancel
+  const cancel = proj_ed.querySelector('#cancel');
+  cancel.addEventListener('click', () => stopEditProjectSection(proj_sec));
+
+  proj_sec.replaceWith(proj_ed);
+
+  // auto-complete element must be in the DOM when its api is updated,
+  // and setting it directly doesn't work; setAttribute must be used.
+  ac.setAttribute('api', `${ums}/users?term=\${newowner}&include_groups=false&limit=6`);
+
+  hideEditLinks();
+}
+
+async function submitEditProjectSection(proj, owners, client, proj_sec, rtf, now, ums) {
+  const cur_owners = new Set(owners.getValues());
+  const prev_owners = new Set(proj.owners);
+  const to_add = [...[...cur_owners.values()].filter((u) => !prev_owners.has(u))];
+  const to_remove = [...[...prev_owners.values()].filter((u) => !cur_owners.has(u))];
+
+  const token = getCookie('token');
+
+  try {
+    if (to_add) {
+      await client.addOwners(to_add, token);
+    }
+
+    if (to_remove) {
+      await client.removeOwners(to_remove, token);
+    }
+  }
+  catch (error) {
+    handleErrorBefore(error, 'project_section_form');
+    return;
+  }
+
+  proj.owners = [...cur_owners];
+  updateProjectSection(proj_sec, proj, rtf, now, ums);
+  stopEditProjectSection(proj_sec);
+
+  // user can stop being an owner
+  const user_is_owner = proj.owners.includes(username);
+  if (!user_is_owner) {
+    hideEditLinks();
+  }
+}
+
+function stopEditProjectSection(proj_sec) {
+  const proj_ed = document.getElementById('project_section_inner');
+  proj_ed.replaceWith(proj_sec);
+  showEditLinks();
+}
+
+function makePackageSection(pkg, user_is_owner, client, pkg_t, release_t, ums, rtf, now) {
+  const inner = document.importNode(pkg_t.content.firstElementChild, true);
+
+  const div_pkg_name = inner.querySelector('.package_tmpl_name');
+  div_pkg_name.textContent = pkg.name;
+
+  const div_pkg_desc = inner.querySelector('.package_tmpl_description');
+  div_pkg_desc.textContent = pkg.description;
+
+  if (pkg.releases.length < 2) {
+    const old_details = inner.querySelector('.package_tmpl_releases_older_details');
+    old_details.hidden = true;
+  }
+
+  const ul_ver = inner.querySelector('.package_tmpl_releases');
+
+  const itr = pkg.releases.values();
+  let item = itr.next();
+  if (!item.done) {
+    // current release
+    const release = makeRelease(item.value, release_t, true, ums, rtf, now);
+    ul_ver.appendChild(release);
+
+    // older releases
+    item = itr.next();
+    if (!item.done) {
+      const ul_ver_old = inner.querySelector('.package_tmpl_releases_older');
+      do {
+        const release = makeRelease(item.value, release_t, false, ums, rtf, now);
+        ul_ver_old.appendChild(release);
+        item = itr.next();
+      } while (!item.done);
+    }
+  }
+
+  // add release
+  if (user_is_owner) {
+    const ed = inner.querySelector('.edit_button');
+// TODO: must pass on pkg
+    ed.addEventListener('click', () => startEditReleaseSection(ul_ver, client));
   }
 
   return inner;
 }
 
-function makeNewPackageBox(proj) {
+function makeNewPackageBox() {
+// TODO: reject duplicate package
   const tmpl = document.querySelector('#package_new_tmpl');
-  const inner = document.importNode(tmpl.content.firstElementChild, true);
+  return document.importNode(tmpl.content.firstElementChild, true);
+}
+
+function startEditPackageSection(client) {
+  const packages_list = document.getElementById('packages_list');
+  const package_new = makeNewPackageBox();
+
+  // create
+  const form = package_new.querySelector('#package_new_form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await submitEditPackageSection(form, client);
+  });
+
+  // cancel
+  const cancel = package_new.querySelector('#cancel_new_package');
+  cancel.addEventListener('click', () => removeNewPackageSection());
+
+  packages_list.prepend(package_new);
+  hideEditLinks();
+}
+
+async function submitEditPackageSection(form, client) {
+  const pkg = new FormData(form).get('package_name');
+  try {
+    await client.addPackage(pkg, getCookie('token'));
+  }
+  catch (error) {
+    handleErrorBefore(error, 'package_new_form');
+    return;
+  }
+
+  const packageTemplate = document.querySelector('#package_tmpl');
+  const e_packages = document.getElementById('packages_list');
+  e_packages.appendChild(
+    makePackageSection(
+      {
+        name: pkg,
+        description: '',
+        releases: []
+      },
+      true,
+      client,
+      packageTemplate,
+      null,
+      null,
+      null,
+      null
+    )
+  );
+
+// TODO: update proj?
+
+  removeNewPackageSection();
+}
+
+function removeNewPackageSection() {
+  const package_new = document.getElementById('package_new');
+  package_new.remove();
+  showEditLinks();
+}
+
+function makeRelease(release, release_t, current, ums, rtf, now) {
+  const inner = document.importNode(release_t.content.firstElementChild, true);
+
+  const div_ver = inner.querySelector('.release_tmpl_version');
+  div_ver.textContent = release.version;
+  div_ver.classList.add(current ? 'current_release' : 'release');
+
+  const a_file = inner.querySelector('.release_tmpl_filename');
+  a_file.textContent = release.filename;
+  a_file.href = release.url;
+
+  const div_size = inner.querySelector('.release_tmpl_size');
+  div_size.textContent = formatSizeWithUnit(release.size);
+
+  const sp_requires = inner.querySelector('.release_tmpl_requires');
+  sp_requires.textContent = release.requires === '' ? 'Unknown' : release.requires;
+
+  const sp_pub_by = inner.querySelector('.release_tmpl_published_by');
+  sp_pub_by.appendChild(makeUserLink(release.published_by, ums));
+
+  const time_time = inner.querySelector('.release_tmpl_published_at');
+  time_time.dateTime = release.published_at;
+
+  const sp_reltime = inner.querySelector('.release_tmpl_published_rel');
+  sp_reltime.textContent = intlFormatDistance(rtf, new Date(release.published_at), now);
+
   return inner;
 }
 
-function populateProject(proj, username) {
-  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-  const now = new Date();
+function makeNewReleaseBox() {
+  const tmpl = document.querySelector('#release_new_tmpl');
+  return document.importNode(tmpl.content.firstElementChild, true);
+}
+
+function startEditReleaseSection(list, client) {
+  const release_new = makeNewReleaseBox();
+
+  // create
+  const form = release_new.querySelector('#release_new_form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await submitNewReleaseSection(form, client);
+  });
+
+////
+
+/*
+    const url = 'https://httpbin.org/post';
+    await uploadFile(release_file, 'application/octet-stream', url);
+*/
+
+    // TODO: display new release
+/*
+    const release = makeRelease(item.value, release_t, true, ums, rtf, now);
+
+    release_new.replace(release);
+*/
+
+  // cancel
+  const cancel = release_new.querySelector('#cancel_new_release');
+  cancel.addEventListener('click', () => removeNewReleaseSection());
+
+  list.prepend(release_new);
+  hideEditLinks();
+}
+
+async function submitNewReleaseSection(form, client) {
+  const fdata = new FormData(form);
+  console.log(fdata);
+// HERE
+  const release_file = fdata.get('release_file');
+
+  try {
+    await client.addRelease(
+      '13_Days_Official',
+      '1.0.1',
+      release_file,
+      release_file.type,
+      getCookie('token')
+    );
+  }
+  catch (error) {
+//      handleErrorBefore(error, 'game_section_form');
+    console.log(error);
+    return;
+  }
+
+}
+
+function removeNewReleaseSection() {
+  const release_new = document.getElementById('release_new');
+  release_new.remove();
+  showEditLinks();
+}
+
+function updateReadme(inner, proj, md) {
+  // TODO: sanitize all input from JSON API
+  inner.innerHTML = DOMPurify.sanitize(md.render(proj.readme));
+}
+
+function makeReadme(proj, md) {
+  const inner = document.createElement('div');
+  inner.id = 'readme';
+  updateReadme(inner, proj, md);
+  return inner;
+}
+
+function updateReadmeResult(source, result, md) {
+// TODO: do we need to sanitize here?
+  result.innerHTML = md.render(source.value);
+}
+
+function makeReadmeEditor(proj, md) {
+  const tmpl = document.querySelector('#readme_edit_tmpl');
+  const inner = document.importNode(tmpl.content.firstElementChild, true);
+
+  const source = inner.querySelector('#readme_source');
+  source.value = proj.readme;
+
+  return inner;
+}
+
+function startEditReadmeSection(proj, client, md) {
+  const readme_sec = document.getElementById('readme');
+  const readme_ed = makeReadmeEditor(proj, md);
+
+// TODO: Add formatting bar like Discourse
+
+  const source = readme_ed.querySelector('#readme_source');
+  const result = readme_ed.querySelector('#readme_result');
+
+  // sync result with source while editing
+  updateReadmeResult(source, result, md);
+  source.addEventListener('input', () => updateReadmeResult(source, result, md));
+
+  // update
+  const form = readme_ed.querySelector('#readme_form');
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    await submitEditReadmeSection(proj, source, client, md, readme_sec);
+  });
+
+  // cancel
+  const cancel = readme_ed.querySelector('#cancel');
+  cancel.addEventListener('click', () => stopEditReadmeSection(readme_sec));
+
+  readme_sec.replaceWith(readme_ed);
+  hideEditLinks();
+}
+
+async function submitEditReadmeSection(proj, source, client, md, readme_sec) {
+  const data = { readme: source.value };
+
+  try {
+    await client.updateProject(data, getCookie('token'));
+  }
+  catch (error) {
+    handleErrorBefore(error, 'readme_form');
+    return;
+  }
+
+  // update the project data
+  proj.readme = source.value;
+
+  updateReadme(readme_sec, proj, md);
+  stopEditReadmeSection(readme_sec);
+}
+
+function stopEditReadmeSection(readme_sec) {
+  const readme_ed = document.getElementById('readme');
+  readme_ed.replaceWith(readme_sec);
+  showEditLinks();
+}
+
+function populateProject(proj, config, client) {
+  const { md, username, ums, rtf, now } = config;
+
+  const user_is_owner = proj.owners.includes(username);
 
   //
   // game section
   //
 
   const game_section = document.getElementById('game_section');
-  game_section.appendChild(makeGameSection(proj, username));
+  game_section.appendChild(makeGameSection(proj, client));
+
+  if (user_is_owner) {
+    // edit game section
+    const ed = game_section.querySelector('.edit_button');
+    ed.addEventListener('click', () => startEditGameSection(proj, client));
+  }
 
   //
   // project section
   //
 
   const project_section = document.getElementById('project_section');
-  project_section.appendChild(makeProjectSection(proj, rtf, now));
+  project_section.appendChild(makeProjectSection(proj, rtf, now, ums));
 
+  if (user_is_owner) {
+    // edit project section
+    const ed = project_section.querySelector('.edit_button');
+    ed.addEventListener('click', () => startEditProjectSection(proj, username, rtf, now, ums, client));
+  }
 
   //
   // packages section
@@ -453,126 +923,170 @@ function populateProject(proj, username) {
 
   const e_packages = document.getElementById('packages_list');
 
-  for (const [pi, p] of proj['packages'].entries()) {
-    const pkg_t = document.importNode(packageTemplate.content, true);
+  for (const pkg of proj.packages) {
+    e_packages.appendChild(
+      makePackageSection(
+        pkg,
+        user_is_owner,
+        client,
+        packageTemplate,
+        releaseTemplate,
+        ums,
+        rtf,
+        now
+      )
+    );
+  }
 
-    const pkg = pkg_t.querySelector('.package_tmpl_top');
-
-    const div_pkg_name = pkg.querySelector('.package_tmpl_name');
-    div_pkg_name.textContent = p.name;
-
-    const div_pkg_desc = pkg.querySelector('.package_tmpl_description');
-    div_pkg_desc.textContent = p.description;
-
-    if (p.releases.length < 2) {
-      const old_details = pkg.querySelector('.package_tmpl_releases_older_details');
-      old_details.hidden = true;
-    }
-
-    const ul_ver = pkg.querySelector('.package_tmpl_releases');
-    const ul_ver_old = pkg.querySelector('.package_tmpl_releases_older');
-
-    for (const [vi, v] of p.releases.entries()) {
-      const release = document.importNode(releaseTemplate.content, true);
-
-      const div_ver = release.querySelector('.release_tmpl_version');
-      div_ver.textContent = v.version;
-      if (vi === 0) {
-        div_ver.classList.add('current_release');
-      }
-      else {
-        div_ver.classList.add('release');
-      }
-
-      const a_file = release.querySelector('.release_tmpl_filename');
-      a_file.textContent = v.filename;
-      a_file.href = v.url;
-
-      const div_size = release.querySelector('.release_tmpl_size');
-      div_size.textContent = formatSizeWithUnit(v.size);
-
-      const sp_requires = release.querySelector('.release_tmpl_requires');
-      sp_requires.textContent = v.requires === '' ? 'Unknown' : v.requires;
-
-      const sp_pub_by = release.querySelector('.release_tmpl_published_by');
-      sp_pub_by.appendChild(makeUserLink(v.published_by));
-
-      const time_time = release.querySelector('.release_tmpl_published_at');
-      time_time.dateTime = v.published_at;
-
-      const sp_reltime = release.querySelector('.release_tmpl_published_rel');
-      sp_reltime.textContent = intlFormatDistance(rtf, new Date(v.published_at), now);
-
-      (vi === 0 ? ul_ver : ul_ver_old).appendChild(release);
-    }
-
-    e_packages.appendChild(pkg);
+  if (user_is_owner) {
+    // add package
+    const ed = document.querySelector('#packages_section .edit_button');
+    ed.addEventListener('click', () => startEditPackageSection(client));
   }
 
   //
   // readme
   //
 
-  const e_readme = document.getElementById('readme');
+  const readme_section = document.getElementById('readme_section');
+  readme_section.appendChild(makeReadme(proj, md));
 
-  // TODO: sanitize all input from JSON API
-  e_readme.innerHTML = DOMPurify.sanitize(marked.parse(proj['readme']));
-
-  //
-  // enable edit links for owners
-  //
-
-  if (proj['owners'].includes(username)) {
-    {
-      // edit project section
-      const ed = document.querySelector('#project_section .edit_link');
-      ed.classList.add('is_editable');
-      ed.addEventListener('click', (e) => startEditProjectSection(proj));
-    }
-
-    // add package
-    {
-      const ed = document.querySelector('#packages_section .edit_link');
-      ed.classList.add('is_editable');
-      ed.addEventListener('click', (e) => startEditPackagesSection(proj));
-    }
-
-    // add release
-
-    {
-      // edit readme
-      const ed = document.querySelector('#readme_section .edit_link');
-      ed.classList.add('is_editable');
-      ed.addEventListener('click', (e) => startEditReadmeSection(proj));
-    }
+  if (user_is_owner) {
+    // edit readme
+    const ed = readme_section.querySelector('.edit_button');
+    ed.addEventListener('click', () => startEditReadmeSection(proj, client, md));
   }
+
+  // enable edit links for owners
+  if (user_is_owner) {
+    showEditLinks();
+  }
+
+  return proj;
 }
 
-const project_script_data = document.getElementById('project-script').dataset;
-const api = project_script_data.api;
-const username = project_script_data.username ?? null;
+function updatePlayerAddRemoveButtons(user_is_player) {
+  const add_button = document.getElementById('add_player_button');
+  const remove_button = document.getElementById('remove_player_button');
 
-const project = window.location.pathname.substring(window.location.pathname.lastIndexOf('/') + 1);
+  add_button.style.display = user_is_player ? 'none' : 'inline';
+  remove_button.style.display = user_is_player ? 'inline' : 'none';
+}
 
-const sections = [
-  [
-    `${api}/projects/${project}`,
-    (proj) => populateProject(proj, username),
-    'project_content'
-  ],
-  [
-    `${api}/projects/${project}/players`,
-    (players) => populatePlayers(players, username),
-    'players_content'
-  ]
-];
+function enablePlayerAddRemoveButtons(user_is_player, config, client) {
+  const { username, ums } = config;
 
-Promise.allSettled(
-  sections.map((item, i) => fetchJSON(item[0]).then(item[1]))
-).then((results) => {
-  results.forEach((result, i) => {
-    if (result.status !== 'fulfilled') {
-      handleError(result.reason, sections[i][2]);
+  const add_button = document.getElementById('add_player_button');
+  const remove_button = document.getElementById('remove_player_button');
+
+  add_button.addEventListener('click', async () => {
+    try {
+      await client.addPlayer(getCookie('token'));
+    }
+    catch (error) {
+      handleErrorBefore(error, 'players');
+      return;
+    }
+    addPlayerToList(username, ums);
+  });
+
+  remove_button.addEventListener('click', async () => {
+    try {
+      await client.removePlayer(getCookie('token'));
+    }
+    catch (error) {
+      handleErrorBefore(error, 'players');
+      return;
+    }
+    removePlayerFromList(username);
+  });
+
+  updatePlayerAddRemoveButtons(user_is_player);
+}
+
+function addPlayerToList(username, ums) {
+  const player_li = makePlayerItem(username, ums);
+  document.getElementById('players').appendChild(player_li);
+  updatePlayerAddRemoveButtons(true);
+}
+
+function removePlayerFromList(username) {
+  document.getElementById(`player_${username}`).remove();
+  updatePlayerAddRemoveButtons(false);
+}
+
+function mdInit() {
+  const defaults = {
+    html: false,
+    xhtmlOut: false,
+    breaks: false,
+    langPrefix: 'language-',
+    linkify: true,
+    typographer: true,
+//    highlight: doHighlight
+  };
+
+  const md = window.markdownit(defaults);
+
+//  mdHtml.renderer.rules.paragraph_open = mdHtml.renderer.rules.heading_open = injectLineNumbers;
+
+  return md;
+}
+
+(function() {
+  const project_script_data = document.getElementById('project-script').dataset;
+  const path = window.location.pathname;
+
+  const api = project_script_data.api;
+  const username = project_script_data.username ?? null;
+  const project = path.substring(path.lastIndexOf('/') + 1);
+
+  const config = {
+    md: mdInit(),
+    api: api,
+    ums: 'http://localhost:4000/api/v1',
+    username: username,
+    project: project,
+    rtf: new Intl.RelativeTimeFormat('en', { numeric: 'auto' }),
+    now: new Date()
+  };
+
+  const client = new Client(api, project);
+
+  const loadProject = async function() {
+    try {
+      return await client.getProject();
+    }
+    catch (error) {
+      handleErrorReplace(error, 'project_content');
+      throw error;
+    }
+  };
+
+  const loadPlayers = async function() {
+    try {
+      return await client.getPlayers();
+    }
+    catch (error) {
+      handleErrorReplace(error, 'players_content');
+      throw error;
+    }
+  };
+
+  Promise.allSettled(
+    [
+      loadProject().then((proj) => populateProject(proj, config, client)),
+      loadPlayers().then((players) => populatePlayers(players, config))
+    ]
+  ).then((results) => {
+    if (results.every((r) => r.status === 'fulfilled')) {
+      if (username !== null) {
+        const proj = results[0].value;
+        const user_is_player = results[1].value;
+        enablePlayerAddRemoveButtons(user_is_player, config, client);
+      }
     }
   });
-});
+
+
+}());
