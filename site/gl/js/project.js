@@ -411,12 +411,23 @@ async function submitEditGameSection(form, proj, client, game_sec) {
     }
   }
 
+  const box_image = fdata.get('box_image');
+  if (box_image.name !== "") {
+    data.image = box_image.name;
+  }
+
+  // do nothing if no changes were made
+  if (Object.keys({}).length === 0) {
+    stopEditGameSection(game_sec);
+    return;
+  }
+
   const token = getCookie('token');
 
 // TODO: distinguish between no change and setting no image
 // TODO: do something to actually upload the image
-  const box_image = fdata.get('box_image');
   console.log(box_image);
+
   if (box_image.name !== "") {
     data.image = box_image.name;
 
