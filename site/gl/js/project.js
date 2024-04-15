@@ -365,6 +365,10 @@ function makeGameSection(proj, username) {
   const e_year = inner.querySelector('#game_year');
   e_year.textContent = proj.game.year;
 
+  // hide the comma if one of publisher and year are blank
+  const e_pub_year_sep = inner.querySelector('#game_publisher_year_sep');
+  e_pub_year_sep.hidden = proj.game.publisher === "" || proj.game.year === "";
+
   // description
   const e_description =  inner.querySelector('#description');
   e_description.textContent = proj['description'];
