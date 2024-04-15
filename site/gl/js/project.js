@@ -231,16 +231,22 @@ function makeUserLink(username, ums) {
   return a;
 }
 
-function populatePlayers(players, username) {
+function makePlayerItem(username, ums) {
+  const li = document.createElement('li');
+  li.id = `player_${username}`;
+  li.appendChild(makeUserLink(username, ums));
+  return li;
+}
+
+async function populatePlayers(players, config) {
+  const { username, ums } = config;
+
   let user_is_player = false;
 
   const e_players = document.getElementById('players');
 
-  const get_avatars = [];
-
-  for (const p of players['users']) {
-    const li = document.createElement('li');
-    li.appendChild(makeUserLink(p));
+  for (const p of players.users) {
+    const li = makePlayerItem(p, ums);
     e_players.appendChild(li);
 
     if (p === username) {
