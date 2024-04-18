@@ -333,18 +333,54 @@ function makeGameSectionEditor(proj, client) {
   return inner;
 }
 
+/*
+
+fn split_title_sort_key(title: &str) -> (&str, Option<&str>) {
+    match title.split_once(' ') {
+        // Probably Spanish or French, "A" is not an article
+        Some(("A", rest)) if rest.starts_with("la") => (title, None),
+        // Put leading article at end
+        Some(("A", rest)) => (rest, Some("A")),
+        Some(("An", rest)) => (rest, Some("An")),
+        Some(("The", rest)) => (rest, Some("The")),
+        // Doesn't start with an article
+        Some(_) | None => (title, None)
+    }
+}
+
+fn title_sort_key(title: &str) -> String {
+    match split_title_sort_key(title) {
+        (_, None) => title.into(),
+        (rest, Some(art)) => format!("{rest}, {art}")
+    }
+}
+
+*/
+
 function startEditGameSection(proj, client) {
   const game_sec = document.getElementById('game_section_inner');
   const game_ed = makeGameSectionEditor(proj, client);
 
 // TODO: make box image accept drops
-// TODO: provide a way to clear the box image
-// TODO: disable submit button when there are no changes
 
   // set box image
   const box_img_input = game_ed.querySelector('#box_image_input');
   const box_img_label = game_ed.querySelector('#box_image_label');
+  const box_img_clear = game_ed.querySelector('#box_image_clear');
   const box_img = game_ed.querySelector('#box_image');
+  const box_img_none = game_ed.querySelector('#box_image_none');
+
+  const img_loaded = () => {
+    URL.revokeObjectURL(box_img.src);
+    box_img_label.classList.remove('no_image');
+    box_img_clear.value = false;
+  };
+
+  const img_cleared = () => {
+    box_img.src = '';
+    box_img_label.classList.add('no_image');
+    box_img_clear.value = true;
+  };
 
   box_img_label.addEventListener('dragenter', (e) => {
     e.stopPropagation();
@@ -367,7 +403,7 @@ function startEditGameSection(proj, client) {
 
     if (file.type.startsWith('image/')) {
       box_img.src = URL.createObjectURL(file);
-      box_img.onload = () => URL.revokeObjectURL(box_img.src);
+      box_img.onload = img_loaded;
     }
   });
 
@@ -375,9 +411,12 @@ function startEditGameSection(proj, client) {
     const file = box_img_input.files[0];
     if (file.type.startsWith('image/')) {
       box_img.src = URL.createObjectURL(file);
-      box_img.onload = () => URL.revokeObjectURL(box_img.src);
+      box_img.onload = img_loaded;
     }
   });
+
+  const box_img_delete = game_ed.querySelector('#box_image_delete');
+  box_img_delete.addEventListener('click', img_cleared);
 
   // update
   const form = game_ed.querySelector('#game_section_form');
@@ -411,24 +450,27 @@ async function submitEditGameSection(form, proj, client, game_sec) {
     }
   }
 
+  console.log(fdata);
+
   const box_image = fdata.get('box_image');
   if (box_image.name !== "") {
     data.image = box_image.name;
   }
+  else if (fdata.get('box_image_clear') === 'true') {
+    data.image = null;
+  }
+
+  console.log(data);
 
   // do nothing if no changes were made
-  if (Object.keys({}).length === 0) {
+  if (Object.keys(data.game).length === 0 && Object.keys(data).length === 1) {
     stopEditGameSection(game_sec);
     return;
   }
 
   const token = getCookie('token');
 
-// TODO: distinguish between no change and setting no image
-// TODO: do something to actually upload the image
-  console.log(box_image);
-
-  if (box_image.name !== "") {
+  if (data.image) {
     data.image = box_image.name;
 
     try {
@@ -460,7 +502,7 @@ async function submitEditGameSection(form, proj, client, game_sec) {
     proj.description = data.description;
   }
 
-  if (data.image) {
+  if (data.image !== undefined) {
     proj.image = data.image;
   }
 

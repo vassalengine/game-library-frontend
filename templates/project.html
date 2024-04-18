@@ -87,13 +87,22 @@
   <div id="game_section_inner">
     <form id="game_section_form" action="">
       <div id="box_image_container" class="float-left my-2 ms-2 me-3">
-        <label id="box_image_label" for="box_image_input">
-          <img id="box_image" class="rounded border" src="">
-          <div id="box_image_ovl">
-            <svg id="box_image_ovl_img"><use xlink:href="#pencil"></use></svg>
+        <label id="box_image_label" class="rounded border" for="box_image_input">
+          <div id="box_image_none">
+            <div>no image</div>
+          </div>
+          <img id="box_image" class="rounded border" src="" alt="">
+          <div id="box_image_delete_overlay">
+            <button id="box_image_delete" type="button">
+              <svg class="svg-icon"><use xlink:href="#xmark"></use></svg>
+            </button>
+          </div>
+          <div id="box_image_edit_overlay">
+            <svg><use xlink:href="#pencil"></use></svg>
           </div>
         </label>
-        <input id="box_image_input" type="file" name="box_image_input" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/avif">
+        <input id="box_image_clear" type="hidden" name="box_image_clear" value="">
+        <input id="box_image_input" type="file" name="box_image" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/avif">
       </div>
       <div class="row">
         <div class="col-12">

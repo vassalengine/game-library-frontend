@@ -105,15 +105,65 @@ img.avatar {
 }
 
 #box_image_label {
+  display: inline-flex;
   position: relative;
   pointer-events: none;
+  background-color: #dee2e6;
 }
 
 #box_image_label:hover #box_image {
   filter: grayscale(100%) brightness(0.5) blur(1px);
 }
 
-#box_image_ovl {
+#box_image_none {
+  display: none;
+  font-style: italic;
+}
+
+#box_image_delete_overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+}
+
+#box_image_delete_overlay button {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  top: 0.5em;
+  left: 0.5em;
+  width: 1.75em;
+  height: 1.75em;
+  border: 2px solid black;
+  border-radius: 50%;
+  z-index: 10;
+  background-color: white;
+}
+
+#box_image_label.no_image #box_image_none {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 12em;
+  height: 12em;
+}
+
+#box_image_label.no_image #box_image,
+#box_image_label.no_image #box_image_delete_overlay button {
+  visibility: hidden !important;
+}
+
+#box_image_delete_overlay button:hover {
+  border-color: #0a58ca;
+}
+
+#box_image_delete_overlay button:hover svg {
+  fill: #0a58ca;
+}
+
+#box_image_edit_overlay {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -121,13 +171,15 @@ img.avatar {
   left: 0;
   opacity: 0;
   pointer-events: auto;
+  z-index: 0;
 }
 
-#box_image_ovl:hover {
+#box_image_edit_overlay:hover {
   opacity: 1;
+  cursor: pointer;
 }
 
-#box_image_ovl svg {
+#box_image_edit_overlay svg {
   position: absolute;
   top: 50%;
   left: 50%;
