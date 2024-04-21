@@ -1,19 +1,12 @@
 use askama::Template;
 use axum::{
     Router, serve,
-    extract::{Path, Query},
+    extract::Path,
     http::StatusCode,
-    response::{Html, Json, IntoResponse, Response},
+    response::{Html, IntoResponse, Response},
     routing::get
 };
 use axum_extra::extract::cookie::CookieJar;
-use mime::APPLICATION_JSON;
-use reqwest::{
-    Client, // StatusCode,
-    header::ACCEPT
-};
-use serde::Deserialize;
-use serde_json::Value;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use tower_http::{
