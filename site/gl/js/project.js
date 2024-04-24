@@ -278,8 +278,16 @@ function makeGameSection(proj, client) {
 
 function updateGameSection(inner, proj, client) {
   // image
+  const e_box_image_container = inner.querySelector('#box_image_container');
   const e_box_image = inner.querySelector('#box_image');
-  e_box_image.src = client.imageUrl(proj.image);
+  if (proj.image !== null) {
+    e_box_image.src = client.imageUrl(proj.image);
+    e_box_image_container.classList.remove('no_image');
+  }
+  else {
+    e_box_image.src = '';
+    e_box_image_container.classList.add('no_image');
+  }
 
 // TODO: field for sort key
 // TODO: suggest sort key
@@ -312,7 +320,15 @@ function makeGameSectionEditor(proj, client) {
 
   // image
   const e_box_image = inner.querySelector('#box_image');
-  e_box_image.src = client.imageUrl(proj.image);
+  const e_box_image_container = inner.querySelector('#box_image_container');
+  if (proj.image !== null) {
+    e_box_image.src = client.imageUrl(proj.image);
+    e_box_image_container.classList.remove('no_image');
+  }
+  else {
+    e_box_image.src = '';
+    e_box_image_container.classList.add('no_image');
+  }
 
   // title
   const e_title = inner.querySelector('#game_title_input');
@@ -365,22 +381,24 @@ function startEditGameSection(proj, client) {
 
   // set box image
   const box_img_input = game_ed.querySelector('#box_image_input');
-  const box_img_label = game_ed.querySelector('#box_image_label');
+  const box_img_container = game_ed.querySelector('#box_image_container');
   const box_img_clear = game_ed.querySelector('#box_image_clear');
   const box_img = game_ed.querySelector('#box_image');
   const box_img_none = game_ed.querySelector('#box_image_none');
 
   const img_loaded = () => {
     URL.revokeObjectURL(box_img.src);
-    box_img_label.classList.remove('no_image');
+    box_img_container.classList.remove('no_image');
     box_img_clear.value = false;
   };
 
   const img_cleared = () => {
     box_img.src = '';
-    box_img_label.classList.add('no_image');
+    box_img_container.classList.add('no_image');
     box_img_clear.value = true;
   };
+
+  const box_img_label = game_ed.querySelector('#box_image_label');
 
   box_img_label.addEventListener('dragenter', (e) => {
     e.stopPropagation();
@@ -459,8 +477,6 @@ async function submitEditGameSection(form, proj, client, game_sec) {
   else if (fdata.get('box_image_clear') === 'true') {
     data.image = null;
   }
-
-  console.log(data);
 
   // do nothing if no changes were made
   if (Object.keys(data.game).length === 0 && Object.keys(data).length === 1) {

@@ -108,7 +108,6 @@ img.avatar {
   display: inline-flex;
   position: relative;
   pointer-events: none;
-  background-color: #dee2e6;
 }
 
 #box_image_label:hover #box_image {
@@ -118,6 +117,7 @@ img.avatar {
 #box_image_none {
   display: none;
   font-style: italic;
+  background-color: #dee2e6;
 }
 
 #box_image_delete_overlay {
@@ -142,7 +142,7 @@ img.avatar {
   background-color: white;
 }
 
-#box_image_label.no_image #box_image_none {
+.no_image #box_image_none {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -150,8 +150,11 @@ img.avatar {
   height: 12em;
 }
 
-#box_image_label.no_image #box_image,
-#box_image_label.no_image #box_image_delete_overlay button {
+.no_image #box_image {
+  display: none !important;
+}
+
+.no_image #box_image_delete_overlay button {
   visibility: hidden !important;
 }
 

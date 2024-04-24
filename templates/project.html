@@ -65,6 +65,9 @@
   <div id="game_section_inner">
     <div id="box_image_container" class="float-start my-2 ms-2 me-3">
       <img id="box_image" class="rounded border">
+      <div id="box_image_none" class="rounded border">
+        <div>no image</div>
+      </div>
     </div>
     <h1>
       <span id="game_title" class="editable_field"></span>
@@ -87,11 +90,11 @@
   <div id="game_section_inner">
     <form id="game_section_form" action="">
       <div id="box_image_container" class="float-left my-2 ms-2 me-3">
-        <label id="box_image_label" class="rounded border" for="box_image_input">
-          <div id="box_image_none">
+        <label id="box_image_label" for="box_image_input">
+          <img id="box_image" class="rounded border">
+          <div id="box_image_none" class="rounded border">
             <div>no image</div>
           </div>
-          <img id="box_image" class="rounded border" src="" alt="">
           <div id="box_image_delete_overlay">
             <button id="box_image_delete" type="button">
               <svg class="svg-icon"><use xlink:href="#xmark"></use></svg>
