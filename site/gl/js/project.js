@@ -378,11 +378,9 @@ function startEditGameSection(proj, client) {
   const game_ed = makeGameSectionEditor(proj, client);
 
   // set box image
-  const box_img_input = game_ed.querySelector('#box_image_input');
   const box_img_container = game_ed.querySelector('#box_image_container');
   const box_img_clear = game_ed.querySelector('#box_image_clear');
   const box_img = game_ed.querySelector('#box_image');
-  const box_img_none = game_ed.querySelector('#box_image_none');
 
   const img_loaded = () => {
     URL.revokeObjectURL(box_img.src);
@@ -423,6 +421,7 @@ function startEditGameSection(proj, client) {
     }
   });
 
+  const box_img_input = game_ed.querySelector('#box_image_input');
   box_img_input.addEventListener('change', () => {
     const file = box_img_input.files[0];
     if (file.type.startsWith('image/')) {
