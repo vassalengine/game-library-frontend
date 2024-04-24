@@ -394,6 +394,13 @@ function startEditGameSection(proj, client) {
     box_img_clear.value = true;
   };
 
+  const load_if_image = (file) => {
+    if (file.type.startsWith('image/')) {
+      box_img.src = URL.createObjectURL(file);
+      box_img.onload = img_loaded;
+    }
+  };
+
   const box_img_label = game_ed.querySelector('#box_image_label');
 
   box_img_label.addEventListener('dragenter', (e) => {
@@ -410,24 +417,16 @@ function startEditGameSection(proj, client) {
     e.stopPropagation();
     e.preventDefault();
 
-// FIXME: Why don't drags from browsers work?
     const dt = e.dataTransfer;
     const file = dt.files[0];
-    console.log(dt);
 
-    if (file.type.startsWith('image/')) {
-      box_img.src = URL.createObjectURL(file);
-      box_img.onload = img_loaded;
-    }
+    load_if_image(file);
   });
 
   const box_img_input = game_ed.querySelector('#box_image_input');
   box_img_input.addEventListener('change', () => {
     const file = box_img_input.files[0];
-    if (file.type.startsWith('image/')) {
-      box_img.src = URL.createObjectURL(file);
-      box_img.onload = img_loaded;
-    }
+    load_if_image(file);
   });
 
   const box_img_delete = game_ed.querySelector('#box_image_delete');
