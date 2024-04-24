@@ -373,6 +373,10 @@ fn title_sort_key(title: &str) -> String {
 
 */
 
+function is_single_image(files) {
+  return files.length == 1 && files[0].type.startsWith('image/');
+}
+
 function startEditGameSection(proj, client) {
   const game_sec = document.getElementById('game_section_inner');
   const game_ed = makeGameSectionEditor(proj, client);
@@ -394,13 +398,6 @@ function startEditGameSection(proj, client) {
     box_img_clear.value = true;
   };
 
-  const load_if_image = (file) => {
-    if (file.type.startsWith('image/')) {
-      box_img.src = URL.createObjectURL(file);
-      box_img.onload = img_loaded;
-    }
-  };
-
   const box_img_label = game_ed.querySelector('#box_image_label');
 
   box_img_label.addEventListener('dragenter', (e) => {
@@ -418,15 +415,22 @@ function startEditGameSection(proj, client) {
     e.preventDefault();
 
     const dt = e.dataTransfer;
-    const file = dt.files[0];
-
-    load_if_image(file);
+    if (is_single_image(dt.files)) {
+      box_img.src = URL.createObjectURL(dt.files[0]);
+      box_img.onload = img_loaded;
+      box_img_input.files = dt.files;
+    }
   });
 
   const box_img_input = game_ed.querySelector('#box_image_input');
   box_img_input.addEventListener('change', () => {
-    const file = box_img_input.files[0];
-    load_if_image(file);
+    if (is_single_image(box_img_input.files)) {
+      box_img.src = URL.createObjectURL(box_img_input.files[0]);
+      box_img.onload = img_loaded;
+    }
+    else {
+      box_img_input.files = new DataTransfer().files;
+    }
   });
 
   const box_img_delete = game_ed.querySelector('#box_image_delete');
@@ -463,8 +467,6 @@ async function submitEditGameSection(form, proj, client, game_sec) {
       data.game[k] = fv;
     }
   }
-
-  console.log(fdata);
 
   const box_image = fdata.get('box_image');
   if (box_image.name !== '') {
