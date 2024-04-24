@@ -454,7 +454,7 @@ function startEditGameSection(proj, client) {
 async function submitEditGameSection(form, proj, client, game_sec) {
   // build the request
   const fdata = new FormData(form);
-  const data = { game: {} };
+  const data = {};
 
   const description = fdata.get('description');
   if (description !== proj.description) {
@@ -464,7 +464,7 @@ async function submitEditGameSection(form, proj, client, game_sec) {
   for (const k of ['title', 'publisher', 'year']) {
     const fv = fdata.get(`game_${k}`);
     if (fv !== proj.game[k]) {
-      data.game[k] = fv;
+      (data.game ??= {})[k] = fv;
     }
   }
 
@@ -477,7 +477,7 @@ async function submitEditGameSection(form, proj, client, game_sec) {
   }
 
   // do nothing if no changes were made
-  if (Object.keys(data.game).length === 0 && Object.keys(data).length === 1) {
+  if (Object.keys(data).length === 0) {
     stopEditGameSection(game_sec);
     return;
   }
