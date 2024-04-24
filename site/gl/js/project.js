@@ -377,8 +377,6 @@ function startEditGameSection(proj, client) {
   const game_sec = document.getElementById('game_section_inner');
   const game_ed = makeGameSectionEditor(proj, client);
 
-// TODO: make box image accept drops
-
   // set box image
   const box_img_input = game_ed.querySelector('#box_image_input');
   const box_img_container = game_ed.querySelector('#box_image_container');
