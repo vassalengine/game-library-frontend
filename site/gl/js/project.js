@@ -59,7 +59,7 @@ async function addOwners(api, project, owners, token) {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ "users": owners })
+      body: JSON.stringify({ 'users': owners })
     }
   );
 }
@@ -73,7 +73,7 @@ async function removeOwners(api, project, owners, token) {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ "users": owners })
+      body: JSON.stringify({ 'users': owners })
     }
   );
 }
@@ -215,7 +215,7 @@ function formatSizeWithUnit(n) {
 function makeUserLink(username, ums) {
   const img = document.createElement('img');
   img.classList.add('avatar', `avatar_${username}`);
-  img.loading = "lazy";
+  img.loading = 'lazy';
   const size = 24;
   img.src = `${ums}/users/${username}/avatar/${size}`;
   img.width = size;
@@ -307,7 +307,7 @@ function updateGameSection(inner, proj, client) {
 
   // hide the comma if one of publisher and year are blank
   const e_pub_year_sep = inner.querySelector('#game_publisher_year_sep');
-  e_pub_year_sep.hidden = proj.game.publisher === "" || proj.game.year === "";
+  e_pub_year_sep.hidden = proj.game.publisher === '' || proj.game.year === '';
 
   // description
   const e_description =  inner.querySelector('#description');
@@ -467,7 +467,7 @@ async function submitEditGameSection(form, proj, client, game_sec) {
   console.log(fdata);
 
   const box_image = fdata.get('box_image');
-  if (box_image.name !== "") {
+  if (box_image.name !== '') {
     data.image = box_image.name;
   }
   else if (fdata.get('box_image_clear') === 'true') {
