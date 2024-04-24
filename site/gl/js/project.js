@@ -289,9 +289,6 @@ function updateGameSection(inner, proj, client) {
     e_box_image_container.classList.add('no_image');
   }
 
-// TODO: field for sort key
-// TODO: suggest sort key
-
   // title
   const e_title = inner.querySelector('#game_title');
   e_title.textContent = proj.game.title;
@@ -333,6 +330,12 @@ function makeGameSectionEditor(proj, client) {
   // title
   const e_title = inner.querySelector('#game_title_input');
   e_title.value = proj.game.title;
+
+// TODO: suggest sort key
+
+  // title sort key
+  const e_title_sk = inner.querySelector('#game_title_sort_key_input');
+  e_title_sk.value = proj.game.title_sort_key;
 
   // publisher
   const e_publisher = inner.querySelector('#game_publisher_input');
@@ -461,7 +464,7 @@ async function submitEditGameSection(form, proj, client, game_sec) {
     data.description = description;
   }
 
-  for (const k of ['title', 'publisher', 'year']) {
+  for (const k of ['title', 'title_sort_key', 'publisher', 'year']) {
     const fv = fdata.get(`game_${k}`);
     if (fv !== proj.game[k]) {
       (data.game ??= {})[k] = fv;
