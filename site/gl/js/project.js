@@ -331,11 +331,12 @@ function makeGameSectionEditor(proj, client) {
   const e_title = inner.querySelector('#game_title_input');
   e_title.value = proj.game.title;
 
-// TODO: suggest sort key
-
   // title sort key
   const e_title_sk = inner.querySelector('#game_title_sort_key_input');
   e_title_sk.value = proj.game.title_sort_key;
+
+  const e_title_sk_cb = inner.querySelector('#game_title_sort_key_checkbox');
+  e_title_sk_cb.checked = proj.game.title !== proj.game.title_sort_key;
 
   // publisher
   const e_publisher = inner.querySelector('#game_publisher_input');
@@ -351,6 +352,8 @@ function makeGameSectionEditor(proj, client) {
 
   return inner;
 }
+
+// TODO: suggest sort key on creation
 
 /*
 

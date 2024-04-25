@@ -192,6 +192,17 @@ img.avatar {
   fill: white;
 }
 
+/* Game title sort key editing */
+
+#game_title_sort_key_input_row {
+  display: none;
+}
+
+div:has(div #game_title_sort_key_checkbox:checked) #game_title_sort_key_input_row {
+  display: block;
+}
+
+
 @media only screen and (max-width:767px) {
   #game_section_form {
     clear: both;
