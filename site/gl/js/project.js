@@ -338,6 +338,11 @@ function makeGameSectionEditor(proj, client) {
   const e_title_sk_cb = inner.querySelector('#game_title_sort_key_checkbox');
   e_title_sk_cb.checked = proj.game.title !== proj.game.title_sort_key;
 
+  e_title_sk_cb.addEventListener('click', () => {
+    // toggling the sort key checkbox resets the sort key to the title
+    e_title_sk.value = proj.game.title;
+  });
+
   // publisher
   const e_publisher = inner.querySelector('#game_publisher_input');
   e_publisher.value = proj.game.publisher;
