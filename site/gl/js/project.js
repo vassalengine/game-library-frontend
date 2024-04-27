@@ -715,8 +715,10 @@ function makePackageSection(pkg, user_is_owner, client, pkg_t, release_t, ums, r
   // add release
   if (user_is_owner) {
     const ed = inner.querySelector('.edit_button');
-// TODO: must pass on pkg
-    ed.addEventListener('click', () => startEditReleaseSection(ul_ver, client));
+    ed.addEventListener(
+      'click',
+      () => startEditReleaseSection(pkg, ul_ver, client)
+    );
   }
 
   return inner;
@@ -821,7 +823,7 @@ function makeNewReleaseBox() {
   return document.importNode(tmpl.content.firstElementChild, true);
 }
 
-function startEditReleaseSection(list, client) {
+function startEditReleaseSection(pkg, list, client) {
   const release_new = makeNewReleaseBox();
 
   // create
