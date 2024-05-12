@@ -725,14 +725,25 @@ function makePackageSection(pkg, user_is_owner, client, pkg_t, release_t, ums, r
 }
 
 function makeNewPackageBox() {
-// TODO: reject duplicate package
   const tmpl = document.querySelector('#package_new_tmpl');
   return document.importNode(tmpl.content.firstElementChild, true);
 }
 
-function startEditPackageSection(client) {
+function startEditPackageSection(pkgs, client) {
   const packages_list = document.getElementById('packages_list');
   const package_new = makeNewPackageBox();
+
+  const pkg_names = new Set(pkgs.map((p) => p.name));
+
+  const package_name_input = package_new.querySelector('#package_name_input');
+  package_name_input.addEventListener('input', () => {
+    package_name_input.setCustomValidity(
+      pkg_names.has(package_name_input.value) ?
+        "Package already exists" : ""
+    );
+  });
+
+// TODO: we need to update the packages list on addition
 
   // create
   const form = package_new.querySelector('#package_new_form');
@@ -833,13 +844,6 @@ function startEditReleaseSection(pkg, list, client) {
     await submitNewReleaseSection(form, client);
   });
 
-////
-
-/*
-    const url = 'https://httpbin.org/post';
-    await uploadFile(release_file, 'application/octet-stream', url);
-*/
-
     // TODO: display new release
 /*
     const release = makeRelease(item.value, release_t, true, ums, rtf, now);
@@ -858,7 +862,7 @@ function startEditReleaseSection(pkg, list, client) {
 async function submitNewReleaseSection(form, client) {
   const fdata = new FormData(form);
   console.log(fdata);
-// HERE
+// TODO
   const release_file = fdata.get('release_file');
 
   try {
@@ -1021,7 +1025,10 @@ function populateProject(proj, config, client) {
   if (user_is_owner) {
     // add package
     const ed = document.querySelector('#packages_section .edit_button');
-    ed.addEventListener('click', () => startEditPackageSection(client));
+    ed.addEventListener(
+      'click',
+      () => startEditPackageSection(proj.packages, client)
+    );
   }
 
   //
