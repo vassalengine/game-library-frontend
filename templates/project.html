@@ -4,6 +4,8 @@
 
 {% block head %}
   {% call super() %}
+  <link href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.0/dist/use-bootstrap-tag.min.css" rel="stylesheet">
   <link rel="stylesheet" type="text/css" href="/gl/css/gl.css">
 {% endblock %}
 
@@ -169,6 +171,23 @@
   </div>
 </template>
 
+<template id="project_section_edit_tmpl">
+  <div id="project_section_inner" class="container">
+    <div class="row">
+      <form id="project_section_form" action="">
+        <input id="owners_input" type="text" class="form-control">
+<!--
+        <auto-complete id="newownerauto" api="{{ crate::GL_BASE }}/u/search/users?term=${newowner}&include_groups=false&limit=6" resultdata="users" resultname="username" querymin="2" optionmax="100" inputdelay="200">
+          <input class="form-control" type="text" id="newowner" name="newowner">
+        </auto-complete>
+-->
+        <button type="submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+        <button id="cancel" type="button" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+      </form>
+    </div>
+  </div>
+</template>
+
 <template id="package_tmpl">
   <div class="package_tmpl_top border rounded p-3 my-2">
     <h3>
@@ -188,7 +207,7 @@
 </template>
 
 <template id="package_new_tmpl">
-  <div class="package_tmpl_top border rounded p-3 my-2">
+  <div id="package_new" class="package_tmpl_top border rounded p-3 my-2">
     <form id="package_new_form" action="">
       <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
       <label for="package_name_input" class="form-label">Package name</label>
@@ -227,7 +246,7 @@
 </template>
 
 <template id="release_new_tmpl">
-  <div class="release_tmpl_top border rounded p-3 my-2">
+  <div id="release_new" class="release_tmpl_top border rounded p-3 my-2">
     <form id="release_new_form" action="">
       <input id="release_file_input" class="release_tmpl_name form-control" type="file" name="release_file" required>
       <button id="add_new_release" class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
@@ -390,8 +409,15 @@
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.0/dist/use-bootstrap-tag.min.js" integrity="sha384-Y+vdy9AuyE9klSF2hkIoVVv9Vt9o/wE7CMJCv6IZJLwLb0OCLDXLoi3HEsXeMzaM" crossorigin="anonymous"></script>
+<!--
+<script src="https://cdn.jsdelivr.net/npm/datalist-ajax@1.0.2/dist/datalist-ajax.min.js" integrity="sha384-l1SJImy1KcVdwwAARHm0QIA41YLgISyILDgtUgb7qZg0rMwMFODSIEudEaER/2nF" crossorigin="anonymous"></script>
+-->
+<script src="/gl/js/datalist-ajax.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js" integrity="sha384-vdScihEZCfbPnBQf+lc7LgXUdJVYyhC3yWHUW5C5P5GpHRqVnaM6HJELJxT6IqwM" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/lib/marked.umd.min.js" integrity="sha384-9dUjyclywLkiW3FdYja7HWOMEGEgvuNY0MKlGtlABWtQcowS6ReVjJyaaL2hliGT" crossorigin="anonymous"></script>
+<!-- TODO: integrity for highlight? -->
+<script type="module"> import hljs from 'https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/+esm' </script>
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@14.0.0/dist/markdown-it.min.js" integrity="sha384-m4eAATWFHwurgWQTBxFRh5346JXxGTucT+lJH2TcxGrE+vNBENJGasyBNnLc23ft" crossorigin="anonymous"></script>
 <script src="/gl/js/common.js"></script>
 <script src="/gl/js/client.js"></script>
 <script type="module" src="/gl/js/project.js" id="project-script" data-api="{{ api_url }}"
