@@ -159,6 +159,7 @@ function makeGameSectionEditor(proj, client) {
   return inner;
 }
 
+// TODO: module creation
 // TODO: suggest sort key on creation
 
 /*
@@ -590,6 +591,7 @@ async function submitEditPackageSection(form, client) {
     )
   );
 
+// TODO: On edit, rerender the whole page?
 // TODO: update proj?
 
   removeNewPackageSection();
