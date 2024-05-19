@@ -27,7 +27,7 @@
   <div><a href={release.url}>{release.filename}</a></div>
   <div class="d-flex flex-wrap gap-2">
     <div>
-      By <UserChip UMS_URL={UMS_URL} username={release.published_by} size=24 />
+      By <UserChip {UMS_URL} username={release.published_by} size=24 />
     </div>
     <div>
       <svg class="svg-icon"><use xlink:href="#weight-hanging"></use></svg>

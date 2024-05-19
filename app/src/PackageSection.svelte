@@ -118,7 +118,7 @@ details[open] > summary::before {
     </li>
     {/if}
     {#if pkg.releases.length > 0}
-    <ReleaseSection release={pkg.releases[0]} current UMS_URL={UMS_URL} />
+    <ReleaseSection release={pkg.releases[0]} current {UMS_URL} />
     {/if}  
   </ol>
   {#if pkg.releases.length > 1}
@@ -126,7 +126,7 @@ details[open] > summary::before {
     <summary>Older releases...</summary>
     <ol class="list-unstyled">
       {#each pkg.releases.slice(1) as release}
-      <ReleaseSection release={release} UMS_URL={UMS_URL} />  
+      <ReleaseSection {release} {UMS_URL} />
       {/each}
     </ol>
   </details>

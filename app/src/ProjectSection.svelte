@@ -114,7 +114,7 @@
 </script>
 
 {#if error}
-<ErrorBox error={error} />
+<ErrorBox {error} />
 {/if}
 <div class="my-2 pb-2">
   <h2>
@@ -154,7 +154,7 @@
         Owners
         <ul class="d-flex flex-wrap list-unstyled m-0 gap-1">
         {#each proj.owners as owner}
-          <li><UserChip UMS_URL={UMS_URL} username={owner} size=24 /></li>
+          <li><UserChip {UMS_URL} username={owner} size=24 /></li>
         {/each}
         </ul>
       </div>

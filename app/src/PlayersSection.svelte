@@ -43,7 +43,7 @@
 </script>
 
 {#if error}
-<ErrorBox error={error} />
+<ErrorBox {error} />
 {/if}
 <div>
   <h2>
@@ -59,7 +59,7 @@
   </h2>
   <ul class="d-flex flex-wrap list-unstyled gap-1">
   {#each players.users as username}
-    <li><UserChip UMS_URL={UMS_URL} username={username} size=24 /></li>
+    <li><UserChip {UMS_URL} {username} size=24 /></li>
   {/each}
   </ul>
 </div>

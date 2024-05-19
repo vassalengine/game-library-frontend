@@ -106,7 +106,7 @@
 <!-- TODO: Add formatting bar like Discourse -->
 
 {#if error}
-<ErrorBox error={error} />
+<ErrorBox {error} />
 {/if}
 <div>
   <h2>

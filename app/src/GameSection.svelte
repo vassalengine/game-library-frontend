@@ -272,7 +272,7 @@
 <!-- TODO: disable submit buttons when there are no changes -->
 
 {#if error}
-<ErrorBox error={error} />
+<ErrorBox {error} />
 {/if}
 <div class="my-2 p-2 border rounded clearfix bg-light">
   <div>

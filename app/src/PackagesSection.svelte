@@ -70,7 +70,7 @@
 </script>
 
 {#if error}
-<ErrorBox error={error} />
+<ErrorBox {error} />
 {/if}
 <div>
   <h2>
@@ -93,7 +93,7 @@
     </div>
   {/if}
   {#each proj.packages as pkg}
-    <PackageSection bind:proj={proj} pkg={pkg} client={client} username={username} UMS_URL={UMS_URL} bind:editing={editing} />
+    <PackageSection bind:proj={proj} {pkg} {client} {username} {UMS_URL} bind:editing={editing} />
   {/each}
   </div>
 </div>
