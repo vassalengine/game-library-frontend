@@ -91,7 +91,7 @@
     </div>
   {/if}
   {#each proj.packages as pkg}
-    <PackageSection proj={proj} pkg={pkg} client={client} username={username} UMS_URL={UMS_URL} bind:editing={editing} />
+    <PackageSection bind:proj={proj} pkg={pkg} client={client} username={username} UMS_URL={UMS_URL} bind:editing={editing} />
   {/each}
   </div>
 </div>
