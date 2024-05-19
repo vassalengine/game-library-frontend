@@ -129,10 +129,10 @@
   <ErrorBox error={proj_error} />
   {/if}
   {#if proj}
-  <GameSection proj={proj} client={client} user_info={user_info} bind:editing={editing} />
-  <ProjectSection proj={proj} client={client} user_info={user_info} UMS_URL={UMS_URL} bind:editing={editing} />
-  <PackagesSection proj={proj} client={client} user_info={user_info} UMS_URL={UMS_URL} bind:editing={editing} />
-  <ReadmeSection proj={proj} client={client} user_info={user_info} bind:editing={editing} />
+  <GameSection proj={proj} client={client} username={user_info.username} bind:editing={editing} />
+  <ProjectSection proj={proj} client={client} username={user_info.username} UMS_URL={UMS_URL} bind:editing={editing} />
+  <PackagesSection proj={proj} client={client} username={user_info.username} UMS_URL={UMS_URL} bind:editing={editing} />
+  <ReadmeSection proj={proj} client={client} username={user_info.username} bind:editing={editing} />
   {/if}
  
 </div>
@@ -144,7 +144,7 @@
 <ErrorBox error={players_error} />
 {/if}
 {#if players !== null}
-<PlayersSection players={players} client={client} user_info={user_info} UMS_URL={UMS_URL} bind:editing={editing} />
+<PlayersSection players={players} client={client} username={user_info.username} UMS_URL={UMS_URL} bind:editing={editing} />
 {/if}
 
   {#if user_info}

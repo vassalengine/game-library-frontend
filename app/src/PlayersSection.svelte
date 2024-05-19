@@ -8,7 +8,7 @@
 
   export let players;
   export let client;
-  export let user_info;
+  export let username;
   export let editing;
 
   let error = null;
@@ -23,7 +23,7 @@
       return;
     }
 
-    players.users.push(user_info.username);
+    players.users.push(username);
     players = players;
   } 
 
@@ -37,7 +37,7 @@
       return;
     }
 
-    players.users.splice(players.users.indexOf(user_info.username), 1);
+    players.users.splice(players.users.indexOf(username), 1);
     players = players;
   }
 </script>
@@ -49,8 +49,8 @@
   <h2>
     <svg class="svg-icon"><use xlink:href="#user-group"></use></svg>
     Players
-    {#if !editing && user_info}
-      {#if players.users.includes(user_info.username)}
+    {#if !editing && username}
+      {#if players.users.includes(username)}
     <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={removePlayer}><svg class="svg-icon"><use xlink:href="#user-minus"></use></svg></button>
       {:else}
     <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={addPlayer}><svg class="svg-icon"><use xlink:href="#user-plus"></use></svg></button>

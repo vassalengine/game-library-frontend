@@ -9,11 +9,11 @@
  
   export let proj;
   export let client;
-  export let user_info;
+  export let username;
   export let editing;
 
   function user_is_owner() {
-     return user_info && proj.owners.includes(user_info.username);
+     return username && proj.owners.includes(username);
   }
 
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
@@ -153,8 +153,8 @@
         <svg class="svg-icon"><use xlink:href="#user"></use></svg>
         Owners
         <ul class="d-flex flex-wrap list-unstyled m-0 gap-1">
-        {#each proj.owners as username}
-          <li><UserChip UMS_URL={UMS_URL} username={username} size=24 /></li>
+        {#each proj.owners as owner}
+          <li><UserChip UMS_URL={UMS_URL} username={owner} size=24 /></li>
         {/each}
         </ul>
       </div>

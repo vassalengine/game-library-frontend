@@ -8,11 +8,11 @@
 
   export let proj;
   export let client;
-  export let user_info;
+  export let username;
   export let editing;
 
   function user_is_owner() {
-     return user_info && proj.owners.includes(user_info.username);
+     return username && proj.owners.includes(username);
   }
 
   function mdInit() {

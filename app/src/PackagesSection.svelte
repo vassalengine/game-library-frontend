@@ -8,11 +8,11 @@
 
   export let proj;
   export let client;
-  export let user_info;
+  export let username;
   export let editing;
 
   function user_is_owner() {
-     return user_info && proj.owners.includes(user_info.username);
+     return username && proj.owners.includes(username);
   }
 
   let pkg_names = new Set(proj.packages.map((p) => p.name));
@@ -91,7 +91,7 @@
     </div>
   {/if}
   {#each proj.packages as pkg}
-    <PackageSection proj={proj} pkg={pkg} client={client} user_info={user_info} UMS_URL={UMS_URL} bind:editing={editing} />
+    <PackageSection proj={proj} pkg={pkg} client={client} username={username} UMS_URL={UMS_URL} bind:editing={editing} />
   {/each}
   </div>
 </div>
