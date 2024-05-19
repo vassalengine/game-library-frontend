@@ -17,7 +17,6 @@
   }
 
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-  const now = new Date();
 
   const avatar_size = 24;
 
@@ -141,6 +140,7 @@
     </div>
   </div>
 {:else}
+  {@const now = new Date()}
   <div>
     <div class="px-3 pt-2 pb-2 border rounded d-flex flex-wrap">
       <h3>{proj.name}</h3>

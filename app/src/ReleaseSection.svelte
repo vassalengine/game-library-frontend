@@ -8,7 +8,6 @@
   export let current = false;
 
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-  const now = new Date();
 </script>
 
 <style>
@@ -40,7 +39,7 @@
     </div>
     <time datetime={release.published_at}>
       <svg class="svg-icon"><use xlink:href="#calendar-days"></use></svg>
-      {intlFormatDistance(rtf, new Date(release.published_at), now)}
+      {intlFormatDistance(rtf, new Date(release.published_at), new Date())}
     </time>
   </div>
 </li>
