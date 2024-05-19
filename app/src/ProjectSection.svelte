@@ -18,8 +18,6 @@
 
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 
-  const avatar_size = 24;
-
   let owner_tags;
 
   function setupOwnersInput(owners_input) {
