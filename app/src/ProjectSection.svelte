@@ -97,16 +97,16 @@
       return;
     }
 
-// TODO: refetch, then update
-    proj.owners = [...cur_owners];
-
-/*
-    // user can stop being an owner
-    const user_is_owner = proj.owners.includes(username);
-    if (!user_is_owner) {
-      hideEditLinks();
+    // update the project data
+    try {
+      proj = await client.getProject();
+      error = null;
     }
-*/
+    catch (err) {
+      error = err;
+      return;
+    }
+
     edit = false;
     editing = false;
   }

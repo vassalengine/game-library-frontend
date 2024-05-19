@@ -68,7 +68,14 @@
     }
 
     // update the project data
-    proj.readme = source;
+    try {
+      proj = await client.getProject();
+      error = null;
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
 
     edit = false;
     editing = false;

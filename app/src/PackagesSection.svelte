@@ -53,13 +53,15 @@
       return;
     }
 
-  // TODO: On edit, rerender the whole page?
-  // TODO: update proj?
-    proj.packages.push({
-      name: pkg,
-      description: '',
-      releases: []
-    });
+    // update the project data
+    try {
+      proj = await client.getProject();
+      error = null;
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
 
     edit = false;
     editing = false;

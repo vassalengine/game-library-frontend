@@ -151,16 +151,14 @@
         return;
       }
 
-  // TODO: refetch, then update
       // update the project data
-      proj.game = { ...proj.game, ...data.game };
-
-      if (data.description) {
-        proj.description = data.description;
+      try {
+        proj = await client.getProject();
+        error = null;
       }
-
-      if (data.image !== undefined) {
-        proj.image = data.image;
+      catch (err) {
+        error = err;
+        return;
       }
     }
 
