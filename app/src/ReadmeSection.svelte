@@ -1,0 +1,133 @@
+<script>
+  import markdownIt from 'https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/+esm';
+  import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.1.3/+esm';
+
+  import { getCookie } from '../public/gl/js/util.js';
+
+  import ErrorBox from './ErrorBox.svelte';
+
+  export let proj;
+  export let client;
+  export let user_info;
+  export let editing;
+
+  function user_is_owner() {
+     return user_info && proj.owners.includes(user_info.username);
+  }
+
+  function mdInit() {
+    const defaults = {
+      html: false,
+      xhtmlOut: false,
+      breaks: false,
+      langPrefix: 'language-',
+      linkify: true,
+      typographer: true,
+  //    highlight: doHighlight
+    };
+
+    const md = markdownIt(defaults);
+
+  //  mdHtml.renderer.rules.paragraph_open = mdHtml.renderer.rules.heading_open = injectLineNumbers;
+
+    return md;
+  }
+
+  const md = mdInit();
+
+  let source = proj.readme;
+
+  //
+  // edit mode
+  //
+
+  let edit = false;
+  let error = null;
+
+  function startEdit(event) {
+    edit = true;
+    editing = true;
+  }
+
+  function cancelEdit(event) {
+    edit = false;
+    editing = false;
+    error = null;
+  }
+
+  async function submitEdit(event) {
+    const data = { readme: source };
+
+    try {
+      await client.updateProject(data, getCookie('token'));
+      error = null;
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
+
+    // update the project data
+    proj.readme = source;
+
+    edit = false;
+    editing = false;
+  }
+</script>
+
+<style>
+.full-height {
+  height: 100%;
+}
+
+.source {
+  width: 100%;
+  font-family: monospace;
+  font-size: 13px;
+  padding: 2px;
+}
+
+.result {
+  padding: 2px 10px;
+  overflow: auto;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+</style>
+
+<!-- TODO: Add formatting bar like Discourse -->
+
+{#if error}
+<ErrorBox error={error} />
+{/if}
+<div>
+  <h2>
+    <svg class="svg-icon"><use xlink:href="#info-circle"></use></svg>
+    Readme
+    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startEdit}>
+      <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
+    </button>
+  </h2>
+{#if edit}
+  <div class="container">
+    <div class="row">
+      <div class="col-6">
+        <textarea id="readme_source" class="source full-height" bind:value={source} />
+      </div>
+      <section class="col-6">
+<!-- TODO: do we need to sanitize here? -->
+        <div id="readme_result" class="result full-height">{@html md.render(source)}</div>
+      </section>
+    </div>
+    <div class="row">
+      <form id="readme_form" action="" on:submit|preventDefault={submitEdit}>
+        <button type="submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+        <button id="cancel" type="button" class="btn btn-primary" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+      </form>
+    </div>
+  </div>
+{:else}
+  <div>{@html DOMPurify.sanitize(md.render(proj.readme))}</div>
+{/if}
+</div>

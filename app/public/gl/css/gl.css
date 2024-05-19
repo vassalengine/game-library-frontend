@@ -1,0 +1,33 @@
+/* Alphabetical index */
+
+#index ol {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0;
+  margin: 0 auto;
+  gap: 0.4em;
+}
+
+#index li {
+  list-style: none;
+  white-space: nowrap;
+}
+
+@media only screen and (max-width:767px) {
+  #index ol {
+    max-width: 15em;
+  }
+}
+
+/* User avatars */
+
+#current_user button img.avatar {
+  width: 2em;
+  height: 2em;
+  margin: 0.2em;
+}
+
+img.avatar {
+  border-radius: 50%;
+}
