@@ -6,7 +6,6 @@ const UMS_URL = 'http://localhost:4000/api/v1';
 const DISCOURSE_URL = 'https://forum.vassalengine.org';
 const api_url = 'http://localhost:3000/api/v1';
 
-const year = '2024';
 const current_version = '3.7.9';
 const news_link = 'https://forum.vassalengine.org/t/vassal-3-7-9-released/79096';
 
@@ -38,8 +37,8 @@ const project = path.substring(path.lastIndexOf('/') + 1);
 
 const app = new App({
   target: document.body,
+  anchor: document.body.firstChild,
   props: {
-    year: year,
     current_version: current_version,
     news_link: news_link,
     api_url: api_url,

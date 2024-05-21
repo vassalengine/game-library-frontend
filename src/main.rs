@@ -7,11 +7,12 @@ use axum::{
     routing::get
 };
 use axum_extra::extract::cookie::CookieJar;
+use const_format::formatcp;
 use std::net::SocketAddr;
 use tokio::net::TcpListener;
 use tower_http::{
     compression::CompressionLayer,
-    services::ServeDir
+    services::{ServeDir, ServeFile}
 };
 
 const DISCOURSE_URL: &str = "https://forum.vassalengine.org";
@@ -23,7 +24,7 @@ const GL_BASE: &str = GL_URL;
 
 const UMS_URL: &str = "http://localhost:4000/api/v1";
 
-const SITE_DIR: &str = "site";
+const SITE_DIR: &str = "app/dist";
 
 // TODO: client-side templating?
 // TODO: sanitize strings going into HTML
@@ -201,7 +202,10 @@ async fn main() {
     // set up router
     let app = Router::new()
         .route("/projects", get(handle_projects))
-        .route("/projects/:project", get(handle_project))
+        .route_service(
+            "/projects/:project",
+            ServeFile::new(formatcp!("{SITE_DIR}/index.html"))
+        )
         .nest_service("/", ServeDir::new(SITE_DIR))
         .layer(CompressionLayer::new());
 
