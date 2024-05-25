@@ -30,7 +30,6 @@ const YEAR: &str = "2024";
 const CURRENT_VERSION: &str = "3.7.12";
 const NEWS_LINK: &str = "https://forum.vassalengine.org/t/vassal-3-7-12-released/79548";
 
-// TODO: client-side templating?
 // TODO: sanitize strings going into HTML
 // TODO: should empty hrefs be # instead? something else?
 // TODO: look into tracing
