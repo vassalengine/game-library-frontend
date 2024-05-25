@@ -25,7 +25,7 @@
     owner_tags.addValue(proj.owners);
 
     // TODO: make autocomplete look like Discourse's, with avatars
-    // FIXME: Enter doesn't create chit
+    // FIXME: Enter doesn't create chip
 
     const inner_input = owners_input.parentNode.querySelector('.input-wrapper input');
     inner_input.id = 'newowner';

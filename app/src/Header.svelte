@@ -42,4 +42,3 @@
 <div id="alert-bar" class="text-center">
   <h5 class="py-3">Vassal {current_version} is released! See the <a class="link-light" href="{news_link}">news</a> for details.</h5>
 </div>
-
