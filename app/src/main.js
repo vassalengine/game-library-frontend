@@ -6,8 +6,8 @@ const UMS_URL = 'http://localhost:4000/api/v1';
 const DISCOURSE_URL = 'https://forum.vassalengine.org';
 const api_url = 'http://localhost:3000/api/v1';
 
-const current_version = '3.7.9';
-const news_link = 'https://forum.vassalengine.org/t/vassal-3-7-9-released/79096';
+const current_version = '3.7.12';
+const news_link = 'https://forum.vassalengine.org/t/vassal-3-7-12-released/79548';
 
 // determine if the user is logged in
 let user_info = null;
