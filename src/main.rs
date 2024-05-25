@@ -24,6 +24,12 @@ const UMS_URL: &str = "http://localhost:4000/api/v1";
 
 const SITE_DIR: &str = "app/dist";
 
+const API_URL: &str = "http://localhost:3000/api/v1";
+//const API_URL: &str = "https://vassalengine.org/test/gls/api/v1";
+const YEAR: &str = "2024";
+const CURRENT_VERSION: &str = "3.7.12";
+const NEWS_LINK: &str = "https://forum.vassalengine.org/t/vassal-3-7-12-released/79548";
+
 // TODO: client-side templating?
 // TODO: sanitize strings going into HTML
 // TODO: should empty hrefs be # instead? something else?
@@ -93,12 +99,6 @@ where
         }
     }
 }
-
-const API_URL: &str = "http://localhost:3000/api/v1";
-//const API_URL: &str = "https://vassalengine.org/test/gls/api/v1";
-const YEAR: &str = "2024";
-const CURRENT_VERSION: &str = "3.7.12";
-const NEWS_LINK: &str = "https://forum.vassalengine.org/t/vassal-3-7-12-released/79548";
 
 async fn setup_user_info(
     here: &str,
