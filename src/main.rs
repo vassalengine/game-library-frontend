@@ -17,9 +17,7 @@ use tower_http::{
 
 const DISCOURSE_URL: &str = "https://forum.vassalengine.org";
 
-const GL_URL: &str = "http://localhost:8000";
-const GL_BASE: &str = GL_URL;
-//const GL_URL: &str = "https://vassalengine.org/test/gl";
+const GL_BASE: &str = "/gl";
 //const GL_BASE: &str = "/test/gl";
 
 const UMS_URL: &str = "http://localhost:4000/api/v1";
@@ -173,6 +171,7 @@ async fn handle_projects(
     )
 }
 
+/*
 async fn handle_project(
     Path(proj): Path<String>,
     jar: CookieJar
@@ -193,6 +192,7 @@ async fn handle_project(
         )
     )
 }
+*/
 
 #[tokio::main]
 async fn main() {
@@ -201,9 +201,9 @@ async fn main() {
 
     // set up router
     let app = Router::new()
-        .route("/projects", get(handle_projects))
+        .route(&format!("{GL_BASE}/projects"), get(handle_projects))
         .route_service(
-            "/projects/:project",
+            &format!("{GL_BASE}/projects/:project"),
             ServeFile::new(formatcp!("{SITE_DIR}/index.html"))
         )
         .nest_service("/", ServeDir::new(SITE_DIR))

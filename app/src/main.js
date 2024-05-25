@@ -41,6 +41,7 @@ const app = new App({
   props: {
     current_version: current_version,
     news_link: news_link,
+    base_url: window.location.href,
     api_url: api_url,
     DISCOURSE_URL: DISCOURSE_URL,
     UMS_URL: UMS_URL,

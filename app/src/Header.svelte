@@ -1,4 +1,5 @@
 <script>
+  export let base_url;
   export let user_info;
   export let DISCOURSE_URL;
   export let UMS_URL;
@@ -22,7 +23,8 @@
     <li><a class="nav-link px-2 link-dark" href="/about.html"><svg class="svg-icon"><use xlink:href="#info-circle"></use></svg> About</a></li>
     <li><a class="nav-link px-2 link-dark" href="https://discord.gg/GDdfq9AkfM"><svg class="svg-icon"><use xlink:href="#fab-discord"></use></svg> Chat</a></li>
     <li><a class="nav-link px-2 link-dark" href="https://forum.vassalengine.org"><svg class="svg-icon"><use xlink:href="#landmark"></use></svg> Forum</a></li>
-    <li><a class="nav-link px-2 link-dark" href="/wiki/Category:Modules"><svg class="svg-icon"><use xlink:href="#chess-knight"></use></svg> Modules</a></li>
+    <li><a class="nav-link px-2 link-dark" href="{base_url}/projects"><svg class="svg-icon"><use xlink:href="#chess-knight"></use></svg> Modules</a></li>
+<!-- TODO: update doc link -->
     <li><a class="nav-link px-2 link-dark" href="/wiki"><svg class="svg-icon"><use xlink:href="#book-open"></use></svg> Documentation</a></li>
     <li><a class="nav-link px-2 link-dark" href="https://forum.vassalengine.org/c/news/17"><svg class="svg-icon"><use xlink:href="#bullhorn"></use></svg> News</a></li>
     {#if user_info}

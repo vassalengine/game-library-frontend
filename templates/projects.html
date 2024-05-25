@@ -4,7 +4,7 @@
 
 {% block head %}
   {% call super() %}
-  <link rel="stylesheet" type="text/css" href="/gl/css/gl.css">
+  <link rel="stylesheet" type="text/css" href="{{ crate::GL_BASE }}/css/gl.css">
 {% endblock %}
 
 {% block content %}
@@ -12,7 +12,7 @@
 <main class="container px-5 mb-5">
 
 <nav class="d-flex flex-wrap align-items-center my-3">
-  <form class="mx-md-2 my-1 flex-grow-1 order-md-1" action="/projects">
+  <form class="mx-md-2 my-1 flex-grow-1 order-md-1" action="{{ crate::GL_BASE }}/projects">
     <input class="form-control" id="search" type="search" name="q" placeholder="Search...">
   </form>
   <div class="w-100 d-md-none"></div>
@@ -25,7 +25,7 @@
     <span id="result_type" class="text-muted"></span>
   </div>
   <div class="ms-auto mx-1 my-1 pe-0 order-md-2">
-    <a href="/projects">Browse All Projects</a>
+    <a href="{{ crate::GL_BASE }}/projects">Browse All Projects</a>
   </div>
 </nav>
 
@@ -135,6 +135,6 @@
   </div>
 </div>
 
-<script src="/gl/js/common.js"></script>
-<script type="module" src="/gl/js/projects.js" id="projects-script" data-api="{{ api_url }}"></script>
+<script src="{{ crate::GL_BASE }}/js/common.js"></script>
+<script type="module" src="{{ crate::GL_BASE }}/js/projects.js" id="projects-script" data-api="{{ api_url }}"></script>
 {% endblock %}
