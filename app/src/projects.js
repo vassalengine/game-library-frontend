@@ -1,13 +1,14 @@
-import App from './App.svelte';
+import Search from './Search.svelte';
 import { getCookie } from '../public/gl/js/util.js';
 
-// config 
 const UMS_URL = 'http://localhost:4000/api/v1';
 const DISCOURSE_URL = 'https://forum.vassalengine.org';
 const api_url = 'http://localhost:3000/api/v1';
 
 const current_version = '3.7.12';
 const news_link = 'https://forum.vassalengine.org/t/vassal-3-7-12-released/79548';
+
+const LIMIT = 10;
 
 // determine if the user is logged in
 let user_info = null;
@@ -31,23 +32,28 @@ const here = encodeURIComponent(window.location.href);
 const action = user_info ? 'Logout' : 'Login';
 const returnto = encodeURIComponent(`${UMS_URL}/sso/complete${action}?returnto=${here}`);
 
-// determine what project to display
-const path = window.location.pathname;
-const project = path.substring(path.lastIndexOf('/') + 1);
+const params = new URLSearchParams(window.location.search);
 
-const app = new App({
+// strip /projects from path to get base path
+const base_path = window.location.pathname.substring(
+  0, window.location.pathname.lastIndexOf('/')
+);
+
+const base_url = window.location.origin + base_path;
+
+const app = new Search({
   target: document.body,
   anchor: document.body.firstChild,
   props: {
     current_version: current_version,
     news_link: news_link,
-    base_url: window.location.href,
+    base_url: base_url,
     api_url: api_url,
     DISCOURSE_URL: DISCOURSE_URL,
     UMS_URL: UMS_URL,
-    project: project,
     user_info: user_info,
-    returnto: returnto
+    returnto: returnto,
+    LIMIT: LIMIT
   }
 });
 

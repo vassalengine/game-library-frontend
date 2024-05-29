@@ -20,7 +20,7 @@ async function checkError(response) {
   }
 }
 
-async function fetchJSON(url, options={}) {
+export async function fetchJSON(url, options={}) {
   const response = await fetch(url, options);
   await checkError(response);
   return response.json();
