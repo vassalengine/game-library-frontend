@@ -47,15 +47,15 @@ const app = new App({
   target: document.body,
   anchor: document.body.firstChild,
   props: {
-    current_version: current_version,
-    news_link: news_link,
-    base_url: base_url,
-    api_url: api_url,
-    DISCOURSE_URL: DISCOURSE_URL,
-    UMS_URL: UMS_URL,
-    project: project,
-    user_info: user_info,
-    returnto: returnto
+    current_version,
+    news_link,
+    base_url,
+    api_url,
+    DISCOURSE_URL,
+    UMS_URL,
+    project,
+    user_info,
+    returnto
   }
 });
 
