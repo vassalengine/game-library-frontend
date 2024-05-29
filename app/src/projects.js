@@ -34,10 +34,10 @@ const returnto = encodeURIComponent(`${UMS_URL}/sso/complete${action}?returnto=$
 
 const params = new URLSearchParams(window.location.search);
 
+const path = window.location.pathname;
+
 // strip /projects from path to get base path
-const base_path = window.location.pathname.substring(
-  0, window.location.pathname.lastIndexOf('/')
-);
+const base_path = path.substring(0, path.lastIndexOf('/'));
 
 const base_url = window.location.origin + base_path;
 

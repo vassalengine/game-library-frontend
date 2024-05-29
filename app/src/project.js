@@ -37,10 +37,7 @@ const i = path.lastIndexOf('/');
 const project = path.substring(i + 1);
 
 // strip /projects from path to get base path
-const base_path = window.location.pathname.substring(
-  0, path.lastIndexOf('/', i - 1)
-);
-
+const base_path = path.substring(0, path.lastIndexOf('/', i - 1));
 const base_url = window.location.origin + base_path;
 
 const app = new App({
