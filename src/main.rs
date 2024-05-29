@@ -150,6 +150,7 @@ async fn setup_user_info(
     }
 }
 
+/*
 async fn handle_projects(
     jar: CookieJar
 ) -> Result<HtmlTemplate<ProjectsTemplate>, AppError> {
@@ -169,6 +170,7 @@ async fn handle_projects(
         )
     )
 }
+*/
 
 /*
 async fn handle_project(
@@ -200,10 +202,13 @@ async fn main() {
 
     // set up router
     let app = Router::new()
-        .route(&format!("{GL_BASE}/projects"), get(handle_projects))
+        .route_service(
+            &format!("{GL_BASE}/projects"),
+            ServeFile::new(formatcp!("{SITE_DIR}/projects.html"))
+        )
         .route_service(
             &format!("{GL_BASE}/projects/:project"),
-            ServeFile::new(formatcp!("{SITE_DIR}/index.html"))
+            ServeFile::new(formatcp!("{SITE_DIR}/project.html"))
         )
         .nest_service("/", ServeDir::new(SITE_DIR))
         .layer(CompressionLayer::new());
