@@ -9,6 +9,7 @@
   export let returnto;
   export let LIMIT;
 
+  import { unpackParams } from './lib/params.js';
   import { intlFormatDistance } from '../public/gl/js/util.js';
   import { fetchJSON } from '../public/gl/js/client.js';
 
@@ -17,66 +18,6 @@
 
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
   const now = new Date();
-
-  function bytesToBase64(bytes) {
-    return btoa(String.fromCodePoint(...bytes));
-  }
-
-  function b64encode(s) {
-    return bytesToBase64(new TextEncoder().encode(s))
-      .replace(/={1,2}$/, '') // unpad
-      .replace('+', '-')      // url-safe
-      .replace('/', '_');
-  }
-
-  function base64ToBytes(base64) {
-    return Uint8Array.from(atob(base64), (m) => m.codePointAt(0));
-  }
-
-  function b64decode(s) {
-    s = s.replace('-', '+')  // un-url-safe
-      .replace('_', '/') +
-      Array((4 - s.length % 4) % 4 + 1).join('='); // repad
-    return new TextDecoder().decode(base64ToBytes(s));
-  }
-
-  class ParamsError extends Error {}
-
-  function unpackParams(params) {
-    // Unpack parameters
-    let sort = null;
-    let query = null;
-    let s = params.get('s');
-
-    // Local state parameter s
-    //
-    // s is set => retain s
-    // sort is set => add sort to s
-    // query is set => add query to s
-    // nothing set => sort = t, query = null
-
-    if (params.has('seek')) {
-      if (s === null) {
-        // invalid: s should be set if we're seeking
-        throw new ParamsError();
-      }
-
-      [sort, query] = b64decode(s)
-        .split(',', 2)
-        .map((e) => e === '' ? null : e);
-    }
-    else {
-      query = params.get('q');
-      // default query sort is relevance, otherwise title
-      sort = params.get('sort') ?? (query !== null ? 'r' : 't');
-    }
-
-    if (s === null) {
-      s = b64encode(`${sort ?? ''},${query ?? ''}`);
-    }
-
-    return [sort, query, s];
-  }
 
   const params = new URLSearchParams(window.location.search);
  
