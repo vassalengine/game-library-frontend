@@ -1,4 +1,4 @@
-import Search from './Search.svelte';
+import ProjectsPage from './ProjectsPage.svelte';
 import { getUserInfo, returnToFor, CURRENT_VERSION, DISCOURSE_URL, GLS_URL, NEWS_LINK, UMS_URL } from './lib/setup.js';
 
 const api_url = GLS_URL;
@@ -20,7 +20,7 @@ const path = window.location.pathname;
 const base_path = path.substring(0, path.lastIndexOf('/'));
 const base_url = window.location.origin + base_path;
 
-const app = new Search({
+const app = new ProjectsPage({
   target: document.body,
   anchor: document.body.firstChild,
   props: {

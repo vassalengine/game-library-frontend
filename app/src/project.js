@@ -1,4 +1,4 @@
-import App from './App.svelte';
+import ProjectPage from './ProjectPage.svelte';
 import { getUserInfo, returnToFor, CURRENT_VERSION, DISCOURSE_URL, GLS_URL, NEWS_LINK, UMS_URL } from './lib/setup.js';
 
 // config
@@ -22,7 +22,7 @@ const project = path.substring(i + 1);
 const base_path = path.substring(0, path.lastIndexOf('/', i - 1));
 const base_url = window.location.origin + base_path;
 
-const app = new App({
+const app = new ProjectPage({
   target: document.body,
   anchor: document.body.firstChild,
   props: {
