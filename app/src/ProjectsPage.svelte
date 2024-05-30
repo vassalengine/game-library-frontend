@@ -9,7 +9,7 @@
   export let returnto;
   export let LIMIT;
 
-  import { unpackParams } from './lib/params.js';
+  import { makeRequestURL, unpackParams } from './lib/params.js';
   import { intlFormatDistance } from '../public/gl/js/util.js';
   import { fetchJSON } from '../public/gl/js/client.js';
 
@@ -32,6 +32,16 @@
 
   const [sort, query, state] = unpacked;
 
+  let error = null;
+  let meta = null;
+  let projects = null;
+
+  function loadProjects(url) {
+     fetchJSON(url)
+      .then((result) => ( { projects, meta } = result ))
+      .catch((err) => error = err);
+  }
+
   function updateSort(event) {
     const url = new URL(window.location);
 
@@ -45,32 +55,13 @@
     }
 
     url.searchParams.set('sort', event.target.value);
-    window.location.replace(url.toString());
+
+    // update page instead of reloading
+    loadProjects(makeRequestURL(api_url, url.searchParams, LIMIT));
+    window.history.replaceState(null, '', url.toString());
   }
 
-  // Construct API request
-
-  const req_url = new URL(`${api_url}/projects`);
-
-  // Pass on only params the API knows
-  for (const k of ['q', 'sort', 'order', 'from', 'seek', 'limit']) {
-    const v = params.get(k);
-    if (v !== null) {
-      req_url.searchParams.set(k, v);
-    }
-  }
-
-  if (!req_url.searchParams.has('limit')) {
-    req_url.searchParams.set('limit', LIMIT);
-  }
-  
-  let error = null;
-  let meta = null;
-  let projects = null;
-
-  fetchJSON(req_url)
-    .then((result) => ( { projects, meta } = result ))
-    .catch((err) => error = err);
+  loadProjects(makeRequestURL(api_url, params, LIMIT));
 </script>
 
 <style>
