@@ -2,8 +2,6 @@ import ProjectPage from './ProjectPage.svelte';
 import { getUserInfo, returnToFor, CURRENT_VERSION, DISCOURSE_URL, GLS_URL, NEWS_LINK, UMS_URL } from './lib/setup.js';
 
 // config
-const api_url = GLS_URL;
-
 const current_version = CURRENT_VERSION;
 const news_link = NEWS_LINK;
 
@@ -29,7 +27,7 @@ const app = new ProjectPage({
     current_version,
     news_link,
     base_url,
-    api_url,
+    GLS_URL,
     DISCOURSE_URL,
     UMS_URL,
     project,

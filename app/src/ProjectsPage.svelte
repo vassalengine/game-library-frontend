@@ -3,7 +3,7 @@
   export let news_link;
   export let base_url;
   export let user_info;
-  export let api_url;
+  export let GLS_URL;
   export let DISCOURSE_URL;
   export let UMS_URL;
   export let returnto;
@@ -57,11 +57,11 @@
     url.searchParams.set('sort', event.target.value);
 
     // update page instead of reloading
-    loadProjects(makeRequestURL(api_url, url.searchParams, LIMIT));
+    loadProjects(makeRequestURL(GLS_URL, url.searchParams, LIMIT));
     window.history.replaceState(null, '', url.toString());
   }
 
-  loadProjects(makeRequestURL(api_url, params, LIMIT));
+  loadProjects(makeRequestURL(GLS_URL, params, LIMIT));
 </script>
 
 <style>

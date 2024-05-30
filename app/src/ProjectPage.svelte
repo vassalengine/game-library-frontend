@@ -4,7 +4,7 @@
   export let base_url;
   export let user_info;
   export let project;
-  export let api_url;
+  export let GLS_URL;
   export let DISCOURSE_URL;
   export let UMS_URL;
   export let returnto;
@@ -19,7 +19,7 @@
   import ReadmeSection from './ReadmeSection.svelte';
   import PlayersSection from './PlayersSection.svelte';
   
-  const client = new Client(api_url, project);
+  const client = new Client(GLS_URL, project);
 
   let proj = null;
   let proj_error = null;
