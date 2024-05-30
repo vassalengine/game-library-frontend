@@ -1,13 +1,13 @@
 import { getCookie } from '../../public/gl/js/util.js';
 
-export const GLS_URL = 'http://localhost:3000/api/v1';
-export const UMS_URL = 'http://localhost:4000/api/v1';
-export const DISCOURSE_URL = 'https://forum.vassalengine.org';
+const gls_url = 'http://localhost:3000/api/v1';
+const ums_url = 'http://localhost:4000/api/v1';
+const discourse_url = 'https://forum.vassalengine.org';
 
-export const CURRENT_VERSION = '3.7.12';
-export const NEWS_LINK = 'https://forum.vassalengine.org/t/vassal-3-7-12-released/79548';
+const current_version = '3.7.12';
+const news_link = 'https://forum.vassalengine.org/t/vassal-3-7-12-released/79548';
 
-export function getUserInfo(ums_url) {
+function getUserInfo(ums) {
   const username = getCookie('username');
   if (!username) {
     return null;
@@ -21,12 +21,25 @@ export function getUserInfo(ums_url) {
   return {
     username,
     name,
-    avatar_url: `${ums_url}/users/${username}/avatar/48`
+    avatar_url: `${ums}/users/${username}/avatar/48`
   };
 }
 
-export function returnToFor(logged_in, ret_url, ums_url) {
-  const here = encodeURIComponent(ret_url);
+function returnToFor(logged_in, ret, ums) {
+  // construct the login/logout returnto
+  const here = encodeURIComponent(ret);
   const action = logged_in ? 'Logout' : 'Login';
-  return encodeURIComponent(`${ums_url}/sso/complete${action}?returnto=${here}`);
+  return encodeURIComponent(`${ums}/sso/complete${action}?returnto=${here}`);
 }
+
+const user_info = getUserInfo(ums_url);
+
+export const CONFIG = {
+  discourse_url,
+  gls_url,
+  ums_url,
+  current_version,
+  news_link,
+  user_info,
+  returnto: returnToFor(user_info, window.location.href, ums_url)
+};

@@ -4,9 +4,9 @@
   export let base_url;
   export let user_info;
   export let project;
-  export let GLS_URL;
-  export let DISCOURSE_URL;
-  export let UMS_URL;
+  export let gls_url;
+  export let discourse_url;
+  export let ums_url;
   export let returnto;
 
   import Client from '../public/gl/js/client.js';
@@ -19,7 +19,7 @@
   import ReadmeSection from './ReadmeSection.svelte';
   import PlayersSection from './PlayersSection.svelte';
   
-  const client = new Client(GLS_URL, project);
+  const client = new Client(gls_url, project);
 
   let proj = null;
   let proj_error = null;
@@ -75,7 +75,7 @@
   {/if}
 </svelte:head>
 
-<Header {base_url} {user_info} {DISCOURSE_URL} {UMS_URL} {returnto} {current_version} {news_link} />
+<Header {base_url} {user_info} {discourse_url} {ums_url} {returnto} {current_version} {news_link} />
 
 <main class="container px-5 mb-5">
 
@@ -96,8 +96,8 @@
   {/if}
   {#if proj}
   <GameSection bind:proj={proj} {client} username={user_info.username} bind:editing={editing} />
-  <ProjectSection bind:proj={proj} {client} username={user_info.username} {UMS_URL} bind:editing={editing} />
-  <PackagesSection bind:proj={proj} {client} username={user_info.username} {UMS_URL} bind:editing={editing} />
+  <ProjectSection bind:proj={proj} {client} username={user_info.username} {ums_url} bind:editing={editing} />
+  <PackagesSection bind:proj={proj} {client} username={user_info.username} {ums_url} bind:editing={editing} />
   <ReadmeSection bind:proj={proj} {client} username={user_info.username} bind:editing={editing} />
   {/if}
  
@@ -110,7 +110,7 @@
 <ErrorBox error={players_error} />
 {/if}
 {#if players !== null}
-<PlayersSection players={players} client={client} username={user_info.username} UMS_URL={UMS_URL} bind:editing={editing} />
+<PlayersSection players={players} client={client} username={user_info.username} ums_url={ums_url} bind:editing={editing} />
 {/if}
 
   {#if user_info}

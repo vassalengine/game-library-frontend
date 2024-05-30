@@ -1,15 +1,5 @@
 import ProjectPage from './ProjectPage.svelte';
-import { getUserInfo, returnToFor, CURRENT_VERSION, DISCOURSE_URL, GLS_URL, NEWS_LINK, UMS_URL } from './lib/setup.js';
-
-// config
-const current_version = CURRENT_VERSION;
-const news_link = NEWS_LINK;
-
-// determine if the user is logged in
-const user_info = getUserInfo(UMS_URL);
-
-// set the login/logout returnto
-const returnto = returnToFor(user_info, window.location.href, UMS_URL);
+import { CONFIG } from './lib/setup.js';
 
 // determine what project to display
 const path = window.location.pathname;
@@ -24,15 +14,9 @@ const app = new ProjectPage({
   target: document.body,
   anchor: document.body.firstChild,
   props: {
-    current_version,
-    news_link,
+    ...CONFIG,
     base_url,
-    GLS_URL,
-    DISCOURSE_URL,
-    UMS_URL,
-    project,
-    user_info,
-    returnto
+    project
   }
 });
 

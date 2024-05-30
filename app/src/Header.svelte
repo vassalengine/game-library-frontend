@@ -1,8 +1,8 @@
 <script>
   export let base_url;
   export let user_info;
-  export let DISCOURSE_URL;
-  export let UMS_URL;
+  export let discourse_url;
+  export let ums_url;
   export let returnto;
   export let current_version;
   export let news_link;
@@ -17,8 +17,8 @@
 
   <ul class="nav col-12 col-md-auto mb-2 justify-content-center align-items-center mb-md-0">
     {#if !user_info}
-    <li id="sign_up_user"><a class="btn btn-primary p-1 mx-1 rounded-0" href="{DISCOURSE_URL}/signup" role="button">Sign Up</a></li>
-    <li id="login_user"><a class="btn btn-primary p-1 mx-1 rounded-0" href="{UMS_URL}/sso/login?returnto={returnto}" role="button"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Log In</a></li>
+    <li id="sign_up_user"><a class="btn btn-primary p-1 mx-1 rounded-0" href="{discourse_url}/signup" role="button">Sign Up</a></li>
+    <li id="login_user"><a class="btn btn-primary p-1 mx-1 rounded-0" href="{ums_url}/sso/login?returnto={returnto}" role="button"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Log In</a></li>
     {/if}
     <li><a class="nav-link px-2 link-dark" href="/about.html"><svg class="svg-icon"><use xlink:href="#info-circle"></use></svg> About</a></li>
     <li><a class="nav-link px-2 link-dark" href="https://discord.gg/GDdfq9AkfM"><svg class="svg-icon"><use xlink:href="#fab-discord"></use></svg> Chat</a></li>
@@ -33,8 +33,8 @@
         <img id="userAvatar" class="avatar" title="{user_info.name}" src="{user_info.avatar_url}" alt="">
       </button>
       <ul class="dropdown-menu" aria-labelledby="userDropdown">
-        <li><a id="userProfile" class="dropdown-item" href="{DISCOURSE_URL}/u/{user_info.username}"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Profile</a></li>
-        <li><a id="userLogout" class="dropdown-item" href="{UMS_URL}/sso/logout?returnto={returnto}"><svg class="svg-icon"><use xlink:href="#right-from-bracket"></use></svg> Log Out</a></li>
+        <li><a id="userProfile" class="dropdown-item" href="{discourse_url}/u/{user_info.username}"><svg class="svg-icon"><use xlink:href="#user"></use></svg> Profile</a></li>
+        <li><a id="userLogout" class="dropdown-item" href="{ums_url}/sso/logout?returnto={returnto}"><svg class="svg-icon"><use xlink:href="#right-from-bracket"></use></svg> Log Out</a></li>
       </ul>
     </li>
     {/if}

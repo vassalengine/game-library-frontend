@@ -3,11 +3,11 @@
   export let news_link;
   export let base_url;
   export let user_info;
-  export let GLS_URL;
-  export let DISCOURSE_URL;
-  export let UMS_URL;
+  export let gls_url;
+  export let discourse_url;
+  export let ums_url;
   export let returnto;
-  export let LIMIT;
+  export let limit;
 
   import { makeRequestURL, unpackParams } from './lib/params.js';
   import { intlFormatDistance } from '../public/gl/js/util.js';
@@ -57,11 +57,11 @@
     url.searchParams.set('sort', event.target.value);
 
     // update page instead of reloading
-    loadProjects(makeRequestURL(GLS_URL, url.searchParams, LIMIT));
+    loadProjects(makeRequestURL(gls_url, url.searchParams, limit));
     window.history.replaceState(null, '', url.toString());
   }
 
-  loadProjects(makeRequestURL(GLS_URL, params, LIMIT));
+  loadProjects(makeRequestURL(gls_url, params, limit));
 </script>
 
 <style>
@@ -98,7 +98,7 @@
   {/if}
 </svelte:head>
 
-<Header {base_url} {user_info} {DISCOURSE_URL} {UMS_URL} {returnto} {current_version} {news_link} />
+<Header {base_url} {user_info} {discourse_url} {ums_url} {returnto} {current_version} {news_link} />
 
 <main class="container px-5 mb-5">
 
@@ -111,7 +111,7 @@
   <div class="small me-auto mx-1 my-1 order-md-0">
 <!-- TODO: Is there some way to provide a range for the count? -->
     <span class="text-muted">Displaying</span>
-    <b>{Math.min(params.get('limit') ?? LIMIT, meta.total)}</b>
+    <b>{Math.min(params.get('limit') ?? limit, meta.total)}</b>
     <span class="text-muted">of</span>
     <b>{meta.total}</b>
     <span class="text-muted">{params.has('q') ? "search result" : "module"}{meta.total === 1 ? "" : "s"}</span>
