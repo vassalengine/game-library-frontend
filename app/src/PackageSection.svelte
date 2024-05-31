@@ -3,7 +3,7 @@
 
   import ReleaseSection from './ReleaseSection.svelte';
 
-  export let UMS_URL;
+  export let ums_url;
 
   export let proj;
   export let pkg;
@@ -118,7 +118,7 @@ details[open] > summary::before {
     </li>
     {/if}
     {#if pkg.releases.length > 0}
-    <ReleaseSection release={pkg.releases[0]} current {UMS_URL} />
+    <ReleaseSection release={pkg.releases[0]} current {ums_url} />
     {/if}  
   </ol>
   {#if pkg.releases.length > 1}
@@ -126,7 +126,7 @@ details[open] > summary::before {
     <summary>Older releases...</summary>
     <ol class="list-unstyled">
       {#each pkg.releases.slice(1) as release}
-      <ReleaseSection {release} {UMS_URL} />
+      <ReleaseSection {release} {ums_url} />
       {/each}
     </ol>
   </details>

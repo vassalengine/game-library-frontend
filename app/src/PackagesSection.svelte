@@ -4,7 +4,7 @@
   import ErrorBox from './ErrorBox.svelte';
   import PackageSection from './PackageSection.svelte';
 
-  export let UMS_URL;
+  export let ums_url;
 
   export let proj;
   export let client;
@@ -93,7 +93,7 @@
     </div>
   {/if}
   {#each proj.packages as pkg}
-    <PackageSection bind:proj={proj} {pkg} {client} {username} {UMS_URL} bind:editing={editing} />
+    <PackageSection bind:proj={proj} {pkg} {client} {username} {ums_url} bind:editing={editing} />
   {/each}
   </div>
 </div>

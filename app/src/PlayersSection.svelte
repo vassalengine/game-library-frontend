@@ -4,7 +4,7 @@
   import ErrorBox from './ErrorBox.svelte';
   import UserChip from './UserChip.svelte';
 
-  export let UMS_URL;
+  export let ums_url;
 
   export let players;
   export let client;
@@ -59,7 +59,7 @@
   </h2>
   <ul class="d-flex flex-wrap list-unstyled gap-1">
   {#each players.users as username}
-    <li><UserChip {UMS_URL} {username} size=24 /></li>
+    <li><UserChip {ums_url} {username} size=24 /></li>
   {/each}
   </ul>
 </div>

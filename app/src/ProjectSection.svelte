@@ -5,7 +5,7 @@
   import ErrorBox from './ErrorBox.svelte';
   import UserChip from './UserChip.svelte';
 
-  export let UMS_URL;
+  export let ums_url;
  
   export let proj;
   export let client;
@@ -50,7 +50,7 @@
     // and setting it directly doesn't work; setAttribute must be used.
     ac.setAttribute(
       'api',
-      `${UMS_URL}/users?term=\${newowner}&include_groups=false&limit=6`
+      `${ums_url}/users?term=\${newowner}&include_groups=false&limit=6`
     );
   }
 
@@ -152,7 +152,7 @@
         Owners
         <ul class="d-flex flex-wrap list-unstyled m-0 gap-1">
         {#each proj.owners as owner}
-          <li><UserChip {UMS_URL} username={owner} size=24 /></li>
+          <li><UserChip {ums_url} username={owner} size=24 /></li>
         {/each}
         </ul>
       </div>
