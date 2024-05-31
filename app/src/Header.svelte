@@ -8,6 +8,14 @@
   export let news_link;
 </script>
 
+<style>
+#current_user button img.avatar {
+  width: 2em;
+  height: 2em;
+  margin: 0.2em;
+}
+</style>
+
 <!-- nav -->
 
 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between px-2 py-2">
