@@ -9,11 +9,17 @@
 </script>
 
 <style>
+
 #current_user button img.avatar {
   width: 2em;
   height: 2em;
   margin: 0.2em;
 }
+
+.avatar {
+  border-radius: 50%;
+}
+
 </style>
 
 <!-- nav -->
