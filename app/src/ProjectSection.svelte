@@ -147,9 +147,11 @@
         <li>#{tag}</li>
       {/each}
       </ul>
-      <div class="d-flex align-items-center">
-        <svg class="svg-icon"><use xlink:href="#user"></use></svg>
-        Owners
+      <div class="d-flex align-items-center gap-1">
+        <div>
+          <svg class="svg-icon"><use xlink:href="#user"></use></svg>
+          Owners
+        </div>
         <ul class="d-flex flex-wrap list-unstyled m-0 gap-1">
         {#each proj.owners as owner}
           <li><UserChip {ums_url} username={owner} size=24 /></li>
