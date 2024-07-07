@@ -15,6 +15,18 @@
      return username && proj.owners.includes(username);
   }
 
+  function renderImage(tokens, idx, options, env, self) {
+    // Get token of a specific image
+    const tok = tokens[idx];
+
+    // Use token to get src and alt attributes
+    const src = client.imageUrl(tok.attrGet("src"));
+    const alt = tok.content;
+
+    // return image HTML
+    return `<img src="${src}" alt="${alt}" loading="lazy" />`;
+  }
+
   function mdInit() {
     const defaults = {
       html: false,
@@ -29,6 +41,8 @@
     const md = markdownIt(defaults);
 
   //  mdHtml.renderer.rules.paragraph_open = mdHtml.renderer.rules.heading_open = injectLineNumbers;
+
+    md.renderer.rules['image'] = renderImage;
 
     return md;
   }
