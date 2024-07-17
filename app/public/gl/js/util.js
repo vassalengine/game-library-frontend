@@ -7,7 +7,7 @@ export function getCookie(name) {
 export function formatSizeWithUnit(n) {
   const k = n > 0 ? Math.floor((Math.log2(n) / 10)) : 0;
   const unit = (k > 0 ? 'KMGT'[k - 1] + 'i' : '') + 'B';
-  const count = Math.floor(n / 1024**k);
+  const count = Math.round(n / 1024**k);
   return `${count} ${unit}`;
 }
 
