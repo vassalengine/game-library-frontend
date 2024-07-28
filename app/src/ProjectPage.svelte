@@ -17,6 +17,7 @@
   import ProjectSection from './ProjectSection.svelte';
   import PackagesSection from './PackagesSection.svelte';
   import ReadmeSection from './ReadmeSection.svelte';
+  import GallerySection from './GallerySection.svelte';
   import PlayersSection from './PlayersSection.svelte';
   
   const client = new Client(gls_url, project);
@@ -99,10 +100,9 @@
   <ProjectSection bind:proj={proj} {client} username={user_info?.username} {ums_url} bind:editing={editing} />
   <PackagesSection bind:proj={proj} {client} username={user_info?.username} {ums_url} bind:editing={editing} />
   <ReadmeSection bind:proj={proj} {client} username={user_info?.username} bind:editing={editing} />
+  <GallerySection bind:proj={proj} {client} username={user_info?.username} bind:editing={editing} />
   {/if}
- 
 </div>
-
 
 <!-- TODO: limit text field length -->
 
