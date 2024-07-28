@@ -12,6 +12,57 @@
      return username && proj.owners.includes(username);
   }
 
+  let players_slug;
+
+  function plural(v) {
+    return v === 1 ? '' : 's';
+  }
+
+  function makePlayersSlug(min, max) {
+    return makeRangeSlug(min, 'player', max, 'player');
+  }
+
+  let length_slug;
+
+  function roundNearest(v, step) {
+    return Math.round(v / step) * step;
+  }
+
+  function minutesOrHours(t) {
+    return t > 90 ? [roundNearest(t / 60, 0.5), 'hour'] : [t, 'minute'];
+  }
+
+  function makeLengthSlug(min, max) {
+    return makeRangeSlug(...minutesOrHours(min), ...minutesOrHours(max))
+  }
+
+  function makeRangeSlug(lval, lunit, hval, hunit) {
+    if (lval !== null) {
+      if (hval !== null) {
+        if (lval === hval) {
+          return `${lval} ${lunit}${plural(lval)}`;
+        }
+        else if (lunit === hunit) {
+          return `${lval}–${hval} ${hunit}s`;
+        }
+        else {
+          return `${lval} ${lunit}${plural(lval)}–${hval} ${hunit}${plural(hval)}`;
+        }
+      }
+      else {
+        return `At least ${lval} ${lunit}${plural(lval)}`;
+      }
+    }
+    else if (hval !== null) {
+      return `Up to ${hval} ${hunit}${plural(hval)}`;
+    }
+    else {
+      return 'unknown';
+    }
+  }
+
+  const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dui lorem, tincidunt eget justo eget, finibus semper erat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec condimentum justo vitae tortor imperdiet, vitae ornare massa hendrerit.';
+
   //
   // box image
   //
@@ -77,6 +128,16 @@
     box_img = proj.image ? client.imageUrl(proj.image) : '';
     sort_key = proj.game.title_sort_key;
     use_sort_key = proj.game.title !== proj.game.title_sort_key;
+
+    players_slug = makePlayersSlug(
+      proj.game.players?.min ?? null,
+      proj.game.players?.max ?? null
+    );
+
+    length_slug = makeLengthSlug(
+      proj.game.length?.min ?? null,
+      proj.game.length?.max ?? null
+    );
   }
 
   let edit = false;
@@ -164,7 +225,7 @@
 
     edit = false;
     editing = false;
-  }  
+  }
 
   init();
 </script>
@@ -275,8 +336,8 @@
 <ErrorBox {error} />
 {/if}
 <div class="my-2 p-2 border rounded clearfix bg-light">
-  <div>
 {#if edit}
+  <div>
     <form id="game_section_form" action="" on:submit|preventDefault={submitEdit}>
       <div class="float-left my-2 ms-2 me-3" class:no_image={!box_img}>
         <label id="box_image_label" for="box_image_input" on:dragenter|stopPropagation|preventDefault={handleDragEnter} on:dragover|stopPropagation|preventDefault={handleDragOver} on:drop|stopPropagation|preventDefault={handleDrop}>
@@ -329,25 +390,47 @@
         </div>
       </div>
     </form>
+  </div>
 {:else}
-    <div class="float-start my-2 ms-2 me-3" class:no_image={!box_img}>
-      <img id="box_image" class="rounded border" src={box_img} alt="box cover">
-      <div id="box_image_none" class="rounded border">
-        <div>no image</div>
+  <div class="m-3">
+    <div class="row mb-3">
+      <div class="col-md-auto text-center mb-2" class:no_image={!box_img}>
+        <img id="box_image" class="rounded border" src={box_img} alt="box cover">
+        <div id="box_image_none" class="rounded border">
+          <div>no image</div>
+        </div>
+      </div>
+      <div class="col">
+        <h1 class="">
+          {proj.game.title}
+          <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startEdit}>
+            <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
+          </button>
+        </h1>
+        <div class="d-flex flex-wrap gap-3 h5 fw-normal">
+          <div>
+            <svg class="svg-icon"><use xlink:href="#industry"></use></svg>
+            {#if proj.game.publisher}
+            <a href="">{proj.game.publisher}</a>{#if proj.game.publisher}, {/if}
+            {/if}
+            {#if proj.game.year}
+            <a href="">{proj.game.year}</a>
+            {/if}
+          </div>
+          <div><svg class="svg-icon"><use xlink:href="#user-group"></use></svg> <a href="">{players_slug}</a></div>
+          <div><svg class="svg-icon"><use xlink:href="#clock"></use></svg> <a href="">{length_slug}</a></div>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+          <svg class="align-self-center svg-icon"><use xlink:href="#tags"></use></svg>
+          <ul class="d-flex flex-wrap list-unstyled gap-3 mb-0">
+            {#each proj.tags as tag}
+            <li><a href="">{tag.replace(':', ': ')}</a></li>
+            {/each}
+          </ul>
+        </div>
       </div>
     </div>
-    <h1>
-      <span class="editable_field">{proj.game.title}</span>
-      <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startEdit}>
-        <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
-      </button>
-    </h1>
-    <div class="mb-2">
-      {[proj.game.publisher, proj.game.year].filter(Boolean).join(', ')}
-    </div>
-    <div>
-      {proj.description}
-    </div>
-{/if}
+    <p class="mb-0">{proj.description || lorem}</p>
   </div>
+{/if}
 </div>
