@@ -8,6 +8,15 @@
   export let current = false;
 
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
+
+  function formatRequires(r) {
+    if (r === '') {
+      return 'Unknown';
+    }
+
+    return r.replace('>=', '≥').replace('<=', '≤');
+  }
+
 </script>
 
 <style>
@@ -35,7 +44,7 @@
     </div>
     <div>
       <svg class="svg-icon"><use xlink:href="#vassal-bw"></use></svg>
-      {release.requires === '' ? 'Unknown' : release.requires}
+      {formatRequires(release.requires)}
     </div>
     <time datetime={release.published_at}>
       <svg class="svg-icon"><use xlink:href="#calendar-days"></use></svg>
