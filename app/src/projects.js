@@ -1,7 +1,7 @@
 import ProjectsPage from './ProjectsPage.svelte';
 import { CONFIG } from './lib/setup.js';
 
-const limit = 10;
+const limit = 50;
 
 // strip /projects from path to get base path
 const path = window.location.pathname;
