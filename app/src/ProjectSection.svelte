@@ -142,11 +142,6 @@
   <div>
     <div class="px-3 pt-2 pb-2 border rounded d-flex flex-wrap">
       <h3>{proj.name}</h3>
-      <ul>
-      {#each proj.tags as tag}
-        <li>#{tag}</li>
-      {/each}
-      </ul>
       <div class="d-flex align-items-center gap-1">
         <div>
           <svg class="svg-icon"><use xlink:href="#user"></use></svg>
