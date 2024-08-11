@@ -131,4 +131,11 @@ details[open] > summary::before {
     </ol>
   </details>
   {/if}
+  {#if pkg.files.length > 0 }
+  <ol class="list-unstyled">
+    {#each pkg.files as release}
+    <ReleaseSection {release} {ums_url} />
+    {/each}
+  </ol>
+  {/if}
 </div>
