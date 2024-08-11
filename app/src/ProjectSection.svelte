@@ -140,18 +140,23 @@
 {:else}
   {@const now = new Date()}
   <div>
-    <div class="px-3 pt-2 pb-2 border rounded d-flex flex-wrap">
-      <h3>{proj.name}</h3>
-      <div class="d-flex align-items-center gap-1">
-        <div>
-          <svg class="svg-icon"><use xlink:href="#user"></use></svg>
-          Owners
+    <div class="px-3 pt-2 pb-2 border rounded d-flex flex-wrap gap-2">
+      <div>
+        <div class="d-flex align-items-center gap-1">
+          <svg class="svg-icon"><use xlink:href="#id-badge"></use></svg>
+          {proj.name}
         </div>
-        <ul class="d-flex flex-wrap list-unstyled m-0 gap-1">
-        {#each proj.owners as owner}
-          <li><UserChip {ums_url} username={owner} size=24 /></li>
-        {/each}
-        </ul>
+        <div class="d-flex align-items-center gap-1">
+          <div>
+            <svg class="svg-icon"><use xlink:href="#user"></use></svg>
+            Owners
+          </div>
+          <ul class="d-flex flex-wrap list-unstyled m-0 gap-1">
+          {#each proj.owners as owner}
+            <li><UserChip {ums_url} username={owner} size=24 /></li>
+          {/each}
+          </ul>
+        </div>
       </div>
       <div class="ms-auto">
         <div>
