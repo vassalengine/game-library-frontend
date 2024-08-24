@@ -4,8 +4,8 @@ const gls_url = 'http://localhost:3000/api/v1';
 const ums_url = 'http://localhost:4000/api/v1';
 const discourse_url = 'https://forum.vassalengine.org';
 
-const current_version = '3.7.12';
-const news_link = 'https://forum.vassalengine.org/t/vassal-3-7-12-released/79548';
+const current_version = '3.7.14';
+const news_link = 'https://forum.vassalengine.org/t/vassal-3-7-14-released/83466';
 
 function getUserInfo(ums) {
   const username = getCookie('username');
