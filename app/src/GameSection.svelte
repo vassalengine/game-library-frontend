@@ -328,6 +328,12 @@
     clear: both;
   }
 }
+
+@media only screen and (min-width: 768px) {
+  #box_image {
+    max-width: 240px;
+  }
+}
 </style>
 
 <!-- TODO: disable submit buttons when there are no changes -->
@@ -341,7 +347,7 @@
     <form id="game_section_form" action="" on:submit|preventDefault={submitEdit}>
       <div class="float-left my-2 ms-2 me-3" class:no_image={!box_img}>
         <label id="box_image_label" for="box_image_input" on:dragenter|stopPropagation|preventDefault={handleDragEnter} on:dragover|stopPropagation|preventDefault={handleDragOver} on:drop|stopPropagation|preventDefault={handleDrop}>
-          <img id="box_image" class="rounded border" src={box_img} alt="box cover">
+          <img id="box_image" class="rounded border img-fluid" src={box_img} alt="box cover">
           <div id="box_image_none" class="rounded border">
             <div>no image</div>
           </div>
