@@ -323,7 +323,7 @@
   fill: white;
 }
 
-@media only screen and (max-width:767px) {
+@media only screen and (max-width: 767px) {
   #game_section_form {
     clear: both;
   }
