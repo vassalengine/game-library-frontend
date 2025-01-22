@@ -19,13 +19,13 @@
 }
 </style>
 
-<li class="d-flex flex-wrap align-items-center p-1 my-2 gap-2">
-  <div class="badge rounded-pill fs-5" class:current_release={current} class:release={!current}>{release.version}</div>
-  {#if release.files.length > 0}
-  <li class="">
-    {#each release.files as file}
+<div class="badge rounded-pill fs-5" class:current_release={current} class:release={!current}>{release.version}</div>
+{#if release.files.length > 0}
+<ul class="list-unstyled">
+  {#each release.files as file}
+  <li class="mb-2">
     <FileSection {file} {ums_url} />
-    {/each}
   </li>
-  {/if}
-</li>
+  {/each}
+</ul>
+{/if}

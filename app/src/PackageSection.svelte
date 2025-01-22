@@ -118,7 +118,9 @@ details[open] > summary::before {
     </li>
     {/if}
     {#if pkg.releases.length > 0}
-    <ReleaseSection release={pkg.releases[0]} current {ums_url} />
+    <li class="d-flex flex-wrap align-items-start p-1 my-2 gap-2">
+      <ReleaseSection release={pkg.releases[0]} current {ums_url} />
+    </li>
     {/if}  
   </ol>
   {#if pkg.releases.length > 1}
@@ -126,7 +128,9 @@ details[open] > summary::before {
     <summary>Older releases...</summary>
     <ol class="list-unstyled">
       {#each pkg.releases.slice(1) as release}
-      <ReleaseSection {release} {ums_url} />
+      <li class="d-flex flex-wrap align-items-start p-1 my-2 gap-2">
+        <ReleaseSection {release} {ums_url} />
+      </li>
       {/each}
     </ol>
   </details>
