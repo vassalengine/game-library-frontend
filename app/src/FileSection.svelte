@@ -9,10 +9,6 @@
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 
   function formatRequires(r) {
-    if (r === '') {
-      return 'Unknown';
-    }
-
     return r.replace('>=', '≥').replace('<=', '≤');
   }
 </script>
@@ -30,10 +26,12 @@
     <svg class="svg-icon"><use xlink:href="#weight-hanging"></use></svg>
     {formatSizeWithUnit(file.size)}
   </div>
+{#if file.requires}
   <div>
     <svg class="svg-icon"><use xlink:href="#vassal-bw"></use></svg>
     {formatRequires(file.requires)}
   </div>
+{/if}
   <time datetime={file.published_at}>
     <svg class="svg-icon"><use xlink:href="#calendar-days"></use></svg>
     {intlFormatDistance(rtf, new Date(file.published_at), new Date())}
