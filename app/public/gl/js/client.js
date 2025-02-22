@@ -119,6 +119,18 @@ async function addPackage(api, project, pkg, data, token) {
   );
 }
 
+async function addRelease(api, project, pkg, version, token) {
+  return fetchOk(
+    `${api}/projects/${project}/packages/${pkg}/${version}`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    }
+  );
+}
+
 function uploadFile(file, type, url, token) {
   return new Promise((resolve, reject) => {
     console.log(file.size);
@@ -171,15 +183,6 @@ function imageUrl(api, project, filename) {
   return `${api}/projects/${project}/images/${filename}`;
 }
 
-async function addRelease(api, project, pkg, version, file, type, token) {
-  return uploadFile(
-    file,
-    type,
-    `${api}/projects/${project}/packages/${pkg}/${version}`,
-    token
-  );
-}
-
 class Client {
   constructor(api, project) {
     this.api = api;
@@ -219,16 +222,16 @@ class Client {
     return addPackage(this.api, this.project, pkg, data, token);
   }
 
+  async addRelease(pkg, version, token) {
+    return addRelease(this.api, this.project, pkg, version, token);
+  }
+
   async addImage(imgname, file, type, token) {
     return addImage(this.api, this.project, imgname, file, type, token);
   }
 
   imageUrl(filename) {
     return imageUrl(this.api, this.project, filename);
-  }
-
-  async addRelease(pkg, version, file, type, token) {
-    return addRelease(this.api, this.project, pkg, version, file, type, token);
   }
 }
 
