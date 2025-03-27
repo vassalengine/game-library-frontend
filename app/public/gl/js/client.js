@@ -184,13 +184,34 @@ function uploadFile(file, type, url, token) {
   });
 }
 
+async function addFile(api, project, pkg, version, filename, file, type, token) {
+  try {
+    return await uploadFile(
+      file,
+      type,
+      `${api}/projects/${project}/packages/${pkg}/${version}/${filename}`,
+      token
+    );
+  }
+  catch (result) {
+    const message = JSON.parse(result.response)?.error;
+    throw new APIError(result.status, result.statusText, message);
+  }
+}
+
 async function addImage(api, project, imgname, file, type, token) {
-  return uploadFile(
-    file,
-    type,
-    `${api}/projects/${project}/images/${imgname}`,
-    token
-  );
+  try {
+    return await uploadFile(
+      file,
+      type,
+      `${api}/projects/${project}/images/${imgname}`,
+      token
+    );
+  }
+  catch (result) {
+    const message = JSON.parse(result.response)?.error;
+    throw new APIError(result.status, result.statusText, message);
+  }
 }
 
 function imageUrl(api, project, filename) {
@@ -242,6 +263,10 @@ class Client {
 
   async addRelease(pkg, version, token) {
     return addRelease(this.api, this.project, pkg, version, token);
+  }
+
+  async addFile(pkg, version, file, token) {
+    return addFile(this.api, this.project, pkg, version, file.name, file, 'application/octet-stream', token);
   }
 
   async addImage(imgname, file, type, token) {
