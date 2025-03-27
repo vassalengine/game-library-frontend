@@ -9,6 +9,59 @@
   export let ums_url;
   export let returnto;
 
+  import { getCookie } from '../public/gl/js/util.js';
+
+  import Client from '../public/gl/js/client.js';
+
+  import Header from './Header.svelte';
+  import ErrorBox from './ErrorBox.svelte';
+
+  let error = null;
+
+  const client = new Client(gls_url, null);
+
+  async function submitEdit(event) {
+    error = null;
+
+    const fdata = new FormData(event.target);
+
+    const pname = fdata.get('project_name')
+    if (pname) {
+      const data = {
+        description: "",
+        tags: [],
+        game: {
+          title: pname,
+          title_sort_key: pname,
+          publisher: "",
+          year: ""
+        },
+        readme: ""
+      };
+
+      const token = getCookie('token');
+
+      client.project = pname;
+
+      try {
+        await client.createProject(data, token);
+        error = null;
+      }
+      catch (err) {
+        error = err;
+        return;
+      }
+    }
+  }
+
+  function validateProjectName(event) {
+
+  }
+
+  function cancelEdit(event) {
+
+  }
+
 </script>
 
 
@@ -31,9 +84,34 @@
   </div>
 </nav>
 
-<div id="new_project">
+<div id="new_project_content">
 
+{#if error}
+  <ErrorBox {error} />
+{/if}
 
+  <div class="my-2 pb-2">
+    <h2>
+      <svg class="svg-icon"><use xlink:href="#person-digging"></use></svg>
+      Create Project
+    </h2>
+
+{#if user_info}
+    <div class="container">
+      <div class="row">
+        <form action="" on:submit|preventDefault={submitEdit}>
+          <label for="project_name_input" class="form-label">Project name</label>
+          <input id="project_name_input" type="text" name="project_name" class="form-control" required on:input={validateProjectName}>
+          <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+          <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        </form>
+      </div>
+    </div>
+{:else}
+<ErrorBox error={"Log in to create a project."} />
+{/if}
+
+  </div>
 </div>
 
 </main>
