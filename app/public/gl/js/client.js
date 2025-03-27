@@ -9,7 +9,7 @@ class APIError extends Error {
 }
 
 APIError.prototype.toString = function () {
-  return `${this.name}: ${this.status} ${this.statusText}: ${this.message}`;
+  return `APIError: ${this.status} ${this.statusText}: ${this.message}`;
 };
 
 async function checkError(response) {
