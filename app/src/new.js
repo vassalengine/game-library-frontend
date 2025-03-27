@@ -1,10 +1,10 @@
-import ProjectPage from './ProjectPage.svelte';
+import NewProjectPage from './NewProjectPage.svelte';
 import { CONFIG } from './lib/setup.js';
 
 const path = window.location.pathname;
 
 // strip last component from path to get base path
-const base_path = path.substring(0, path.lastIndexOf('/', i - 1));
+const base_path = path.substring(0, path.lastIndexOf('/'));
 const base_url = window.location.origin + base_path;
 
 const app = new NewProjectPage({
