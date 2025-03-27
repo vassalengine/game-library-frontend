@@ -54,7 +54,7 @@ async fn main() {
             ServeFile::new(formatcp!("{SITE_DIR}/project.html"))
         )
         .route_service(
-            &format!("{GL_BASE}/projects/new"),
+            &format!("{GL_BASE}/new"),
             ServeFile::new(formatcp!("{SITE_DIR}/new.html"))
         )
         .nest_service("/", ServeDir::new(SITE_DIR))
