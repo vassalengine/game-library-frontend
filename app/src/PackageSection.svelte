@@ -1,6 +1,9 @@
 <script>
+   import { validate } from 'https://cdn.jsdelivr.net/npm/compare-versions@6.1.1/+esm';
+
   import { getCookie } from '../public/gl/js/util.js';
 
+  import ErrorBox from './ErrorBox.svelte';
   import ReleaseSection from './ReleaseSection.svelte';
 
   export let ums_url;
@@ -20,6 +23,7 @@
   //
 
   let edit = false;
+  let error = null;
 
   function startEdit(event) {
     edit = true;
@@ -46,26 +50,48 @@
     editing = false;
   }
 
+// FIXME: does this get updated when pkg changes?
+  let release_versions = new Set(pkg.releases.map((r) => r.version));
+
+  function validateReleaseVersion(event) {
+    let msg = "";
+    if (release_versions.has(event.target.value)) {
+      msg = "Release already exists";
+    }
+    else if (!validate(event.target.value)) {
+      msg = "Invalid version";
+    }
+
+    event.target.setCustomValidity(msg);
+  }
+
   async function submitRelease(event) {
     const fdata = new FormData(event.target);
 
     console.log(fdata);
-    // TODO
-    const release_file = fdata.get('release_file');
+    const release_version = fdata.get('release_version');
 
     try {
       await client.addRelease(
-        '13_Days_Official',
-        '1.0.1',
-        release_file,
-        release_file.type,
+        pkg.name,
+        release_version,
         getCookie('token')
       );
+      error = null;
     }
-    catch (error) {
-  // TODO: error box
-  //      handleErrorBefore(error, 'game_section_form');
-      console.log(error);
+    catch (err) {
+// TODO: Release needs different error var from package
+      error = err;
+      return;
+    }
+
+    // update the project data
+    try {
+      proj = await client.getProject();
+      error = null;
+    }
+    catch (err) {
+      error = err;
       return;
     }
 
@@ -98,6 +124,9 @@ details[open] > summary::before {
 }
 </style>
 
+{#if error}
+<ErrorBox {error} />
+{/if}
 <div class="border rounded p-3 my-2">
   <h3>
     <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
@@ -111,7 +140,10 @@ details[open] > summary::before {
     {#if edit}
     <li class="release_tmpl_top border rounded p-3 my-2">
       <form action="" on:submit|preventDefault={submitRelease}>
+        <input id="release_version_input" class="release_tmpl_name form-control" type="text" name="release_version" required on:input={validateReleaseVersion}>
+<!--
         <input id="release_file_input" class="release_tmpl_name form-control" type="file" name="release_file" required>
+-->
         <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
         <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelRelease}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </form>
@@ -119,7 +151,7 @@ details[open] > summary::before {
     {/if}
     {#if pkg.releases.length > 0}
     <li class="d-flex flex-wrap align-items-start p-1 my-2 gap-2">
-      <ReleaseSection release={pkg.releases[0]} current {ums_url} />
+      <ReleaseSection bind:proj={proj} {pkg} release={pkg.releases[0]} {client} current {username} {ums_url} bind:editing={editing} />
     </li>
     {/if}  
   </ol>
@@ -129,7 +161,7 @@ details[open] > summary::before {
     <ol class="list-unstyled">
       {#each pkg.releases.slice(1) as release}
       <li class="d-flex flex-wrap align-items-start p-1 my-2 gap-2">
-        <ReleaseSection {release} {ums_url} />
+        <ReleaseSection bind:proj={proj} {pkg} {release} {client} {username} {ums_url} bind:editing={editing} />
       </li>
       {/each}
     </ol>
