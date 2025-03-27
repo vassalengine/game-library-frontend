@@ -1,5 +1,5 @@
 <script>
-  import UseBootstrapTag from 'https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.0/+esm'
+  import UseBootstrapTag from 'https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.0/+esm';
   import { getCookie, intlFormatDistance } from '../public/gl/js/util.js';
 
   import ErrorBox from './ErrorBox.svelte';
