@@ -35,6 +35,20 @@ async function getProject(api, project) {
   return fetchJSON(`${api}/projects/${project}`);
 }
 
+async function createProject(api, project, data, token) {
+  return fetchOk(
+    `${api}/projects/${project}`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    }
+  );
+}
+
 async function updateProject(api, project, data, token) {
   return fetchOk(
     `${api}/projects/${project}`,
@@ -191,6 +205,10 @@ class Client {
 
   async getProject() {
     return getProject(this.api, this.project);
+  }
+
+  async createProject(data, token) {
+    return createProject(this.api, this.project, data, token);
   }
 
   async updateProject(data, token) {
