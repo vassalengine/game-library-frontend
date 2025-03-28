@@ -36,6 +36,17 @@
   let meta = null;
   let projects = null;
 
+  function normalizeWhitespace(s) {
+    return s.split(/\s+/).filter(s => s.length > 0).join(' ');
+  }
+
+  function submitSearch(event) {
+    const fdata = new FormData(event.target);
+
+    console.log(fdata);
+    fdata.set('q', normalizeWhitespace(fdata.get('q')));
+  }
+
   function loadProjects(url) {
      fetchJSON(url)
       .then((result) => ( { projects, meta } = result ))
@@ -103,7 +114,7 @@
 <main class="container px-5 mb-5">
 
 <nav class="d-flex flex-wrap align-items-center my-3">
-  <form class="mx-md-2 my-1 flex-grow-1 order-md-1" action="{base_url}/projects">
+  <form class="mx-md-2 my-1 flex-grow-1 order-md-1" action="{base_url}/projects" on:submit={submitSearch}>
     <input class="form-control" type="search" name="q" placeholder="Search..." value={query} required>
   </form>
   <div class="w-100 d-md-none"></div>
