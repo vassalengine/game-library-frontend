@@ -32,7 +32,7 @@
     {formatRequires(file.requires)}
   </div>
 {/if}
-  <time datetime={file.published_at}>
+  <time datetime={file.published_at} title={file.published_at}>
     <svg class="svg-icon"><use xlink:href="#calendar-days"></use></svg>
     {intlFormatDistance(rtf, new Date(file.published_at), new Date())}
   </time>
