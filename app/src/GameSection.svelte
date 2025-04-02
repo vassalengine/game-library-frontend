@@ -61,8 +61,6 @@
     }
   }
 
-  const lorem = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus dui lorem, tincidunt eget justo eget, finibus semper erat. Orci varius natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec condimentum justo vitae tortor imperdiet, vitae ornare massa hendrerit.';
-
   //
   // box image
   //
@@ -436,7 +434,7 @@
         </div>
       </div>
     </div>
-    <p class="mb-0">{proj.description || lorem}</p>
+    <p class="mb-0">{proj.description}</p>
   </div>
 {/if}
 </div>
