@@ -50,14 +50,14 @@ async fn main() {
             ServeFile::new(formatcp!("{SITE_DIR}/projects.html"))
         )
         .route_service(
-            &format!("{GL_BASE}/projects/:project"),
+            &format!("{GL_BASE}/projects/{{project}}"),
             ServeFile::new(formatcp!("{SITE_DIR}/project.html"))
         )
         .route_service(
             &format!("{GL_BASE}/new"),
             ServeFile::new(formatcp!("{SITE_DIR}/new.html"))
         )
-        .nest_service("/", ServeDir::new(SITE_DIR))
+        .fallback_service(ServeDir::new(SITE_DIR))
         .layer(CompressionLayer::new());
 
     // serve pages
