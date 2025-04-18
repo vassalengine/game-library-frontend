@@ -44,9 +44,26 @@
     flag_dialog.showModal();
   }
 
+  function maybeCloseDialog(event) {
+    // The backdrop is part of the dialog element, but the dialog contents
+    // completely fill the portion that is "inside" the dialog, so any clicks
+    // that register as being directly on the dialog are actually "outside"
+    // it, which means we should close the dialog.
+    //
+    // We listen on mousedown to prevent the situation in which the user
+    // selected text inside the dialog but released the mouse button outside
+    // the dialog.
+    if (event.target === event.currentTarget) {
+      event.currentTarget.close();
+    }
+  }
+
   function closeDialog(event) {
     if (flag_dialog.returnValue === 'submit') {
-
+      const form = flag_dialog.querySelector('form');
+      const data = new FormData(form);
+      console.log(Object.fromEntries(data));
+      // TODO: post data to GLS
     }
 
     resetFlagDialog();
@@ -123,8 +140,8 @@
 
 </style>
 
-<dialog id="flag_dialog" class="container p-0 border-0 shadow-lg " bind:this={flag_dialog} on:close={closeDialog}>
-  <form method="dialog">
+<dialog id="flag_dialog" class="container p-0 border-0 shadow-lg " bind:this={flag_dialog} on:close={closeDialog} on:mousedown={maybeCloseDialog}>
+  <form id="flag_form" method="dialog">
     <header class="d-flex align-items-center border-bottom ps-4 pe-3 py-3">
       <h1 class="fs-4 m-0">Thanks for keeping our community civil!</h1>
       <button id="flag_dialog_close" class="close_button ms-auto fs-4" type="submit" value="cancel" formnovalidate><svg class="svg-icon close_icon"><use xlink:href="#xmark"></use></svg></button>
@@ -132,17 +149,17 @@
     <div class="px-4 pt-4 pb-3">
       <p>All flags are received by moderators and will be reviewed as soon as possible.</p>
       <label class="flag_item pt-1 mb-1">
-        <input class="flag_type_radio" type="radio" bind:group={flag_selected} value="inappropriate" />
+        <input class="flag_type_radio" type="radio" name="flag_selected" bind:group={flag_selected} value="inappropriate" />
         <strong class="flag_type">It's Inappropriate</strong>
         <div class="flag_type_description mb-1">This page contains content that a reasonable person would consider offensive, abusive, to be hateful conduct or a violation of <a href="/guidelines">our community guidelines</a>.</div>
       </label>
       <label class="flag_item pt-1 mb-1">
-        <input class="flag_type_radio" type="radio" bind:group={flag_selected} value="spam" on:change={selectFlagType} />
+        <input class="flag_type_radio" type="radio" name="flag_selected" bind:group={flag_selected} value="spam" on:change={selectFlagType} />
         <strong class="flag_type">It's Spam</strong>
         <div class="flag_type_description mb-1">This page contains an advertisement, or vandalism. It is not useful or relevant to the current topic.</div>
       </label>
       <label class="flag_item pt-1 mb-1">
-        <input class="flag_type_radio" type="radio" bind:group={flag_selected} value="illegal" on:change={selectFlagType} />
+        <input class="flag_type_radio" type="radio" name="flag_selected" bind:group={flag_selected} value="illegal" on:change={selectFlagType} />
         <strong class="flag_type">It's Illegal</strong>
         <div class="flag_type_description mb-1">This page requires staff attention because I believe it contains content that is illegal.</div>
         {#if flag_selected === 'illegal'}
@@ -155,7 +172,7 @@
         {/if}
       </label>
       <label class="flag_item pt-1 mb-1">
-        <input class="flag_type_radio" type="radio" bind:group={flag_selected} value="other" on:change={selectFlagType} />
+        <input class="flag_type_radio" type="radio" name="flag_selected" bind:group={flag_selected} value="other" on:change={selectFlagType} />
         <strong class="flag_type">Something Else</strong>
         <div class="flag_type_description mb-1">This post requires staff attention for another reason not listed above.</div>
         {#if flag_selected === 'other'}
