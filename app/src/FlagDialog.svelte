@@ -85,6 +85,18 @@
   opacity: 0.6;
 }
 
+/*
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.6;
+  }
+}
+*/
+
 .flag_item {
   display: grid;
   grid-template-columns: auto 1fr;
@@ -125,18 +137,6 @@
 #flag_dialog .close_icon:hover {
   fill: var(--bs-link-hover-color);
 }
-
-/*
-@keyframes fade {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 0.6;
-  }
-}
-*/
 
 </style>
 
