@@ -13,13 +13,14 @@
 
   import Header from './Header.svelte';
   import ErrorBox from './ErrorBox.svelte';
+  import FlagDialog from './FlagDialog.svelte';
   import GameSection from './GameSection.svelte';
   import ProjectSection from './ProjectSection.svelte';
   import PackagesSection from './PackagesSection.svelte';
   import ReadmeSection from './ReadmeSection.svelte';
   import GallerySection from './GallerySection.svelte';
   import PlayersSection from './PlayersSection.svelte';
-  
+
   const client = new Client(gls_url, project);
 
   let proj = null;
@@ -38,6 +39,7 @@
 
   let editing = false;
 
+  let flag_dialog = null;
 </script>
 
 <style>
@@ -113,8 +115,11 @@
 <PlayersSection players={players} client={client} username={user_info?.username} ums_url={ums_url} bind:editing={editing} />
 {/if}
 
-  {#if user_info}
-    <button id="flag_button" type="button" class="btn bg-secondary-subtle p-1 mx-1 rounded-0"><svg class="svg-icon"><use xlink:href="#flag"></use></svg> Flag</button>
-  {/if}
-
+{#if user_info}
+<button id="flag_button" class="btn bg-secondary-subtle p-1 mx-1 rounded-0" type="button" on:click={() => flag_dialog.openDialog()}><svg class="svg-icon"><use xlink:href="#flag"></use></svg> Flag</button>
+{/if}
 </main>
+
+{#if user_info}
+<FlagDialog bind:this={flag_dialog} />
+{/if}
