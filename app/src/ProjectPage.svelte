@@ -121,5 +121,5 @@
 </main>
 
 {#if user_info}
-<FlagDialog bind:this={flag_dialog} />
+<FlagDialog bind:this={flag_dialog} {client} />
 {/if}
