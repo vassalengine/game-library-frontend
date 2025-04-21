@@ -218,6 +218,20 @@ function imageUrl(api, project, filename) {
   return `${api}/projects/${project}/images/${filename}`;
 }
 
+async function addFlag(api, project, flag, message, token) {
+  return fetchOk(
+    `${api}/projects/${project}/flag`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ 'flag': flag, 'message': message })
+    }
+  );
+}
+
 class Client {
   constructor(api, project) {
     this.api = api;
@@ -275,6 +289,10 @@ class Client {
 
   imageUrl(filename) {
     return imageUrl(this.api, this.project, filename);
+  }
+
+  async addFlag(flag, message, token) {
+    return addFlag(this.api, this.project, flag, message, token);
   }
 }
 
