@@ -112,7 +112,7 @@
 <ErrorBox error={players_error} />
 {/if}
 {#if players !== null}
-<PlayersSection players={players} client={client} username={user_info?.username} ums_url={ums_url} bind:editing={editing} />
+<PlayersSection players={players} {client} username={user_info?.username} ums_url={ums_url} bind:editing={editing} />
 {/if}
 
 {#if user_info}
