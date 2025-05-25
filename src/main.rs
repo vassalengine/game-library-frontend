@@ -1,8 +1,6 @@
 use axum::{
     Router, serve,
-    extract::{ConnectInfo, Request},
-    http::StatusCode,
-    response::{IntoResponse, Response},
+    extract::{ConnectInfo, Request}
 };
 use serde::Deserialize;
 use std::{
@@ -28,26 +26,6 @@ use tracing_subscriber::{
 };
 
 const SITE_DIR: &str = "app/dist";
-
-enum AppError {
-    InternalError
-}
-
-impl From<&AppError> for StatusCode {
-    fn from(err: &AppError) -> Self {
-        match err {
-            AppError::InternalError => StatusCode::INTERNAL_SERVER_ERROR
-        }
-    }
-}
-
-impl IntoResponse for AppError {
-    fn into_response(self) -> Response {
-        let code = StatusCode::from(&self);
-        let body = "";
-        (code, body).into_response()
-    }
-}
 
 fn real_addr(request: &Request) -> String {
     // If we're behind a proxy, get IP from X-Forwarded-For header
