@@ -31,8 +31,6 @@ const GL_BASE: &str = "/gl";
 
 const SITE_DIR: &str = "app/dist";
 
-// TODO: look into tracing
-
 enum AppError {
     InternalError
 }
