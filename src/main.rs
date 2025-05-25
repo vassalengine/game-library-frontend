@@ -88,18 +88,19 @@ enum StartupError {
     Io(#[from] io::Error)
 }
 
-fn routes() -> Router {
+// TODO: pass in SITE_DIR
+fn routes(base_path: &str) -> Router {
     Router::new()
         .route_service(
-            &format!("{GL_BASE}/projects"),
+            &format!("{base_path}/projects"),
             ServeFile::new(formatcp!("{SITE_DIR}/projects.html"))
         )
         .route_service(
-            &format!("{GL_BASE}/projects/{{project}}"),
+            &format!("{base_path}/projects/{{project}}"),
             ServeFile::new(formatcp!("{SITE_DIR}/project.html"))
         )
         .route_service(
-            &format!("{GL_BASE}/new"),
+            &format!("{base_path}/new"),
             ServeFile::new(formatcp!("{SITE_DIR}/new.html"))
         )
         .fallback_service(ServeDir::new(SITE_DIR))
@@ -153,7 +154,7 @@ async fn run() -> Result<(), StartupError> {
     let config: Config = toml::from_str(&fs::read_to_string("config.toml")?)?;
 
     // set up router
-    let app = routes();
+    let app = routes(&config.base_path);
 
     // serve pages
     let ip: IpAddr = config.listen_ip.parse()?;
