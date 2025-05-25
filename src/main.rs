@@ -14,6 +14,12 @@ use tower_http::{
     services::{ServeDir, ServeFile}
 };
 use tracing::{error, info};
+use tracing_panic::panic_hook;
+use tracing_subscriber::{
+    EnvFilter,
+    layer::SubscriberExt,
+    util::SubscriberInitExt
+};
 
 const GL_BASE: &str = "/gl";
 //const GL_BASE: &str = "/test/gl";
@@ -87,6 +93,27 @@ async fn run() -> Result<(), StartupError> {
 
 #[tokio::main]
 async fn main() {
+    // set up logging
+    tracing_subscriber::registry()
+        .with(EnvFilter::try_from_default_env()
+            .unwrap_or_else(|_| {
+                [
+                    // log this crate at info level
+                    &format!("{}=info", env!("CARGO_CRATE_NAME")),
+                    // tower_http is noisy below info
+                    "tower_http=info",
+                    // axum::rejection=trace shows rejections from extractors
+                    "axum::rejection=trace",
+                    // every panic is a fatal error
+                    "tracing_panic=error"
+                ].join(",").into()
+            }),
+        )
+        .with(tracing_subscriber::fmt::layer().with_target(false))
+        .init();
+
+    // ensure that panics are logged
+    std::panic::set_hook(Box::new(panic_hook));
 
     info!("Starting");
 
