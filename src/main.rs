@@ -4,12 +4,16 @@ use axum::{
     response::{IntoResponse, Response},
 };
 use const_format::formatcp;
-use std::net::SocketAddr;
+use std::{
+    io,
+    net::SocketAddr
+};
 use tokio::net::TcpListener;
 use tower_http::{
     compression::CompressionLayer,
     services::{ServeDir, ServeFile}
 };
+use tracing::{error, info};
 
 const GL_BASE: &str = "/gl";
 //const GL_BASE: &str = "/test/gl";
@@ -38,8 +42,17 @@ impl IntoResponse for AppError {
     }
 }
 
-#[tokio::main]
-async fn main() {
+#[derive(Debug, thiserror::Error)]
+enum StartupError {
+//    #[error("{0}")]
+//    AddrParse(#[from] std::net::AddrParseError),
+//    #[error("{0}")]
+//    TomlParse(#[from] toml::de::Error),
+    #[error("{0}")]
+    Io(#[from] io::Error)
+}
+
+async fn run() -> Result<(), StartupError> {
     let listen_ip = [0, 0, 0, 0];
     let listen_port = 8000;
 
@@ -62,10 +75,24 @@ async fn main() {
 
     // serve pages
     let addr = SocketAddr::from((listen_ip, listen_port));
-    let listener = TcpListener::bind(addr)
-        .await
-        .unwrap();
+    let listener = TcpListener::bind(addr).await?;
+
+    info!("Listening on {}", addr);
+
     serve(listener, app)
-        .await
-        .unwrap();
+        .await?;
+
+    Ok(())
+}
+
+#[tokio::main]
+async fn main() {
+
+    info!("Starting");
+
+    if let Err(e) = run().await {
+        error!("{}", e);
+    }
+
+    info!("Exiting");
 }

@@ -9,6 +9,8 @@ edition = "2021"
 axum = { version = "^0.8", features = ["http1", "http2", "macros", "query", "tokio"] }
 const_format = "^0.2"
 serde = { version = "^1", features = ["derive"] }
+thiserror = "^2.0"
 tokio = { version = "^1", features = ["full"] }
 tower = { version = "^0.5", features = ["buffer", "limit"] }
 tower-http = { version = "^0.6", features = ["compression-br", "compression-deflate", "compression-gzip", "compression-zstd", "fs"] }
+tracing = "^0.1"
