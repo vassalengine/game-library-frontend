@@ -28,9 +28,6 @@ use tracing_subscriber::{
     util::SubscriberInitExt
 };
 
-const GL_BASE: &str = "/gl";
-//const GL_BASE: &str = "/test/gl";
-
 const SITE_DIR: &str = "app/dist";
 
 enum AppError {
