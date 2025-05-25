@@ -5,9 +5,11 @@ use axum::{
     response::{IntoResponse, Response},
 };
 use const_format::formatcp;
+use serde::Deserialize;
 use std::{
+    fs,
     io,
-    net::SocketAddr,
+    net::{IpAddr, SocketAddr},
     time::Duration
 };
 use tokio::net::TcpListener;
@@ -78,10 +80,10 @@ fn make_span(request: &Request) -> Span {
 
 #[derive(Debug, thiserror::Error)]
 enum StartupError {
-//    #[error("{0}")]
-//    AddrParse(#[from] std::net::AddrParseError),
-//    #[error("{0}")]
-//    TomlParse(#[from] toml::de::Error),
+    #[error("{0}")]
+    AddrParse(#[from] std::net::AddrParseError),
+    #[error("{0}")]
+    TomlParse(#[from] toml::de::Error),
     #[error("{0}")]
     Io(#[from] io::Error)
 }
@@ -139,15 +141,23 @@ async fn shutdown_signal() {
     }
 }
 
+#[derive(Debug, Deserialize)]
+pub struct Config {
+    pub base_path: String,
+    pub listen_ip: String,
+    pub listen_port: u16
+}
+
 async fn run() -> Result<(), StartupError> {
-    let listen_ip = [0, 0, 0, 0];
-    let listen_port = 8000;
+    info!("Reading config.toml");
+    let config: Config = toml::from_str(&fs::read_to_string("config.toml")?)?;
 
     // set up router
     let app = routes();
 
     // serve pages
-    let addr = SocketAddr::from((listen_ip, listen_port));
+    let ip: IpAddr = config.listen_ip.parse()?;
+    let addr = SocketAddr::from((ip, config.listen_port));
     let listener = TcpListener::bind(addr).await?;
     info!("Listening on {}", addr);
 
