@@ -12,7 +12,7 @@ serde = { version = "^1", features = ["derive"] }
 thiserror = "^2.0"
 tokio = { version = "^1", features = ["full"] }
 tower = { version = "^0.5", features = ["buffer", "limit"] }
-tower-http = { version = "^0.6", features = ["compression-br", "compression-deflate", "compression-gzip", "compression-zstd", "fs", "trace"] }
+tower-http = { version = "^0.6", features = ["compression-br", "compression-deflate", "compression-gzip", "compression-zstd", "fs", "timeout", "trace"] }
 tracing = "^0.1"
 tracing-panic = { version = "^0.1", features = ["capture-backtrace"] }
 tracing-subscriber = { version = "^0.3", features = ["env-filter"] }

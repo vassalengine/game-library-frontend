@@ -7,12 +7,15 @@ use axum::{
 use const_format::formatcp;
 use std::{
     io,
-    net::SocketAddr
+    net::SocketAddr,
+    time::Duration
 };
 use tokio::net::TcpListener;
+use tower::ServiceBuilder;
 use tower_http::{
     compression::CompressionLayer,
     services::{ServeDir, ServeFile},
+    timeout::TimeoutLayer,
     trace::{DefaultOnFailure, DefaultOnResponse, TraceLayer}
 };
 use tracing::{error, info, info_span, Level, Span};
@@ -100,7 +103,12 @@ fn routes() -> Router {
             ServeFile::new(formatcp!("{SITE_DIR}/new.html"))
         )
         .fallback_service(ServeDir::new(SITE_DIR))
-        .layer(CompressionLayer::new())
+        .layer(
+            ServiceBuilder::new()
+                .layer(CompressionLayer::new())
+                 // ensure requests don't block shutdown
+                .layer(TimeoutLayer::new(Duration::from_secs(10)))
+        )
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(make_span)
@@ -113,6 +121,26 @@ fn routes() -> Router {
         )
 }
 
+async fn shutdown_signal() {
+    use tokio::signal::unix::{signal, SignalKind};
+
+    let mut interrupt = signal(SignalKind::interrupt())
+        .expect("failed to install signal handler");
+
+    // Docker sends SIGQUIT for some unfathomable reason
+    let mut quit = signal(SignalKind::quit())
+        .expect("failed to install signal handler");
+
+    let mut terminate = signal(SignalKind::terminate())
+        .expect("failed to install signal handler");
+
+    tokio::select! {
+        _ = interrupt.recv() => info!("received SIGINT"),
+        _ = quit.recv() => info!("received SIGQUIT"),
+        _ = terminate.recv() => info!("received SIGTERM")
+    }
+}
+
 async fn run() -> Result<(), StartupError> {
     let listen_ip = [0, 0, 0, 0];
     let listen_port = 8000;
@@ -123,13 +151,13 @@ async fn run() -> Result<(), StartupError> {
     // serve pages
     let addr = SocketAddr::from((listen_ip, listen_port));
     let listener = TcpListener::bind(addr).await?;
-
     info!("Listening on {}", addr);
 
     serve(
         listener,
         app.into_make_service_with_connect_info::<SocketAddr>()
     )
+    .with_graceful_shutdown(shutdown_signal())
     .await?;
 
     Ok(())
