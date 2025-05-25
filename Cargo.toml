@@ -7,7 +7,6 @@ edition = "2021"
 
 [dependencies]
 axum = { version = "^0.8", features = ["http1", "http2", "macros", "query", "tokio"] }
-const_format = "^0.2"
 serde = { version = "^1", features = ["derive"] }
 thiserror = "^2.0"
 tokio = { version = "^1", features = ["full"] }

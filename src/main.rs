@@ -4,7 +4,6 @@ use axum::{
     http::StatusCode,
     response::{IntoResponse, Response},
 };
-use const_format::formatcp;
 use serde::Deserialize;
 use std::{
     fs,
@@ -85,20 +84,19 @@ enum StartupError {
     Io(#[from] io::Error)
 }
 
-// TODO: pass in SITE_DIR
 fn routes(base_path: &str) -> Router {
     Router::new()
         .route_service(
             &format!("{base_path}/projects"),
-            ServeFile::new(formatcp!("{SITE_DIR}/projects.html"))
+            ServeFile::new(format!("{SITE_DIR}/projects.html"))
         )
         .route_service(
             &format!("{base_path}/projects/{{project}}"),
-            ServeFile::new(formatcp!("{SITE_DIR}/project.html"))
+            ServeFile::new(format!("{SITE_DIR}/project.html"))
         )
         .route_service(
             &format!("{base_path}/new"),
-            ServeFile::new(formatcp!("{SITE_DIR}/new.html"))
+            ServeFile::new(format!("{SITE_DIR}/new.html"))
         )
         .fallback_service(ServeDir::new(SITE_DIR))
         .layer(
