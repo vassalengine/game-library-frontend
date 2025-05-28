@@ -148,6 +148,10 @@ async fn run() -> Result<(), StartupError> {
 #[tokio::main]
 async fn main() {
     // set up logging
+    // TODO: make log location configurable
+    let file_appender = tracing_appender::rolling::daily("", "front.log");
+    let (non_blocking, _guard) = tracing_appender::non_blocking(file_appender);
+
     tracing_subscriber::registry()
         .with(EnvFilter::try_from_default_env()
             .unwrap_or_else(|_| {
@@ -163,7 +167,10 @@ async fn main() {
                 ].join(",").into()
             }),
         )
-        .with(tracing_subscriber::fmt::layer().with_target(false))
+        .with(tracing_subscriber::fmt::layer()
+            .with_target(false)
+            .with_writer(non_blocking)
+        )
         .init();
 
     // ensure that panics are logged
