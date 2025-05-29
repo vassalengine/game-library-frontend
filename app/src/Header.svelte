@@ -39,7 +39,7 @@
     <li><a class="nav-link px-2 link-dark" href="https://forum.vassalengine.org"><svg class="svg-icon"><use xlink:href="#landmark"></use></svg> Forum</a></li>
     <li><a class="nav-link px-2 link-dark" href="{base_url}/projects"><svg class="svg-icon"><use xlink:href="#chess-knight"></use></svg> Modules</a></li>
 <!-- TODO: update doc link -->
-    <li><a class="nav-link px-2 link-dark" href="/wiki"><svg class="svg-icon"><use xlink:href="#book-open"></use></svg> Documentation</a></li>
+    <li><a class="nav-link px-2 link-dark" href="https://forum.vassalengine.org/c/documentation/18"><svg class="svg-icon"><use xlink:href="#book-open"></use></svg> Documentation</a></li>
     <li><a class="nav-link px-2 link-dark" href="https://forum.vassalengine.org/c/news/17"><svg class="svg-icon"><use xlink:href="#bullhorn"></use></svg> News</a></li>
     {#if user_info}
     <li id="current_user" class="nav-item dropdown">
