@@ -56,5 +56,5 @@
 </header>
 
 <div id="alert-bar" class="text-center">
-  <h5 class="py-3">Vassal {current_version} is released! See the <a class="link-light" href="{news_link}">news</a> for details.</h5>
+  <h5 class="py-3">We're moving to the new module library. See <a class="link-light" href="{news_link}">here</a> for details.</h5>
 </div>
