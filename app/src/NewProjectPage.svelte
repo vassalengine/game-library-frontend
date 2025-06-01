@@ -51,6 +51,9 @@
         error = err;
         return;
       }
+
+      // redirect to the new project page
+      window.location.replace(`${base_url}/projects/${pname}`);
     }
   }
 
