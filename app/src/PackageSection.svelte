@@ -1,5 +1,5 @@
 <script>
-   import { validate } from 'https://cdn.jsdelivr.net/npm/compare-versions@6.1.1/+esm';
+   import { validateStrict } from 'https://cdn.jsdelivr.net/npm/compare-versions@6.1.1/+esm';
 
   import { getCookie } from '../public/gl/js/util.js';
 
@@ -58,7 +58,7 @@
     if (release_versions.has(event.target.value)) {
       msg = "Release already exists";
     }
-    else if (!validate(event.target.value)) {
+    else if (!validateStrict(event.target.value)) {
       msg = "Invalid version";
     }
 
