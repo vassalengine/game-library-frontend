@@ -1,5 +1,6 @@
 use axum::{
     Router, serve,
+    body::Body,
     extract::{ConnectInfo, Request}
 };
 use serde::Deserialize;
@@ -15,7 +16,7 @@ use tower_http::{
     compression::CompressionLayer,
     services::{ServeDir, ServeFile},
     timeout::TimeoutLayer,
-    trace::{DefaultOnFailure, DefaultOnResponse, TraceLayer}
+    trace::{DefaultOnFailure, DefaultOnResponse, MakeSpan, TraceLayer}
 };
 use tracing::{error, info, info_span, Level, Span};
 use tracing_panic::panic_hook;
@@ -40,16 +41,44 @@ fn real_addr(request: &Request) -> String {
     .unwrap_or_else(|| "<unknown>".into())
 }
 
-fn make_span(request: &Request) -> Span {
-    // adapted from tower_http::trace::DefaultMakeSpan
-    info_span!(
-        "request",
-        source = %real_addr(request),
-        method = %request.method(),
-        uri = %request.uri(),
-        version = ?request.version(),
-        headers = ?request.headers()
-    )
+#[derive(Clone, Debug)]
+struct SpanMaker {
+    include_headers: bool
+}
+
+impl SpanMaker {
+    pub fn new() -> Self {
+        Self { include_headers: false }
+    }
+
+    pub fn include_headers(mut self, include_headers: bool) -> Self {
+        self.include_headers = include_headers;
+        self
+    }
+}
+
+impl MakeSpan<Body> for SpanMaker {
+    fn make_span(&mut self, request: &Request<Body>) -> Span {
+        if self.include_headers {
+            info_span!(
+                "request",
+                source = %real_addr(request),
+                method = %request.method(),
+                uri = %request.uri(),
+                version = ?request.version(),
+                headers = ?request.headers()
+            )
+        }
+        else {
+            info_span!(
+                "request",
+                source = %real_addr(request),
+                method = %request.method(),
+                uri = %request.uri(),
+                version = ?request.version()
+            )
+        }
+    }
 }
 
 #[derive(Debug, thiserror::Error)]
@@ -62,7 +91,7 @@ enum StartupError {
     Io(#[from] io::Error)
 }
 
-fn routes(base_path: &str) -> Router {
+fn routes(base_path: &str, log_headers: bool) -> Router {
     Router::new()
         .route_service(
             &format!("{base_path}/projects"),
@@ -85,13 +114,9 @@ fn routes(base_path: &str) -> Router {
         )
         .layer(
             TraceLayer::new_for_http()
-                .make_span_with(make_span)
-                .on_response(
-                    DefaultOnResponse::new().level(Level::INFO)
-                )
-                .on_failure(
-                    DefaultOnFailure::new().level(Level::WARN)
-                )
+                .make_span_with(SpanMaker::new().include_headers(log_headers))
+                .on_response(DefaultOnResponse::new().level(Level::INFO))
+                .on_failure(DefaultOnFailure::new().level(Level::WARN))
         )
 }
 
@@ -119,7 +144,8 @@ async fn shutdown_signal() {
 pub struct Config {
     pub base_path: String,
     pub listen_ip: String,
-    pub listen_port: u16
+    pub listen_port: u16,
+    pub log_headers: bool
 }
 
 async fn run() -> Result<(), StartupError> {
@@ -127,7 +153,10 @@ async fn run() -> Result<(), StartupError> {
     let config: Config = toml::from_str(&fs::read_to_string("config.toml")?)?;
 
     // set up router
-    let app = routes(&config.base_path);
+    let app = routes(
+        &config.base_path,
+        config.log_headers
+    );
 
     // serve pages
     let ip: IpAddr = config.listen_ip.parse()?;
