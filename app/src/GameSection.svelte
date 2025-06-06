@@ -163,6 +163,7 @@
       data.description = description;
     }
 
+    // check for updates to properties which cannot be null
     for (const k of ['title', 'title_sort_key', 'publisher', 'year']) {
       const fv = fdata.get(`game_${k}`);
       if (fv !== proj.game[k]) {
@@ -170,6 +171,17 @@
       }
     }
 
+    // check for updates to min/max players, length, which can be null
+    for (const k0 of ['players', 'length']) {
+      for (const k1 of ['min', 'max']) {
+        const fv = fdata.get(`game_${k0}_${k1}`) || null;
+        if (fv !== proj.game[k0]?.[k1] ?? null) {
+          ((data.game ??= {})[k0] ??= {})[k1] = fv ? parseInt(fv) : null;
+        }
+      }
+    }
+
+    // check for updates to image
     const box_image = fdata.get('box_image');
     if (box_image.name !== '') {
       data.image = box_image.name;
@@ -375,6 +387,8 @@
           <label for="game_title_sort_key_input" class="form-label">Title Sort Key</label>
           <input id="game_title_sort_key_input" type="text" name="game_title_sort_key" class="form-control" required value={sort_key}>
         </div>
+        {:else}
+         <input id="game_title_sort_key_input" type="hidden" name="game_title_sort_key" class="form-control" required value={proj.game.title_sort_key}>
         {/if}
         <div class="col-8">
           <label for="game_publisher_input" class="form-label">Publisher</label>
@@ -383,6 +397,22 @@
         <div class="col-4">
           <label for="game_year_input" class="form-label">Year</label>
           <input id="game_year_input" type="text" name="game_year" class="form-control" value={proj.game.year}>
+        </div>
+        <div class="col-3">
+          <label for="game_players_min_input" class="form-label">Minimum Players</label>
+          <input id="game_players_min_input" type="text" name="game_players_min" class="form-control" value={proj.game.players?.min ?? ''}>
+        </div>
+        <div class="col-3">
+          <label for="game_players_max_input" class="form-label">Maximum Players</label>
+          <input id="game_players_max_input" type="text" name="game_players_max" class="form-control" value={proj.game.players?.max ?? ''}>
+        </div>
+        <div class="col-3">
+          <label for="game_length_min_input" class="form-label">Minimum Length</label>
+          <input id="game_length_min_input" type="text" name="game_length_min" class="form-control" value={proj.game.length?.min ?? ''}>
+        </div>
+        <div class="col-3">
+          <label for="game_length_max_input" class="form-label">Maximum Length</label>
+          <input id="game_length_max_input" type="text" name="game_length_max" class="form-control" value={proj.game.length?.max ?? ''}>
         </div>
         <div class="col-12">
           <label for="description_input" class="form-label">Description</label>
