@@ -118,10 +118,6 @@
     sort_key = proj.game.title;
   }
 
-  //
-  // edit mode
-  //
-
   function init() {
     box_img = proj.image ? client.imageUrl(proj.image) : '';
     sort_key = proj.game.title_sort_key;
@@ -137,6 +133,10 @@
       proj.game.length?.max ?? null
     );
   }
+
+  //
+  // edit mode
+  //
 
   let edit = false;
   let error = null;
