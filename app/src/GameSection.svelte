@@ -225,6 +225,7 @@
       // update the project data
       try {
         proj = await client.getProject();
+        init();
         error = null;
       }
       catch (err) {
