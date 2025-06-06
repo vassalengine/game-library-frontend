@@ -175,7 +175,7 @@
     for (const k0 of ['players', 'length']) {
       for (const k1 of ['min', 'max']) {
         const fv = fdata.get(`game_${k0}_${k1}`) || null;
-        if (fv !== proj.game[k0]?.[k1] ?? null) {
+        if (fv !== (proj.game[k0]?.[k1] ?? null)) {
           ((data.game ??= {})[k0] ??= {})[k1] = fv ? parseInt(fv) : null;
         }
       }
