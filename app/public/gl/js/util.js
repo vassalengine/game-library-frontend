@@ -7,7 +7,7 @@ export function getCookie(name) {
 export function parseJWT(token) {
   // https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library
   const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const base64 = base64Url.replaceAll('-', '+').replaceAll('_', '/');
   const jsonPayload = decodeURIComponent(
     window.atob(base64).split('').map(
       c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
