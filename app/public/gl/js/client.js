@@ -235,8 +235,8 @@ async function addFlag(api, project, flag, message, token) {
 }
 
 function isTokenExpired(token) {
-  // token exp is seconds, Date.now() is milliseconds
-  return parseJWT(token).exp > Date.now() / 1000
+  // Date.now() is milliseconds, token exp is seconds
+  return Date.now() / 1000 >= parseJWT(token).exp
 }
 
 async function refreshAccessToken(api, refresh_token) {
