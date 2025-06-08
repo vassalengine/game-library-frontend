@@ -264,7 +264,7 @@ class Client {
     if (isTokenExpired(this.token)) {
       this.token = await refreshAccessToken(this.ums_api, this.refresh).token;
       const parsed_token = parseJWT(this.token);
-      const max_age = new Date(parsed_token.exp * 1000);
+      const max_age = parsed_token.exp - Date.now() / 1000;
       setCookie('token', this.token, { 'max-age': max_age, secure: true });
     }
   }
