@@ -25,6 +25,7 @@
 
   const client = new Client(
     gls_url,
+    ums_url,
     project,
     getCookie('token'),
     getCookie('refresh')

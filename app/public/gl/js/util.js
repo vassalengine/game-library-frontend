@@ -4,6 +4,18 @@ export function getCookie(name) {
     ?.split('=')[1];
 }
 
+export function parseJWT(token) {
+  // https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  const jsonPayload = decodeURIComponent(
+    window.atob(base64).split('').map(
+      c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+    ).join('')
+  );
+  return JSON.parse(jsonPayload);
+}
+
 export function formatSizeWithUnit(n) {
   const k = n > 0 ? Math.floor((Math.log2(n) / 10)) : 0;
   const unit = (k > 0 ? 'KMGT'[k - 1] + 'i' : '') + 'B';

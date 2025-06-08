@@ -20,6 +20,7 @@
 
   const client = new Client(
     gls_url,
+    ums_url,
     null,
     getCookie('token'),
     getCookie('refresh')

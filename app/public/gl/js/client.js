@@ -1,3 +1,5 @@
+import { parseJWT } from './util.js';
+
 class APIError extends Error {
   constructor(status, statusText, message) {
     super(message);
@@ -232,69 +234,104 @@ async function addFlag(api, project, flag, message, token) {
   );
 }
 
+function isTokenExpired(token) {
+  // token exp is seconds, Date.now() is milliseconds
+  return parseJWT(token).exp > Date.now() / 1000
+}
+
+async function refreshAccessToken(api, refresh_token) {
+  return fetchJSON(
+    `${api}/refresh`,
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${refresh_token}`
+      }
+    }
+  );
+}
+
 class Client {
-  constructor(api, project, token, refresh) {
-    this.api = api;
+  constructor(gls_api, ums_api, project, token, refresh) {
+    this.gls_api = gls_api;
+    this.ums_api = ums_api;
     this.project = project;
     this.token = token,
     this.refresh = refresh;
   }
 
+  async refreshTokenIfExpired() {
+    if (isTokenExpired(this.token)) {
+      this.token = await refreshAccessToken(this.ums_api, this.refresh).token;
+    }
+  }
+
   async getProject() {
-    return getProject(this.api, this.project);
+    return getProject(this.gls_api, this.project);
   }
 
   async createProject(data) {
-    return createProject(this.api, this.project, data, this.token);
+    await refreshTokenIfExpired();
+    return createProject(this.gls_api, this.project, data, this.token);
   }
 
   async updateProject(data) {
-    return updateProject(this.api, this.project, data, this.token);
+    await refreshTokenIfExpired();
+    return updateProject(this.gls_api, this.project, data, this.token);
   }
 
   async getPlayers() {
-    return getPlayers(this.api, this.project);
+    return getPlayers(this.gls_api, this.project);
   }
 
   async addPlayer() {
-    return addPlayer(this.api, this.project, this.token);
+    await refreshTokenIfExpired();
+    return addPlayer(this.gls_api, this.project, this.token);
   }
 
   async removePlayer() {
-    return removePlayer(this.api, this.project, this.token);
+    await refreshTokenIfExpired();
+    return removePlayer(this.gls_api, this.project, this.token);
   }
 
   async addOwners(owners) {
-    return addOwners(this.api, this.project, owners, this.token);
+    await refreshTokenIfExpired();
+    return addOwners(this.gls_api, this.project, owners, this.token);
   }
 
   async removeOwners(owners) {
-    return removeOwners(this.api, this.project, owners, this.token);
+    await refreshTokenIfExpired();
+    return removeOwners(this.gls_api, this.project, owners, this.token);
   }
 
   async addPackage(pkg) {
+    await refreshTokenIfExpired();
     const data = {'description': ''};
-    return addPackage(this.api, this.project, pkg, data, this.token);
+    return addPackage(this.gls_api, this.project, pkg, data, this.token);
   }
 
   async addRelease(pkg, version) {
-    return addRelease(this.api, this.project, pkg, version, this.token);
+    await refreshTokenIfExpired();
+    return addRelease(this.gls_api, this.project, pkg, version, this.token);
   }
 
   async addFile(pkg, version, file) {
-    return addFile(this.api, this.project, pkg, version, file.name, file, 'application/octet-stream', this.token);
+    await refreshTokenIfExpired();
+    return addFile(this.gls_api, this.project, pkg, version, file.name, file, 'application/octet-stream', this.token);
   }
 
   async addImage(imgname, file, type) {
-    return addImage(this.api, this.project, imgname, file, type, this.token);
+    await refreshTokenIfExpired();
+    return addImage(this.gls_api, this.project, imgname, file, type, this.token);
   }
 
   imageUrl(filename) {
-    return imageUrl(this.api, this.project, filename);
+    return imageUrl(this.gls_api, this.project, filename);
   }
 
   async addFlag(flag, message) {
-    return addFlag(this.api, this.project, flag, message, this.token);
+    await refreshTokenIfExpired();
+    return addFlag(this.gls_api, this.project, flag, message, this.token);
   }
 }
 
