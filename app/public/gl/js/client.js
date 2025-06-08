@@ -271,12 +271,12 @@ class Client {
   }
 
   async createProject(data) {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     return createProject(this.gls_api, this.project, data, this.token);
   }
 
   async updateProject(data) {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     return updateProject(this.gls_api, this.project, data, this.token);
   }
 
@@ -285,43 +285,43 @@ class Client {
   }
 
   async addPlayer() {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     return addPlayer(this.gls_api, this.project, this.token);
   }
 
   async removePlayer() {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     return removePlayer(this.gls_api, this.project, this.token);
   }
 
   async addOwners(owners) {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     return addOwners(this.gls_api, this.project, owners, this.token);
   }
 
   async removeOwners(owners) {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     return removeOwners(this.gls_api, this.project, owners, this.token);
   }
 
   async addPackage(pkg) {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     const data = {'description': ''};
     return addPackage(this.gls_api, this.project, pkg, data, this.token);
   }
 
   async addRelease(pkg, version) {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     return addRelease(this.gls_api, this.project, pkg, version, this.token);
   }
 
   async addFile(pkg, version, file) {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     return addFile(this.gls_api, this.project, pkg, version, file.name, file, 'application/octet-stream', this.token);
   }
 
   async addImage(imgname, file, type) {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     return addImage(this.gls_api, this.project, imgname, file, type, this.token);
   }
 
@@ -330,7 +330,7 @@ class Client {
   }
 
   async addFlag(flag, message) {
-    await refreshTokenIfExpired();
+    await this.refreshTokenIfExpired();
     return addFlag(this.gls_api, this.project, flag, message, this.token);
   }
 }
