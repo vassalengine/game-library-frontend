@@ -1,6 +1,4 @@
 <script>
-  import { getCookie } from '../public/gl/js/util.js';
-
   import ErrorBox from './ErrorBox.svelte';
   import PackageSection from './PackageSection.svelte';
 
@@ -45,7 +43,7 @@
   async function submitEdit(event) {
     const pkg = new FormData(event.target).get('package_name');
     try {
-      await client.addPackage(pkg, getCookie('token'));
+      await client.addPackage(pkg);
       error = null;
     }
     catch (err) {

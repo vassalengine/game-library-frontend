@@ -233,66 +233,68 @@ async function addFlag(api, project, flag, message, token) {
 }
 
 class Client {
-  constructor(api, project) {
+  constructor(api, project, token, refresh) {
     this.api = api;
     this.project = project;
+    this.token = token,
+    this.refresh = refresh;
   }
 
   async getProject() {
     return getProject(this.api, this.project);
   }
 
-  async createProject(data, token) {
-    return createProject(this.api, this.project, data, token);
+  async createProject(data) {
+    return createProject(this.api, this.project, data, this.token);
   }
 
-  async updateProject(data, token) {
-    return updateProject(this.api, this.project, data, token);
+  async updateProject(data) {
+    return updateProject(this.api, this.project, data, this.token);
   }
 
   async getPlayers() {
     return getPlayers(this.api, this.project);
   }
 
-  async addPlayer(token) {
-    return addPlayer(this.api, this.project, token);
+  async addPlayer() {
+    return addPlayer(this.api, this.project, this.token);
   }
 
-  async removePlayer(token) {
-    return removePlayer(this.api, this.project, token);
+  async removePlayer() {
+    return removePlayer(this.api, this.project, this.token);
   }
 
-  async addOwners(owners, token) {
-    return addOwners(this.api, this.project, owners, token);
+  async addOwners(owners) {
+    return addOwners(this.api, this.project, owners, this.token);
   }
 
-  async removeOwners(owners, token) {
-    return removeOwners(this.api, this.project, owners, token);
+  async removeOwners(owners) {
+    return removeOwners(this.api, this.project, owners, this.token);
   }
 
-  async addPackage(pkg, token) {
+  async addPackage(pkg) {
     const data = {'description': ''};
-    return addPackage(this.api, this.project, pkg, data, token);
+    return addPackage(this.api, this.project, pkg, data, this.token);
   }
 
-  async addRelease(pkg, version, token) {
-    return addRelease(this.api, this.project, pkg, version, token);
+  async addRelease(pkg, version) {
+    return addRelease(this.api, this.project, pkg, version, this.token);
   }
 
-  async addFile(pkg, version, file, token) {
-    return addFile(this.api, this.project, pkg, version, file.name, file, 'application/octet-stream', token);
+  async addFile(pkg, version, file) {
+    return addFile(this.api, this.project, pkg, version, file.name, file, 'application/octet-stream', this.token);
   }
 
-  async addImage(imgname, file, type, token) {
-    return addImage(this.api, this.project, imgname, file, type, token);
+  async addImage(imgname, file, type) {
+    return addImage(this.api, this.project, imgname, file, type, this.token);
   }
 
   imageUrl(filename) {
     return imageUrl(this.api, this.project, filename);
   }
 
-  async addFlag(flag, message, token) {
-    return addFlag(this.api, this.project, flag, message, token);
+  async addFlag(flag, message) {
+    return addFlag(this.api, this.project, flag, message, this.token);
   }
 }
 

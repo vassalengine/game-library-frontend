@@ -1,6 +1,4 @@
 <script>
-  import { getCookie } from '../public/gl/js/util.js';
-
   import ErrorBox from './ErrorBox.svelte';
   import UserChip from './UserChip.svelte';
 
@@ -15,7 +13,7 @@
 
   async function addPlayer(event) {
     try {
-      await client.addPlayer(getCookie('token'));
+      await client.addPlayer();
       error = null;
     }
     catch (err) {
@@ -29,7 +27,7 @@
 
   async function removePlayer(event) {
     try {
-      await client.removePlayer(getCookie('token'));
+      await client.removePlayer();
       error = null;
     }
     catch (err) {

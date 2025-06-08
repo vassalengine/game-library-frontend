@@ -2,8 +2,6 @@
   import markdownIt from 'https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/+esm';
   import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.1.3/+esm';
 
-  import { getCookie } from '../public/gl/js/util.js';
-
   import ErrorBox from './ErrorBox.svelte';
 
   export let proj;
@@ -73,7 +71,7 @@
     const data = { readme: source };
 
     try {
-      await client.updateProject(data, getCookie('token'));
+      await client.updateProject(data);
       error = null;
     }
     catch (err) {

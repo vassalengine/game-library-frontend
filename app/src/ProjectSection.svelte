@@ -1,6 +1,6 @@
 <script>
   import UseBootstrapTag from 'https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.0/+esm';
-  import { getCookie, intlFormatDistance } from '../public/gl/js/util.js';
+  import { intlFormatDistance } from '../public/gl/js/util.js';
 
   import ErrorBox from './ErrorBox.svelte';
   import UserChip from './UserChip.svelte';
@@ -78,15 +78,13 @@
     const to_add = [...[...cur_owners.values()].filter((u) => !prev_owners.has(u))];
     const to_remove = [...[...prev_owners.values()].filter((u) => !cur_owners.has(u))];
 
-    const token = getCookie('token');
-
     try {
       if (to_add) {
-        await client.addOwners(to_add, token);
+        await client.addOwners(to_add);
       }
 
       if (to_remove) {
-        await client.removeOwners(to_remove, token);
+        await client.removeOwners(to_remove);
       }
       error = null;
     }

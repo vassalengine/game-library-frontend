@@ -1,8 +1,6 @@
 <script>
    import { validateStrict } from 'https://cdn.jsdelivr.net/npm/compare-versions@6.1.1/+esm';
 
-  import { getCookie } from '../public/gl/js/util.js';
-
   import ErrorBox from './ErrorBox.svelte';
   import ReleaseSection from './ReleaseSection.svelte';
 
@@ -74,8 +72,7 @@
     try {
       await client.addRelease(
         pkg.name,
-        release_version,
-        getCookie('token')
+        release_version
       );
       error = null;
     }

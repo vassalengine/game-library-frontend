@@ -9,6 +9,8 @@
   export let ums_url;
   export let returnto;
 
+  import { getCookie } from '../public/gl/js/util.js';
+
   import Client from '../public/gl/js/client.js';
 
   import Header from './Header.svelte';
@@ -21,7 +23,7 @@
   import GallerySection from './GallerySection.svelte';
   import PlayersSection from './PlayersSection.svelte';
 
-  const client = new Client(gls_url, project);
+  const client = new Client(gls_url, project, getCookie('token'), null);
 
   let proj = null;
   let proj_error = null;

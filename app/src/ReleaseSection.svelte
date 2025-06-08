@@ -1,6 +1,4 @@
 <script>
-  import { getCookie } from '../public/gl/js/util.js';
-
   import ErrorBox from './ErrorBox.svelte';
   import FileSection from './FileSection.svelte';
 
@@ -69,8 +67,7 @@
       await client.addFile(
         pkg.name,
         release.version,
-        file,
-        getCookie('token')
+        file
       );
       error = null;
     }

@@ -1,6 +1,4 @@
 <script>
-  import { getCookie } from '../public/gl/js/util.js';
-
   import CountingTextArea from './CountingTextArea.svelte';
   import ErrorBox from './ErrorBox.svelte';
 
@@ -74,7 +72,7 @@
     const message = fdata.get('message');
 
     try {
-      await client.addFlag(flag, message, getCookie('token'));
+      await client.addFlag(flag, message);
       error = null;
       flag_dialog.close();
     }

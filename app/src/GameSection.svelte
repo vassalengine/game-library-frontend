@@ -1,6 +1,4 @@
 <script>
-  import { getCookie } from '../public/gl/js/util.js';
-
   import ErrorBox from './ErrorBox.svelte';
 
   export let proj;
@@ -193,8 +191,6 @@
     // submit changes only if there are some
     if (Object.keys(data).length > 0) {
 
-      const token = getCookie('token');
-
       if (data.image) {
         data.image = box_image.name;
 
@@ -202,8 +198,7 @@
           await client.addImage(
             box_image.name,
             box_image,
-            box_image.type,
-            token
+            box_image.type
           );
           error = null;
         }
@@ -214,7 +209,7 @@
       }
 
       try {
-        await client.updateProject(data, token);
+        await client.updateProject(data);
         error = null;
       }
       catch (err) {

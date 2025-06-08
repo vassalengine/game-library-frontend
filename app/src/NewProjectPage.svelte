@@ -18,7 +18,7 @@
 
   let error = null;
 
-  const client = new Client(gls_url, null);
+  const client = new Client(gls_url, null, getCookie('token'), null);
 
   async function submitEdit(event) {
     error = null;
@@ -39,12 +39,10 @@
         readme: ""
       };
 
-      const token = getCookie('token');
-
       client.project = pname;
 
       try {
-        await client.createProject(data, token);
+        await client.createProject(data);
         error = null;
       }
       catch (err) {
