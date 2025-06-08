@@ -1,4 +1,4 @@
-import { parseJWT } from './util.js';
+import { parseJWT, setCookie } from './util.js';
 
 class APIError extends Error {
   constructor(status, statusText, message) {
@@ -263,6 +263,9 @@ class Client {
   async refreshTokenIfExpired() {
     if (isTokenExpired(this.token)) {
       this.token = await refreshAccessToken(this.ums_api, this.refresh).token;
+      const parsed_token = parseJWT(this.token);
+      const max_age = new Date(parsed_token.exp * 1000);
+      setCookie('token', this.token, { 'max-age': max_age, secure: true });
     }
   }
 

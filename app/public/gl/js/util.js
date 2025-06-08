@@ -4,6 +4,29 @@ export function getCookie(name) {
     ?.split('=')[1];
 }
 
+export function setCookie(name, value, attributes = {}) {
+  attributes = {
+    path: '/',
+    ...attributes
+  };
+
+  if (attributes.expires instanceof Date) {
+    attributes.expires = attributes.expires.toUTCString();
+  }
+
+  let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+  for (const attributeKey in attributes) {
+    updatedCookie += "; " + attributeKey;
+    let attributeValue = attributes[attributeKey];
+    if (attributeValue !== true) {
+      updatedCookie += "=" + attributeValue;
+    }
+  }
+
+  document.cookie = updatedCookie;
+}
+
 export function parseJWT(token) {
   // https://stackoverflow.com/questions/38552003/how-to-decode-jwt-token-in-javascript-without-using-a-library
   const base64Url = token.split('.')[1];
