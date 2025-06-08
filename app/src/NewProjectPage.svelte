@@ -18,7 +18,12 @@
 
   let error = null;
 
-  const client = new Client(gls_url, null, getCookie('token'), null);
+  const client = new Client(
+    gls_url,
+    null,
+    getCookie('token'),
+    getCookie('refresh')
+  );
 
   async function submitEdit(event) {
     error = null;

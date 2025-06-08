@@ -23,7 +23,12 @@
   import GallerySection from './GallerySection.svelte';
   import PlayersSection from './PlayersSection.svelte';
 
-  const client = new Client(gls_url, project, getCookie('token'), null);
+  const client = new Client(
+    gls_url,
+    project,
+    getCookie('token'),
+    getCookie('refresh')
+  );
 
   let proj = null;
   let proj_error = null;
