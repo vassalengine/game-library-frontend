@@ -256,7 +256,7 @@ class Client {
     this.gls_api = gls_api;
     this.ums_api = ums_api;
     this.project = project;
-    this.token = token,
+    this.token = token;
     this.refresh = refresh;
   }
 
