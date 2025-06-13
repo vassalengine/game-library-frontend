@@ -45,6 +45,7 @@
 
   let edit = false;
   let error = null;
+  let upload = false;
 
   function startFile(event) {
     edit = true;
@@ -64,26 +65,34 @@
     const file = fdata.get('file');
 
     try {
-      await client.addFile(
-        pkg.name,
-        release.version,
-        file
-      );
-      error = null;
-    }
-    catch (err) {
-      error = err;
-      return;
-    }
+      upload = true;
 
-    // update the project data
-    try {
-      proj = await client.getProject();
-      error = null;
+      try {
+        upload = true;
+        await client.addFile(
+          pkg.name,
+          release.version,
+          file
+        );
+        error = null;
+      }
+      catch (err) {
+        error = err;
+        return;
+      }
+
+      // update the project data
+      try {
+        proj = await client.getProject();
+        error = null;
+      }
+      catch (err) {
+        error = err;
+        return;
+      }
     }
-    catch (err) {
-      error = err;
-      return;
+    finally {
+      upload = false;
     }
 
     edit = false;
@@ -119,8 +128,12 @@
     {/if}
     <form action="" on:submit|preventDefault={submitFile}>
       <input id="file_input" class="form-control" type="file" name="file" required>
+      {#if !upload}
       <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
       <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelFile}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+      {:else}
+      <progress value="0" max="100"></progress>
+      {/if}
     </form>
   </li>
   {/if}
