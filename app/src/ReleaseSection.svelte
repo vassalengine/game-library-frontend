@@ -84,7 +84,7 @@
 
         xhr.upload.addEventListener("progress", (e) => {
           if (e.lengthComputable) {
-            uploadProgress = ((e.loaded / e.total) * 100).toFixed(2);
+            uploadProgress = Math.floor((e.loaded / e.total) * 100);
             console.log(`Uploaded ${uploadProgress}%`);
           }
         });
