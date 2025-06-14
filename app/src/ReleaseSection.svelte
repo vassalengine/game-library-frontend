@@ -46,6 +46,7 @@
   let edit = false;
   let error = null;
   let upload = false;
+  let uploadProgress = 0;
 
   function startFile(event) {
     edit = true;
@@ -58,6 +59,8 @@
     error = null;
   }
 
+  let cancelUpload = () => {};
+
   async function submitFile(event) {
     const fdata = new FormData(event.target);
 
@@ -68,13 +71,35 @@
       upload = true;
 
       try {
-        upload = true;
-        await client.addFile(
+        const [xhr, promise] = await client.addFile(
           pkg.name,
           release.version,
           file
         );
+
+        xhr.upload.addEventListerner("loadstart", (e) => {
+          uploadProgress = 0;
+          console.log('Starting upload...');
+        });
+
+        xhr.upload.addEventListerner("progress", (e) => {
+          if (e.lengthComputable) {
+            uploadProgress = ((e.loaded / e.total) * 100).toFixed(2);
+            console.log(`Uploaded ${uploadProgress}%`);
+          }
+        });
+
+        cancelUpload = () => xhr.abort();
+
+        const result = await promise;
         error = null;
+
+        switch (result) {
+          case client.UPLOAD_OK:
+            break;
+          case client.UPLOAD_ABORTED:
+            return;
+        }
       }
       catch (err) {
         error = err;
@@ -132,7 +157,8 @@
       <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
       <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelFile}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       {:else}
-      <progress value="0" max="100"></progress>
+      <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelUpload}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+      <progress value={uploadProgress} max="100"></progress>
       {/if}
     </form>
   </li>
