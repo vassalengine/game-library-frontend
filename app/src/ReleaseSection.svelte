@@ -45,7 +45,7 @@
 
   let edit = false;
   let error = null;
-  let upload = false;
+  let uploading = false;
   let uploadProgress = 0;
 
   function startFile(event) {
@@ -68,7 +68,7 @@
     const file = fdata.get('file');
 
     try {
-      upload = true;
+      uploading = true;
 
       try {
         const [xhr, promise] = await client.addFile(
@@ -117,7 +117,7 @@
       }
     }
     finally {
-      upload = false;
+      uploading = false;
     }
 
     edit = false;
@@ -152,8 +152,8 @@
     <ErrorBox {error} />
     {/if}
     <form action="" on:submit|preventDefault={submitFile}>
-      <input id="file_input" class="form-control" type="file" name="file" required>
-      {#if !upload}
+      <input id="file_input" class="form-control" type="file" name="file" required disabled={uploading}>
+      {#if !uploading}
       <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
       <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelFile}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       {:else}
