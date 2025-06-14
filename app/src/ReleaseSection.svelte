@@ -77,12 +77,12 @@
           file
         );
 
-        xhr.upload.addEventListerner("loadstart", (e) => {
+        xhr.upload.addEventListener("loadstart", (e) => {
           uploadProgress = 0;
           console.log('Starting upload...');
         });
 
-        xhr.upload.addEventListerner("progress", (e) => {
+        xhr.upload.addEventListener("progress", (e) => {
           if (e.lengthComputable) {
             uploadProgress = ((e.loaded / e.total) * 100).toFixed(2);
             console.log(`Uploaded ${uploadProgress}%`);

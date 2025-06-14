@@ -81,7 +81,7 @@ function doUpload(file, type, url, token) {
   const xhr = new XMLHttpRequest();
 
   const promise = new Promise((resolve, reject) => {
-    xhr.addEventListener('load', () => {
+    xhr.upload.addEventListener('load', () => {
       if (xhr.status === 200) {
         resolve(UPLOAD_OK);
       }
@@ -91,9 +91,9 @@ function doUpload(file, type, url, token) {
       }
     });
 
-    xhr.addEventListener('abort', () => resolve(UPLOAD_ABORTED));
-    xhr.addEventListener('error', () => reject(new NetworkError));
-    xhr.addEventListener('timeout', () => reject(new TimeoutError));
+    xhr.upload.addEventListener('abort', () => resolve(UPLOAD_ABORTED));
+    xhr.upload.addEventListener('error', () => reject(new NetworkError));
+    xhr.upload.addEventListener('timeout', () => reject(new TimeoutError));
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
