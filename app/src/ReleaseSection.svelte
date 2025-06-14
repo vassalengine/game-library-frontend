@@ -96,8 +96,10 @@
 
         switch (result) {
           case client.UPLOAD_OK:
+            console.log('Upload completed');
             break;
           case client.UPLOAD_ABORTED:
+            console.log('Upload cancelled');
             return;
         }
       }
