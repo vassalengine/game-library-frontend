@@ -119,7 +119,7 @@ function doUpload(file, type, url, token, callbacks) {
           xhr.status,
           xhr.statusText,
           extractError(xhr.response)
-        );
+        ));
       }
     });
 
