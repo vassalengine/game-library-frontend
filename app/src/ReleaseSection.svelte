@@ -68,28 +68,31 @@
     try {
       uploading = true;
 
-      try {
-        const [xhr, promise] = await client.addFile(
-          pkg.name,
-          release.version,
-          file
-        );
-
-        xhr.upload.addEventListener("loadstart", (e) => {
+      const callbacks = {
+        loadstart: (e) => {
           uploadProgress = 0;
           console.log('Starting upload...');
-        });
+        },
 
-        xhr.upload.addEventListener("progress", (e) => {
+        progress: (e) => {
           if (e.lengthComputable) {
             uploadProgress = Math.floor((e.loaded / e.total) * 100);
             console.log(`Uploaded ${uploadProgress}%`);
           }
-        });
+        },
 
-        xhr.upload.addEventListener("load", (e) => {
+        load: (e) => {
           console.log('Upload complete.');
-        });
+        }
+      };
+
+      try {
+        const [xhr, promise] = await client.addFile(
+          pkg.name,
+          release.version,
+          file,
+          callbacks
+        );
 
         cancelUpload = () => xhr.abort();
 

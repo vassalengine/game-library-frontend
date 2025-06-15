@@ -103,7 +103,7 @@ export async function fetchJSON(url, options={}) {
   return (await doFetch(url, options)).json();
 }
 
-function doUpload(file, type, url, token) {
+function doUpload(file, type, url, token, callbacks) {
   const xhr = new XMLHttpRequest();
 
   const promise = new Promise((resolve, reject) => {
@@ -128,6 +128,10 @@ function doUpload(file, type, url, token) {
     xhr.upload.addEventListener('abort', () => resolve(UPLOAD_ABORTED));
     xhr.upload.addEventListener('error', () => reject(new NetworkError));
     xhr.upload.addEventListener('timeout', () => reject(new TimeoutError));
+
+    for (const [k, v] of Object.entries(callbacks)) {
+      xhr.upload.addEventListener(k, v);
+    }
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
@@ -310,23 +314,25 @@ class Client {
 
   static UPLOAD_ABORTED = UPLOAD_ABORTED;
 
-  async addFile(pkg, version, file) {
+  async addFile(pkg, version, file, callbacks={}) {
     await this.refreshTokenIfExpired();
     return doUpload(
       file,
       'application/octet-stream',
       `${this.gls_api}/projects/${this.project}/packages/${pkg}/${version}/${file.name}`,
-      this.token
+      this.token,
+      callbacks
     );
   }
 
-  async addImage(imgname, file, type) {
+  async addImage(imgname, file, type, callbacks={}) {
     await this.refreshTokenIfExpired();
     return doUpload(
       file,
       type,
       `${this.gls_api}/projects/${this.project}/images/${imgname}`,
-      this.token
+      this.token,
+      callbacks
     );
   }
 
