@@ -174,7 +174,7 @@ class Client {
     if (!this.token || isTokenExpired(this.token)) {
       this.token = (await this.refreshAccessToken()).token;
       const parsed_token = parseJWT(this.token);
-      // Date() wants milliseconsds, token exp is in seconds
+      // Date() wants milliseconds, token exp is in seconds
       const expires = new Date(parsed_token.exp * 1000);
       setCookie('token', this.token, { expires: expires, secure: true });
     }
