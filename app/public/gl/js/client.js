@@ -86,8 +86,8 @@ function doUpload(file, type, url, token) {
         resolve(UPLOAD_OK);
       }
       else {
-        const message = JSON.parse(result.response)?.error;
-        reject(new APIError(result.status, result.statusText, message));
+        const message = JSON.parse(xhr.response)?.error;
+        reject(new APIError(xhr.status, xhr.statusText, message));
       }
     });
 
