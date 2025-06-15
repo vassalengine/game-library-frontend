@@ -63,8 +63,6 @@
 
   async function submitFile(event) {
     const fdata = new FormData(event.target);
-
-    console.log(fdata);
     const file = fdata.get('file');
 
     try {
