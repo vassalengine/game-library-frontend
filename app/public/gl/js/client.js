@@ -107,13 +107,21 @@ function doUpload(file, type, url, token) {
   const xhr = new XMLHttpRequest();
 
   const promise = new Promise((resolve, reject) => {
-    xhr.upload.addEventListener('load', () => {
-      if (xhr.status === 200) {
-        resolve(UPLOAD_OK);
-      }
-      else {
-        const message = extractError(xhr.response);
-        reject(new APIError(xhr.status, xhr.statusText, message));
+    // We listen on readystatechange instead of load because load fires
+    // when all the data is sent, not when the request completes. Because
+    // some processing is done after upload but before a response comes
+    // back, readyState can still be at OPENED when load fires. Also, it's
+    // on xhr instead of xhr.upload because xhr.upload doesn't have that
+    // event.
+    xhr.addEventListener('readystatechange', () => {
+      if (xhr.readyState === XMLHttpRequest.DONE) {
+        if (xhr.status === 200) {
+          resolve(UPLOAD_OK);
+        }
+        else {
+          const message = extractError(xhr.response);
+          reject(new APIError(xhr.status, xhr.statusText, message));
+        }
       }
     });
 

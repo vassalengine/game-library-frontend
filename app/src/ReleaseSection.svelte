@@ -89,6 +89,10 @@
           }
         });
 
+        xhr.upload.addEventListener("load", (e) => {
+          console.log('Upload complete.');
+        });
+
         cancelUpload = () => xhr.abort();
 
         const result = await promise;
