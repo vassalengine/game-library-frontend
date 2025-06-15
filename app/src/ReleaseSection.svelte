@@ -1,4 +1,6 @@
 <script>
+  import Client from '../public/gl/js/client.js';
+
   import ErrorBox from './ErrorBox.svelte';
   import FileSection from './FileSection.svelte';
 
@@ -100,10 +102,10 @@
         error = null;
 
         switch (result) {
-          case client.UPLOAD_OK:
+          case Client.UPLOAD_OK:
             console.log('Upload completed');
             break;
-          case client.UPLOAD_ABORTED:
+          case Client.UPLOAD_ABORTED:
             console.log('Upload cancelled');
             return;
         }
