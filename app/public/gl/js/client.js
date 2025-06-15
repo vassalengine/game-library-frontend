@@ -43,11 +43,37 @@ const UPLOAD_OK = 'UploadOk';
 
 const UPLOAD_ABORTED = 'UploadAborted';
 
+function extractError(response) {
+  try {
+    return JSON.parse(response)?.error ?? response;
+  }
+  catch (e) {
+    // it's not JSON, just return it verbatim
+    return response;
+  }
+}
+
+async function extractFetchError(response) {
+  // The response body is a stream, so we can't call json() and then
+  // subsequently call text() on it if json() fails---the stream will
+  // already be consumed in that case.
+  try {
+    response = await response.text();
+  }
+  catch (e) {
+    return "Failed to extract response text";
+  }
+
+  return extractError(response);
+}
+
 async function checkError(response) {
   if (!response.ok) {
-    const json = await response.json();
-    const message = json?.error ?? json.toString();
-    throw new APIError(response.status, response.statusText, message);
+    throw new APIError(
+      response.status,
+      response.statusText,
+      await extractFetchError(response)
+    );
   }
 }
 
@@ -75,16 +101,6 @@ async function fetchOk(url, options={}) {
 
 export async function fetchJSON(url, options={}) {
   return (await doFetch(url, options)).json();
-}
-
-function extractError(response) {
-  try {
-    return JSON.parse(response)?.error ?? response;
-  }
-  catch (e) {
-    // it's not JSON, just return it verbatim
-    return response;
-  }
 }
 
 function doUpload(file, type, url, token) {
