@@ -47,8 +47,10 @@
 
   let edit = false;
   let error = null;
+
   let uploading = false;
   let uploadProgress = 0;
+  let uploadFilename = '';
 
   function startFile(event) {
     edit = true;
@@ -67,24 +69,19 @@
     const fdata = new FormData(event.target);
     const file = fdata.get('file');
 
+    uploadFilename = file.name;
+    uploadProgress = 0;
+
     try {
       uploading = true;
 
-      const callbacks = {
-        loadstart: (e) => {
-          uploadProgress = 0;
-          console.log('Starting upload...');
-        },
+      document.documentElement.style.cursor = 'wait';
 
+      const callbacks = {
         progress: (e) => {
           if (e.lengthComputable) {
             uploadProgress = Math.floor((e.loaded / e.total) * 100);
-            console.log(`Uploaded ${uploadProgress}%`);
           }
-        },
-
-        load: (e) => {
-          console.log('Upload complete.');
         }
       };
 
@@ -103,10 +100,8 @@
 
         switch (result) {
           case Client.UPLOAD_OK:
-            console.log('Upload completed');
             break;
           case Client.UPLOAD_ABORTED:
-            console.log('Upload cancelled');
             return;
         }
       }
@@ -127,6 +122,7 @@
     }
     finally {
       uploading = false;
+      document.documentElement.style.cursor = 'pointer';
     }
 
     edit = false;
@@ -136,6 +132,12 @@
 </script>
 
 <style>
+
+.upload_progress[value] {
+  appearance: none;
+  height: 1em;
+}
+
 /* Release pills */
 
 .current_release {
@@ -161,13 +163,16 @@
     <ErrorBox {error} />
     {/if}
     <form action="" on:submit|preventDefault={submitFile}>
-      <input id="file_input" class="form-control" type="file" name="file" required disabled={uploading}>
+      <input id="file_input" class="form-control" type="file" name="file" required style:display={uploading ? 'none' : 'inline'}>
       {#if !uploading}
       <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
       <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelFile}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       {:else}
-      <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelUpload}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
-      <progress value={uploadProgress} max="100"></progress>
+      <div>{uploadFilename}</div>
+      <div class="d-flex align-items-center">
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelUpload}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        <progress class="upload_progress text-primary flex-fill w-auto" value={uploadProgress} max="100"></progress>
+      </div>
       {/if}
     </form>
   </li>
