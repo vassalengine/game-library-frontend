@@ -133,7 +133,7 @@
 
 <style>
 
-.upload_progress[value] {
+.upload_progress {
   appearance: none;
   height: 1em;
 }
