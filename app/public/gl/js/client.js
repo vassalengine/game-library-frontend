@@ -179,7 +179,7 @@ class Client {
     return { 'Authorization': `Bearer ${this.token}` }
   }
 
-  authAndJSONHeaders() {
+  authJSONHeaders() {
     return {
       'Authorization': `Bearer ${this.token}`,
       'Content-Type': 'application/json'
