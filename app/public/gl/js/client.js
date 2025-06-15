@@ -140,12 +140,12 @@ class Client {
   }
 
   authHeaders() {
-    return { 'Authorization': `Bearer ${this.refresh}` }
+    return { 'Authorization': `Bearer ${this.token}` }
   }
 
   authAndJSONHeaders() {
     return {
-      'Authorization': `Bearer ${this.refresh}`,
+      'Authorization': `Bearer ${this.token}`,
       'Content-Type': 'application/json'
     }
   }
@@ -155,7 +155,7 @@ class Client {
       `${this.ums_api}/refresh`,
       {
         method: 'POST',
-        headers: this.authHeaders()
+        headers: { 'Authorization': `Bearer ${this.refresh}` }
       }
     );
   }
