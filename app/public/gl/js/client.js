@@ -107,21 +107,19 @@ function doUpload(file, type, url, token, callbacks) {
   const xhr = new XMLHttpRequest();
 
   const promise = new Promise((resolve, reject) => {
-    // We listen on readystatechange instead of load because load fires
-    // when all the data is sent, not when the request completes. Because
-    // some processing is done after upload but before a response comes
-    // back, readyState can still be at OPENED when load fires. Also, it's
-    // on xhr instead of xhr.upload because xhr.upload doesn't have that
-    // event.
-    xhr.addEventListener('readystatechange', () => {
-      if (xhr.readyState === XMLHttpRequest.DONE) {
-        if (xhr.status === 200) {
-          resolve(UPLOAD_OK);
-        }
-        else {
-          const message = extractError(xhr.response);
-          reject(new APIError(xhr.status, xhr.statusText, message));
-        }
+    // We listen on the load event on the xhr instead of xhr.upload because
+    // the upload load event fires when all the data is sent, not when the
+    // request completes.
+    xhr.addEventListener('load', () => {
+      if (xhr.status === 200) {
+        resolve(UPLOAD_OK);
+      }
+      else {
+        reject(new APIError(
+          xhr.status,
+          xhr.statusText,
+          extractError(xhr.response)
+        );
       }
     });
 
@@ -129,8 +127,8 @@ function doUpload(file, type, url, token, callbacks) {
     xhr.upload.addEventListener('error', () => reject(new NetworkError));
     xhr.upload.addEventListener('timeout', () => reject(new TimeoutError));
 
-    for (const [k, v] of Object.entries(callbacks)) {
-      xhr.upload.addEventListener(k, v);
+    for (const [evt, cb] of Object.entries(callbacks)) {
+      xhr.upload.addEventListener(evt, cb);
     }
 
     xhr.open('POST', url);
