@@ -77,6 +77,16 @@ export async function fetchJSON(url, options={}) {
   return (await doFetch(url, options)).json();
 }
 
+function extractError(response) {
+  try {
+    return JSON.parse(response)?.error ?? response;
+  }
+  catch (e) {
+    // it's not JSON, just return it verbatim
+    return response;
+  }
+}
+
 function doUpload(file, type, url, token) {
   const xhr = new XMLHttpRequest();
 
@@ -86,7 +96,7 @@ function doUpload(file, type, url, token) {
         resolve(UPLOAD_OK);
       }
       else {
-        const message = JSON.parse(xhr.response)?.error;
+        const message = extractError(xhr.response);
         reject(new APIError(xhr.status, xhr.statusText, message));
       }
     });
