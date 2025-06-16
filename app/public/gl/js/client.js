@@ -216,7 +216,7 @@ class Client {
       `${this.gls_api}/projects/${this.project}`,
       {
         method: 'POST',
-        headers: this.authAndJSONHeaders(),
+        headers: this.authJSONHeaders(),
         body: JSON.stringify(data)
       }
     );
@@ -228,7 +228,7 @@ class Client {
       `${this.gls_api}/projects/${this.project}`,
       {
         method: 'PATCH',
-        headers: this.authAndJSONHeaders(),
+        headers: this.authJSONHeaders(),
         body: JSON.stringify(data)
       }
     );
