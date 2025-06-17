@@ -94,6 +94,10 @@ enum StartupError {
 fn routes(base_path: &str, log_headers: bool) -> Router {
     Router::new()
         .route_service(
+            &format!("{base_path}/"),
+            ServeFile::new(format!("{SITE_DIR}/root.html"))
+        )
+        .route_service(
             &format!("{base_path}/projects"),
             ServeFile::new(format!("{SITE_DIR}/projects.html"))
         )

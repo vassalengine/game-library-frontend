@@ -8,6 +8,7 @@ export default defineConfig({
     sourcemap: true,
     rollupOptions: {
       input: {
+        root: './root.html',
         new: './new.html',
         projects: './projects.html',
         project: './project.html'
