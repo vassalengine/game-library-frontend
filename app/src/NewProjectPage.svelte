@@ -40,7 +40,15 @@
           title: pname,
           title_sort_key: pname,
           publisher: "",
-          year: ""
+          year: "",
+          players: {
+            min: null,
+            max: null
+          },
+          length: {
+            min: null,
+            max: null
+          }
         },
         readme: ""
       };
