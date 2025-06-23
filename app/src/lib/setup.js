@@ -5,7 +5,7 @@ const ums_url = 'http://localhost:4000/api/v1';
 const discourse_url = 'https://forum.vassalengine.org';
 
 const current_version = '3.7.16';
-const news_link = 'https://forum.vassalengine.org/t/switching-to-the-new-module-library/85164'
+const news_link = 'https://vassalengine.org/library'
 
 function getUserInfo(ums) {
   const username = getCookie('username');
