@@ -63,7 +63,7 @@
 
 </ul>
 
-<p>For greater detail, see the <a href="(https://forum.vassalengine.org/t/how-to-upload-modules-to-the-game-library/85586">library documentation</a>.</p>
+<p>For greater detail, see the <a href="https://forum.vassalengine.org/t/how-to-upload-modules-to-the-game-library/85586">library documentation</a>.</p>
 
 <p>If you are working with a module that was on a page in the old module library which contained multiple competing modules for the same game, including but not limited to <a href="https://forum.vassalengine.org/t/switching-to-the-new-module-library/85164/17">modules listed here</a>, <b>PLEASE CONSULT WITH THE SITE ADMINS BEFORE PROCEEDING</b> by posting in the <a href="https://forum.vassalengine.org/c/site-feedback/2">forum</a>.</p>
 
