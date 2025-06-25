@@ -297,6 +297,17 @@ class Client {
     );
   }
 
+  async removePackage(pkg) {
+    await this.refreshTokenIfExpired();
+    return this.fetchOk(
+      `${this.gls_api}/projects/${this.project}/packages/${pkg}`,
+      {
+        method: 'DELETE',
+        headers: this.authHeaders()
+      }
+    );
+  }
+
   async addRelease(pkg, version) {
     await this.refreshTokenIfExpired();
     return this.fetchOk(

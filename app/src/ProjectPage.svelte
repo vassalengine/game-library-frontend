@@ -76,6 +76,30 @@
   fill: var(--bs-link-hover-color);
 }
 
+/* Delete icons */
+
+#project_content :global(.is_deletable) {
+  visibility: visible !important;
+}
+
+#project_content :global(.delete_button) {
+  background: none;
+  border: none;
+  padding: 0;
+  visibility: hidden;
+}
+
+#project_content :global(.delete_icon) {
+  width: 0.75em;
+  height: 0.75em;
+  fill: #bbbbbb;
+  vertical-align: 0;
+}
+
+#project_content :global(.delete_icon:hover) {
+  fill: var(--bs-link-hover-color);
+}
+
 </style>
 
 <svelte:head>
