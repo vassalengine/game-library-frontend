@@ -20,10 +20,6 @@
   // package removal
   //
 
-  function package_is_empty() {
-    return pkg.releases.length == 0;
-  }
-
   async function deletePackage(event) {
     try {
       await client.removePackage(pkg.name);
@@ -160,7 +156,7 @@ details[open] > summary::before {
     <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startRelease}>
       <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
     </button>
-    <button class="delete_button" class:is_deletable={!editing && user_is_owner() && package_is_empty()} type="button" on:click={deletePackage}>
+    <button class="delete_button" class:is_deletable={!editing && user_is_owner() && pkg.releases.length == 0} type="button" on:click={deletePackage}>
       <svg class="svg-icon delete_icon"><use xlink:href="#trash-can"></use></svg>
     </button>
   </h3>
