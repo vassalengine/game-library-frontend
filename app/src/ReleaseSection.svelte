@@ -42,6 +42,31 @@
   }
 
   //
+  // release removal
+  //
+
+  async function deleteRelease(event) {
+    try {
+      await client.removeRelease(pkg.name, release.version);
+      error = null;
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
+
+    // update the project data
+    try {
+      proj = await client.getProject();
+      error = null;
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
+  }
+
+  //
   // edit mode
   //
 
@@ -153,6 +178,9 @@
   <div class="badge rounded-pill fs-5" class:current_release={current} class:release={!current}>{release.version}</div>
   <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startFile}>
     <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
+  </button>
+  <button class="delete_button" class:is_deletable={!editing && user_is_owner() && release.files.length == 0} type="button" on:click={deleteRelease}>
+      <svg class="svg-icon delete_icon"><use xlink:href="#trash-can"></use></svg>
   </button>
 </div>
 {#if release.files.length > 0 || edit}

@@ -319,6 +319,17 @@ class Client {
     );
   }
 
+  async removeRelease(pkg, version) {
+    await this.refreshTokenIfExpired();
+    return this.fetchOk(
+      `${this.gls_api}/projects/${this.project}/packages/${pkg}/${version}`,
+      {
+        method: 'DELETE',
+        headers: this.authHeaders()
+      }
+    );
+  }
+
   static UPLOAD_OK = UPLOAD_OK;
 
   static UPLOAD_ABORTED = UPLOAD_ABORTED;
