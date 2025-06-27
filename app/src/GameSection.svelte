@@ -117,7 +117,7 @@
       const art = parts[0].toLowerCase();
       const reset = parts[1].toLowerCase();
 
-      if (["an", "the"].contains(art) ||
+      if (["an", "the"].includes(art) ||
         (art === "a" && !(rest.startsWith("la ") || rest.startsWith("las "))))
       {
         return `${parts[1]}, ${parts[0]}`;
