@@ -112,15 +112,18 @@
   let game_title;
 
   function sortKeyFor(t) {
-    const parts = t.split(" ", 2);
-    if (parts.length == 2) {
-      const art = parts[0].toLowerCase();
-      const rest = parts[1].toLowerCase();
+    const i = t.indexOf(" ");
+    if (i !== -1) {
+      const art = t.substring(0, i);
+      const rest = t.substring(i + 1);
 
-      if (["an", "the"].includes(art) ||
-        (art === "a" && !(rest.startsWith("la ") || rest.startsWith("las "))))
+      const art_lc = art.toLowerCase();
+      const rest_lc = rest.toLowerCase();
+
+      if (["an", "the"].includes(art_lc) ||
+        (art_lc === "a" && !(rest_lc.startsWith("la ") || rest_lc.startsWith("las "))))
       {
-        return `${parts[1]}, ${parts[0]}`;
+        return `${rest}, ${art}`;
       }
     }
     return t;
