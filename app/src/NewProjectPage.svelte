@@ -38,7 +38,6 @@
         tags: [],
         game: {
           title: pname,
-          title_sort_key: pname,
           publisher: "",
           year: "",
           players: {

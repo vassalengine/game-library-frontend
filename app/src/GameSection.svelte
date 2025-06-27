@@ -109,17 +109,25 @@
   // title sort key
   //
 
-  let sort_key;
-  let use_sort_key;
+  let game_title;
 
-  function toggleSortKey(event) {
-    sort_key = proj.game.title;
+  function sortKeyFor(t) {
+    const parts = t.split(" ", 2);
+    if (parts.lengh == 2) {
+      const art = parts[0].toLowerCase();
+      const reset = parts[1].toLowerCase();
+
+      if (["an", "the"].contains(art) ||
+        (art === "a" && !(rest.startsWith("la ") || rest.startsWith("las "))))
+      {
+        return `${parts[1]}, ${parts[0]}`;
+      }
+    }
+    return t;
   }
 
   function init() {
     box_img = proj.image ? client.imageUrl(proj.image) : '';
-    sort_key = proj.game.title_sort_key;
-    use_sort_key = proj.game.title !== proj.game.title_sort_key;
 
     players_slug = makePlayersSlug(
       proj.game.players?.min ?? null,
@@ -130,6 +138,8 @@
       proj.game.length?.min ?? null,
       proj.game.length?.max ?? null
     );
+
+    game_title = proj.game.title;
   }
 
   //
@@ -162,7 +172,7 @@
     }
 
     // check for updates to properties which cannot be null
-    for (const k of ['title', 'title_sort_key', 'publisher', 'year']) {
+    for (const k of ['title', 'publisher', 'year']) {
       const fv = fdata.get(`game_${k}`);
       if (fv !== proj.game[k]) {
         (data.game ??= {})[k] = fv;
@@ -372,20 +382,12 @@
       <div class="row">
         <div class="col-12">
           <label for="game_title_input" class="form-label">Title</label>
-          <input id="game_title_input" type="text" name="game_title" class="form-control" required value={proj.game.title}>
+          <input id="game_title_input" type="text" name="game_title" class="form-control" required bind:value={game_title}>
         </div>
-        <div class="col-12">
-          <input id="game_title_sort_key_checkbox" type="checkbox" name="has_game_title_sort_key" class="form-check-input" bind:checked={use_sort_key} on:change={toggleSortKey}>
-          <label for="game_title_sort_key_checkbox" class="form-check-label">Add Title Sort Key</label>
-        </div>
-        {#if use_sort_key}
         <div class="col-12">
           <label for="game_title_sort_key_input" class="form-label">Title Sort Key</label>
-          <input id="game_title_sort_key_input" type="text" name="game_title_sort_key" class="form-control" required value={sort_key}>
+          <input id="game_title_sort_key_input" type="text" name="game_title_sort_key" class="form-control" readonly value={sortKeyFor(game_title)}>
         </div>
-        {:else}
-         <input id="game_title_sort_key_input" type="hidden" name="game_title_sort_key" class="form-control" required value={proj.game.title_sort_key}>
-        {/if}
         <div class="col-8">
           <label for="game_publisher_input" class="form-label">Publisher</label>
           <input id="game_publisher_input" type="text" name="game_publisher" class="form-control" value={proj.game.publisher}>
