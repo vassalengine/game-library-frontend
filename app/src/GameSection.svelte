@@ -115,7 +115,7 @@
     const parts = t.split(" ", 2);
     if (parts.length == 2) {
       const art = parts[0].toLowerCase();
-      const reset = parts[1].toLowerCase();
+      const rest = parts[1].toLowerCase();
 
       if (["an", "the"].includes(art) ||
         (art === "a" && !(rest.startsWith("la ") || rest.startsWith("las "))))
