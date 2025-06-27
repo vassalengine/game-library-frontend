@@ -113,7 +113,7 @@
 
   function sortKeyFor(t) {
     const parts = t.split(" ", 2);
-    if (parts.lengh == 2) {
+    if (parts.length == 2) {
       const art = parts[0].toLowerCase();
       const reset = parts[1].toLowerCase();
 
