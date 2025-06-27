@@ -389,7 +389,7 @@
         </div>
         <div class="col-12">
           <label for="game_title_sort_key_input" class="form-label">Title Sort Key</label>
-          <input id="game_title_sort_key_input" type="text" name="game_title_sort_key" class="form-control" readonly value={sortKeyFor(game_title)}>
+          <input id="game_title_sort_key_input" type="text" name="game_title_sort_key" class="form-control" readonly disabled value={sortKeyFor(game_title.trim())}>
         </div>
         <div class="col-8">
           <label for="game_publisher_input" class="form-label">Publisher</label>
