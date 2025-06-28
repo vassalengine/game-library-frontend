@@ -80,7 +80,7 @@
     let message = "";
 
     const sk = Number(event.target.value);
-    if (Number.isInteger(sk)) {
+    if (!Number.isInteger(sk)) {
       message = "Sort key is not an integer";
     }
 
