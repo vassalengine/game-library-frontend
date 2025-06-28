@@ -41,8 +41,9 @@
     const fd = new FormData(event.target);
 
     const pkg = fd.get('package_name');
+
     const data = {
-      'sort_key': fd.get('sort_key'),
+      'sort_key': Number(fd.get('sort_key')),
       'description': ''
     };
 
