@@ -284,9 +284,8 @@ class Client {
     );
   }
 
-  async addPackage(pkg) {
+  async addPackage(pkg, data) {
     await this.refreshTokenIfExpired();
-    const data = {'description': ''};
     return this.fetchOk(
       `${this.gls_api}/projects/${this.project}/packages/${pkg}`,
       {

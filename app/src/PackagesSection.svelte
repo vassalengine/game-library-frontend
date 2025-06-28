@@ -13,15 +13,6 @@
      return username && proj.owners.includes(username);
   }
 
-  let pkg_names = new Set(proj.packages.map((p) => p.name));
-
-  function validatePackageName(event) {
-    event.target.setCustomValidity(
-      pkg_names.has(event.target.value) ?
-        "Package already exists" : ""
-    );
-  }
-
   //
   // edit mode
   //
@@ -29,9 +20,15 @@
   let edit = false;
   let error = null;
 
+  let pkg_names;
+  let pkg_sort_keys;
+
   function startEdit(event) {
     edit = true;
     editing = true;
+
+    pkg_names = new Set(proj.packages.map((p) => p.name));
+    pkg_sort_keys = new Set(proj.packages.map((p) => p.sort_key));
   }
 
   function cancelEdit(event) {
@@ -41,9 +38,16 @@
   }
 
   async function submitEdit(event) {
-    const pkg = new FormData(event.target).get('package_name');
+    const fd = new FormData(event.target);
+
+    const pkg = fd.get('package_name');
+    const data = {
+      'sort_key': fd.get('sort_key'),
+      'description': ''
+    };
+
     try {
-      await client.addPackage(pkg);
+      await client.addPackage(pkg, data);
       error = null;
     }
     catch (err) {
@@ -65,6 +69,19 @@
     editing = false;
   }
 
+  function validatePackageName(event) {
+    event.target.setCustomValidity(
+      pkg_names.has(event.target.value) ?
+        "Package already exists" : ""
+    );
+  }
+
+  function validatePackageSortKey(event) {
+    event.target.setCustomValidity(
+      pkg_sort_keys.has(event.target.value) ?
+        "Sort key already exists" : ""
+    );
+  }
 </script>
 
 {#if error}
@@ -85,6 +102,8 @@
         <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
         <label for="package_name_input" class="form-label">Package name</label>
         <input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control" required on:input={validatePackageName}>
+        <label for="sort_key_input" class="form-label">Package sort key</label>
+        <input id="sort_key_input" type="text" name="sort_key" class="package_tmpl_name form-control" required on:input={validatePackageSortKey}>
         <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
         <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </form>
