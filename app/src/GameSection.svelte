@@ -112,16 +112,18 @@
   let game_title;
 
   function sortKeyFor(t) {
+    t = t.normalize("NFKD")
+          .toLowerCase()
+          .replace(/\p{M}/ug, "")
+          .replace(/^[^\p{L}\p{N}]+/u, "");
+
     const i = t.indexOf(" ");
     if (i !== -1) {
       const art = t.substring(0, i);
       const rest = t.substring(i + 1);
 
-      const art_lc = art.toLowerCase();
-      const rest_lc = rest.toLowerCase();
-
       if (["an", "the"].includes(art_lc) ||
-        (art_lc === "a" && !(rest_lc.startsWith("la ") || rest_lc.startsWith("las "))))
+        (art === "a" && !(rest.startsWith("la ") || rest.startsWith("las "))))
       {
         return `${rest}, ${art}`;
       }
