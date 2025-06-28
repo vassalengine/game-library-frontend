@@ -77,10 +77,18 @@
   }
 
   function validatePackageSortKey(event) {
-    event.target.setCustomValidity(
-      pkg_sort_keys.has(event.target.value) ?
-        "Sort key already exists" : ""
-    );
+    let message = "";
+
+    const sk = parseInt(event.target.value);
+    if (Number.isNaN(sk)) {
+      message = "Sort key is not an integer";
+    }
+
+    if (pkg_sort_keys.has(sk)) {
+      message = "Sort key already exists";
+    }
+
+    event.target.setCustomValidity(message);
   }
 </script>
 
