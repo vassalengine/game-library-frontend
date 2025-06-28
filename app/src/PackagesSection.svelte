@@ -79,7 +79,7 @@
   function validatePackageSortKey(event) {
     let message = "";
 
-    const sk = Number(event.target.value);
+    const sk = Number(event.target.value.trim());
     if (!Number.isInteger(sk)) {
       message = "Sort key is not an integer";
     }
