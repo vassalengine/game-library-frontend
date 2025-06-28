@@ -122,7 +122,7 @@
       const art = t.substring(0, i);
       const rest = t.substring(i + 1);
 
-      if (["an", "the"].includes(art_lc) ||
+      if (["an", "the"].includes(art) ||
         (art === "a" && !(rest.startsWith("la ") || rest.startsWith("las "))))
       {
         return `${rest}, ${art}`;
