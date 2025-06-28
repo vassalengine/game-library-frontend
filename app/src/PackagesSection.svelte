@@ -103,7 +103,7 @@
         <label for="package_name_input" class="form-label">Package name</label>
         <input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control" required on:input={validatePackageName}>
         <label for="sort_key_input" class="form-label">Package sort key</label>
-        <input id="sort_key_input" type="number" min="-9223372036854775808" max="9223372036854775807" name="sort_key" class="package_tmpl_name form-control" required on:input={validatePackageSortKey}>
+        <input id="sort_key_input" type="number" min="-9223372036854775808" max="9223372036854775807" step="1" name="sort_key" class="package_tmpl_name form-control" required on:input={validatePackageSortKey}>
         <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
         <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </form>
