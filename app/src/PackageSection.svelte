@@ -135,7 +135,7 @@ summary::before {
   content: '';
   width: 1em;
   height: 0.5em;
-  background: url('../public/gl/images/chevron-down.svg');
+  background: url('assets/chevron-down.svg');
   background-size: cover;
   margin-right: 0.5em;
   transition: 0.2s;
