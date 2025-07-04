@@ -1,5 +1,6 @@
 <script>
   import Client from '../public/gl/js/client.js';
+  import { extractVersion } from './lib/module.js';
 
   import ErrorBox from './ErrorBox.svelte';
   import FileSection from './FileSection.svelte';
@@ -86,6 +87,37 @@
     edit = false;
     editing = false;
     error = null;
+  }
+
+  async function validateFile(event) {
+    let msg = "";
+
+    if (event.target.files.length === 1) {
+      const file = event.target.files[0];
+
+      // extensions aren't version checked because they live
+      // in releases whose versions match the module's version
+      if (!file.name.endsWith(".vext")) {
+        // check for a version in anything else
+        const version = await extractVersion(file);
+
+        if (version === null) {
+          // no version in a .vmod is an error
+          if (file.name.endsWith(".vmod")) {
+            msg = "No version found in module file.";
+          }
+        }
+        else if (version !== release.version) {
+          // version mismatch in a file with a version is an error
+          msg = `Module version ${version} != release version ${release.version}.`;
+        }
+      }
+    }
+
+    event.target.setCustomValidity(msg);
+    if (msg) {
+      error = msg;
+    }
   }
 
   let cancelUpload = () => {};
@@ -191,7 +223,7 @@
     <ErrorBox {error} />
     {/if}
     <form action="" on:submit|preventDefault={submitFile}>
-      <input id="file_input" class="form-control" type="file" name="file" required style:display={uploading ? 'none' : 'inline'}>
+      <input id="file_input" class="form-control" type="file" name="file" required style:display={uploading ? 'none' : 'inline'} on:change={validateFile}>
       {#if !uploading}
       <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
       <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelFile}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
