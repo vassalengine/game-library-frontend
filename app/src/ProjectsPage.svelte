@@ -10,8 +10,8 @@
   export let limit;
 
   import { makeRequestURL, unpackParams } from './lib/params.js';
-  import { intlFormatDistance } from '../public/gl/js/util.js';
-  import { fetchJSON } from '../public/gl/js/client.js';
+  import { intlFormatDistance } from './lib/util.js';
+  import { fetchJSON } from './lib/client.js';
 
   import Header from './Header.svelte';
   import ErrorBox from './ErrorBox.svelte';

@@ -1,6 +1,6 @@
 <script>
   import UseBootstrapTag from 'https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.0/+esm';
-  import { intlFormatDistance } from '../public/gl/js/util.js';
+  import { intlFormatDistance } from './lib/util.js';
 
   import ErrorBox from './ErrorBox.svelte';
   import UserChip from './UserChip.svelte';

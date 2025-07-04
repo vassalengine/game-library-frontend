@@ -9,9 +9,9 @@
   export let ums_url;
   export let returnto;
 
-  import { getCookie } from '../public/gl/js/util.js';
+  import { getCookie } from './lib/util.js';
 
-  import Client from '../public/gl/js/client.js';
+  import Client from './lib/client.js';
 
   import Header from './Header.svelte';
   import ErrorBox from './ErrorBox.svelte';

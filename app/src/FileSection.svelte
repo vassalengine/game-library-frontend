@@ -1,5 +1,5 @@
 <script>
-  import { formatSizeWithUnit, intlFormatDistance } from '../public/gl/js/util.js';
+  import { formatSizeWithUnit, intlFormatDistance } from './lib/util.js';
   import UserChip from './UserChip.svelte';
 
   export let ums_url;

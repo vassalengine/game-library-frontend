@@ -1,4 +1,4 @@
-import { getCookie } from '../../public/gl/js/util.js';
+import { getCookie } from './util.js';
 
 const gls_url = 'http://localhost:3000/api/v1';
 const ums_url = 'http://localhost:4000/api/v1';

@@ -1,5 +1,5 @@
 <script>
-  import Client from '../public/gl/js/client.js';
+  import Client from './lib/client.js';
   import { extractVersion } from './lib/module.js';
 
   import ErrorBox from './ErrorBox.svelte';
