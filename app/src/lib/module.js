@@ -13,7 +13,7 @@ async function dumpFile(zipfile, filename) {
   const reader = new BlobReader(zipfile);
   const zipreader = new ZipReader(reader);
   const entry = await getFileEntry(zipreader, filename);
-  return entry ? await entry.getData(new TextWriter()) : null;
+  return await entry?.getData(new TextWriter());
 }
 
 function versionInModuledata(md) {
