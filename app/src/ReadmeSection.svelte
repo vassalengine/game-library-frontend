@@ -1,6 +1,6 @@
 <script>
   import markdownIt from 'https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/+esm';
-  import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.1.3/+esm';
+  import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.2.6/+esm';
 
   import ErrorBox from './ErrorBox.svelte';
 
