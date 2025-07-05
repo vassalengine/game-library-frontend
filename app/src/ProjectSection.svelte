@@ -20,7 +20,7 @@
   let owner_tags;
 
   async function setupOwnersInput(owners_input) {
-    const module = await import("https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.0/+esm");
+    const module = await import("https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.2/+esm");
     const UseBootstrapTag = module.default;
 
     owner_tags = UseBootstrapTag(owners_input);
@@ -138,7 +138,7 @@
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/datalist-ajax@1.0.2/dist/datalist-ajax.min.js" integrity="sha384-l1SJImy1KcVdwwAARHm0QIA41YLgISyILDgtUgb7qZg0rMwMFODSIEudEaER/2nF" crossorigin="anonymous"></script>
-  <link href="https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.0/dist/use-bootstrap-tag.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.2/dist/use-bootstrap-tag.min.css" rel="stylesheet">
 {:else}
   {@const now = new Date()}
   <div>
