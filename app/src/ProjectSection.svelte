@@ -135,6 +135,7 @@
       </form>
     </div>
   </div>
+  <script src="https://cdn.jsdelivr.net/npm/datalist-ajax@1.0.2/dist/datalist-ajax.min.js" integrity="sha384-l1SJImy1KcVdwwAARHm0QIA41YLgISyILDgtUgb7qZg0rMwMFODSIEudEaER/2nF" crossorigin="anonymous"></script>
 {:else}
   {@const now = new Date()}
   <div>
