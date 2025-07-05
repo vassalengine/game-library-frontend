@@ -1,7 +1,4 @@
 <script>
-  import popperjscore from 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/+esm'
-  import bootstrap from 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/+esm';
-
   export let base_url;
   export let user_info;
   export let discourse_url;
@@ -28,6 +25,10 @@
 <!-- nav -->
 
 <header class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between px-2 py-2">
+
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.min.js" integrity="sha384-7qAoOXltbVP82dhxHAUje59V5r2YsVfBafyUDxEdApLPmcdhBPg1DKg1ERo0BZlK" crossorigin="anonymous"></script>
+
   <a href="/" class="d-flex align-items-center col-md-3 mb-2 mb-md-0 text-dark text-decoration-none">
     <img class="wordmark" src="/images/wordmark-path.svg" width="529" height="180" alt="Vassal">
   </a>
