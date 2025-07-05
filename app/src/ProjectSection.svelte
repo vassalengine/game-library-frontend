@@ -1,5 +1,4 @@
 <script>
-  import UseBootstrapTag from 'https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.0/+esm';
   import { intlFormatDistance } from './lib/util.js';
 
   import ErrorBox from './ErrorBox.svelte';
@@ -20,7 +19,10 @@
 
   let owner_tags;
 
-  function setupOwnersInput(owners_input) {
+  async function setupOwnersInput(owners_input) {
+    const module = await import("https://cdn.jsdelivr.net/npm/use-bootstrap-tag@2.2.0/+esm");
+    const UseBootstrapTag = module.default;
+
     owner_tags = UseBootstrapTag(owners_input);
     owner_tags.addValue(proj.owners);
 

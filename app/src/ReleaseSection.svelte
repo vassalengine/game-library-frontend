@@ -1,6 +1,5 @@
 <script>
   import Client from './lib/client.js';
-  import { extractVersion } from './lib/module.js';
 
   import ErrorBox from './ErrorBox.svelte';
   import FileSection from './FileSection.svelte';
@@ -78,9 +77,14 @@
   let uploadProgress = 0;
   let uploadFilename = '';
 
-  function startFile(event) {
+  let extractVersion;
+
+  async function startFile(event) {
     edit = true;
     editing = true;
+
+    const module = await import("./lib/module.js");
+    extractVersion = module.extractVersion;
   }
 
   function cancelFile(event) {
