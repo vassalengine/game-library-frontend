@@ -26,7 +26,8 @@ use tracing_subscriber::{
     util::SubscriberInitExt
 };
 
-const SITE_DIR: &str = "app/dist";
+const SITE_DIR: &str = "../../../site";
+const DIST_DIR: &str = "app/dist";
 
 fn real_addr(request: &Request) -> String {
     // If we're behind a proxy, get IP from X-Forwarded-For header
@@ -94,20 +95,24 @@ enum StartupError {
 fn routes(base_path: &str, log_headers: bool) -> Router {
     Router::new()
         .route_service(
-            &format!("{base_path}/"),
-            ServeFile::new(format!("{SITE_DIR}/root.html"))
+            &format!("{base_path}"),
+            ServeFile::new(format!("{DIST_DIR}/root.html"))
         )
         .route_service(
             &format!("{base_path}/projects"),
-            ServeFile::new(format!("{SITE_DIR}/projects.html"))
+            ServeFile::new(format!("{DIST_DIR}/projects.html"))
         )
         .route_service(
             &format!("{base_path}/projects/{{project}}"),
-            ServeFile::new(format!("{SITE_DIR}/project.html"))
+            ServeFile::new(format!("{DIST_DIR}/project.html"))
         )
         .route_service(
             &format!("{base_path}/new"),
             ServeFile::new(format!("{SITE_DIR}/new.html"))
+        )
+        .nest_service(
+            &format!("{base_path}/"),
+            ServeDir::new(DIST_DIR)
         )
         .fallback_service(ServeDir::new(SITE_DIR))
         .layer(
