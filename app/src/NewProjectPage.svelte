@@ -14,6 +14,7 @@
   import Client from './lib/client.js';
 
   import Header from './Header.svelte';
+  import Footer from './Footer.svelte';
   import ErrorBox from './ErrorBox.svelte';
 
   let error = null;
@@ -129,3 +130,5 @@
 </div>
 
 </main>
+
+<Footer/>

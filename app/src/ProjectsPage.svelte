@@ -14,6 +14,7 @@
   import { fetchJSON } from './lib/client.js';
 
   import Header from './Header.svelte';
+  import Footer from './Footer.svelte';
   import ErrorBox from './ErrorBox.svelte';
 
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
@@ -235,3 +236,5 @@
 </nav>
 
 </main>
+
+<Footer/>

@@ -14,6 +14,7 @@
   import Client from './lib/client.js';
 
   import Header from './Header.svelte';
+  import Footer from './Footer.svelte';
   import ErrorBox from './ErrorBox.svelte';
   import FlagDialog from './FlagDialog.svelte';
   import GameSection from './GameSection.svelte';
@@ -155,3 +156,5 @@
 {#if user_info}
 <FlagDialog bind:this={flag_dialog} {client} />
 {/if}
+
+<Footer/>

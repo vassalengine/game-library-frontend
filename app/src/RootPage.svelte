@@ -9,7 +9,7 @@
   export let returnto;
 
   import Header from './Header.svelte';
-
+  import Footer from './Footer.svelte';
 </script>
 
 <svelte:head>
@@ -97,3 +97,5 @@
 </div>
 
 </main>
+
+<Footer/>
