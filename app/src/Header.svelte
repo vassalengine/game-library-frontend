@@ -1,4 +1,7 @@
 <script>
+  import popperjscore from 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/+esm'
+  import bootstrap from 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/+esm';
+
   export let base_url;
   export let user_info;
   export let discourse_url;
