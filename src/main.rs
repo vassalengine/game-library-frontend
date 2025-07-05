@@ -108,7 +108,7 @@ fn routes(base_path: &str, log_headers: bool) -> Router {
         )
         .route_service(
             &format!("{base_path}/new"),
-            ServeFile::new(format!("{SITE_DIR}/new.html"))
+            ServeFile::new(format!("{DIST_DIR}/new.html"))
         )
         .nest_service(
             &format!("{base_path}/"),
