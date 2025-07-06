@@ -95,11 +95,15 @@
 
   let editRelease = false;
 
+  let release_versions;
+
   let validateStrict;
 
   async function startRelease(event) {
     editRelease = true;
     editing = true;
+
+    release_versions = new Set(pkg.releases.map((r) => r.version));
 
     const module = await import("https://cdn.jsdelivr.net/npm/compare-versions@6.1.1/+esm");
     validateStrict = module.validateStrict;
@@ -109,9 +113,6 @@
     editRelease = false;
     editing = false;
   }
-
-// FIXME: does this get updated when pkg changes?
-  let release_versions = new Set(pkg.releases.map((r) => r.version));
 
   function validateReleaseVersion(event) {
     let msg = "";
