@@ -2,6 +2,7 @@
    import { validateStrict } from 'https://cdn.jsdelivr.net/npm/compare-versions@6.1.1/+esm';
 
   import ErrorBox from './ErrorBox.svelte';
+  import PackageEditor from './PackageEditor.svelte';
   import ReleaseSection from './ReleaseSection.svelte';
 
   export let ums_url;
@@ -14,6 +15,56 @@
 
   function user_is_owner() {
      return username && proj.owners.includes(username);
+  }
+
+  let error = null;
+
+  //
+  // package update
+  //
+
+  let editPackage = false;
+
+  function startEditPackage(event) {
+    editPackage = true;
+    editing = false;
+  }
+
+  function cancelEditPackage(event) {
+    editPackage = false;
+    editing = false;
+  }
+
+  async function submitEditPackage(event) {
+    const fd = new FormData(event.target);
+
+    const data = {
+      'name': fd.get('package_name'),
+      'sort_key': Number(fd.get('sort_key')),
+      'description': ''
+    };
+
+    try {
+      await client.updatePackage(pkg.name, data);
+      error = null;
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
+
+    // update the project data
+    try {
+      proj = await client.getProject();
+      error = null;
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
+
+    editPackage = false;
+    editing = false;
   }
 
   //
@@ -42,34 +93,18 @@
   }
 
   //
-  // edit mode
+  // create release
   //
 
-  let edit = false;
-  let error = null;
-
-  function startEdit(event) {
-    edit = true;
-    editing = true;
-  }
-
-  function cancelEdit(event) {
-    edit = false;
-    editing = false;
-  }
-
-  async function submitEdit(event) {
-    edit = false;
-    editing = false;
-  }
+  let editRelease = false;
 
   function startRelease(event) {
-    edit = true;
+    editRelease = true;
     editing = true;
   }
 
   function cancelRelease(event) {
-    edit = false;
+    editRelease = false;
     editing = false;
   }
 
@@ -117,7 +152,7 @@
       return;
     }
 
-    edit = false;
+    editRelease = false;
     editing = false;
   }
 </script>
@@ -156,13 +191,19 @@ details[open] > summary::before {
     <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startRelease}>
       <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
     </button>
+    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startEditPackage}>
+      <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
+    </button>
     <button class="delete_button" class:is_deletable={!editing && user_is_owner() && pkg.releases.length == 0} type="button" on:click={deletePackage}>
       <svg class="svg-icon delete_icon"><use xlink:href="#trash-can"></use></svg>
     </button>
   </h3>
   <div>{pkg.description}</div>
+  {#if editPackage}
+    <PackageEditor {pkg} packages={proj.packages} submitEdit={submitEditPackage} cancelEdit={cancelEditPackage} />
+  {/if}
   <ol class="list-unstyled">
-    {#if edit}
+    {#if editRelease}
     <li class="release_tmpl_top border rounded p-3 my-2">
       <form action="" on:submit|preventDefault={submitRelease}>
         <input id="release_version_input" class="release_tmpl_name form-control" type="text" name="release_version" required on:input={validateReleaseVersion}>

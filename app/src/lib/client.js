@@ -296,6 +296,18 @@ class Client {
     );
   }
 
+  async updatePackage(pkg, data) {
+    await this.refreshTokenIfExpired();
+    return this.fetchOk(
+      `${this.gls_api}/projects/${this.project}/packages/${pkg}`,
+      {
+        method: 'PATCH',
+        headers: this.authJSONHeaders(),
+        body: JSON.stringify(data)
+      }
+    );
+  }
+
   async removePackage(pkg) {
     await this.refreshTokenIfExpired();
     return this.fetchOk(
