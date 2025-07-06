@@ -128,7 +128,6 @@
   async function submitRelease(event) {
     const fdata = new FormData(event.target);
 
-    console.log(fdata);
     const release_version = fdata.get('release_version');
 
     try {
