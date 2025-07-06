@@ -1,6 +1,4 @@
 <script>
-   import { validateStrict } from 'https://cdn.jsdelivr.net/npm/compare-versions@6.1.1/+esm';
-
   import ErrorBox from './ErrorBox.svelte';
   import PackageEditor from './PackageEditor.svelte';
   import ReleaseSection from './ReleaseSection.svelte';
@@ -97,9 +95,14 @@
 
   let editRelease = false;
 
-  function startRelease(event) {
+  let validateStrict;
+
+  async function startRelease(event) {
     editRelease = true;
     editing = true;
+
+    const module = await import("https://cdn.jsdelivr.net/npm/compare-versions@6.1.1/+esm");
+    validateStrict = module.validateStrict;
   }
 
   function cancelRelease(event) {
