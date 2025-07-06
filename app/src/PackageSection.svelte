@@ -40,8 +40,7 @@
 
     const data = {
       'name': fd.get('package_name'),
-      'sort_key': Number(fd.get('sort_key')),
-      'description': ''
+      'sort_key': Number(fd.get('sort_key'))
     };
 
     try {
