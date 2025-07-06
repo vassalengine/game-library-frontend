@@ -115,6 +115,10 @@
           // version mismatch in a file with a version is an error
           msg = `Module version ${version} does not equal release version ${release.version}.`;
         }
+        else if (!file.name.endsWith(".vmod")) {
+          // module without .vmod extension is an error
+          msg = "Module does not have .vmod extension.";
+        }
       }
     }
 
