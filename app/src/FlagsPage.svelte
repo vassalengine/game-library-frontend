@@ -47,10 +47,12 @@
   
   <table>
     <tbody>
+    {#if flags !== null}
     {#each flags as flag}
       <tr> 
       </tr>
     {/each}
+    {/if}
     </tbody>
   </table>
 </main>
