@@ -52,11 +52,11 @@
     {#if flags !== null}
     {#each flags as flag}
       <tr>
-        <td>{flags.project}</td>
-        <td>{flags.flag}</td>
-        <td><UserChip {ums_url} username={flags.flagged_by} size=24 /></td>
-        <td>{flags.flagged_at}</td>
-        <td>{flags.message}</td>
+        <td>{flag.project}</td>
+        <td>{flag.flag}</td>
+        <td><UserChip {ums_url} username={flag.flagged_by} size=24 /></td>
+        <td>{flag.flagged_at}</td>
+        <td>{flag.message}</td>
       </tr>
     {/each}
     {/if}
