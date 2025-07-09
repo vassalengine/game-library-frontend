@@ -56,6 +56,14 @@ tr:nth-child(even) {
   {/if}
   
   <table>
+    <thead>
+      <tr>
+        <th>Project</th>
+        <th>Type</th>
+        <th>Reporter</th>
+        <th>Date</th>
+      </tr>
+    </thead>
     <tbody>
     {#if flags !== null}
     {#each flags as flag}
