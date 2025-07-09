@@ -56,7 +56,9 @@
         <td>{flag.flag}</td>
         <td><UserChip {ums_url} username={flag.flagged_by} size=24 /></td>
         <td>{flag.flagged_at}</td>
-        <td>{flag.message ?? ""}</td>
+      </tr>
+      <tr>
+        <td colspan="4">{flag.message ?? ""}</td>
       </tr>
     {/each}
     {/if}
