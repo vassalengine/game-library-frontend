@@ -12,7 +12,8 @@ export default defineConfig({
         root: './root.html',
         new: './new.html',
         projects: './projects.html',
-        project: './project.html'
+        project: './project.html',
+        flags: './flags.html'
       }
     }
   }
