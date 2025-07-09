@@ -1,4 +1,14 @@
 <script>
+  import markdownIt from 'https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/+esm';
+  import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.2.6/+esm';
+  import { getCookie } from './lib/util.js';
+
+  import Client from './lib/client.js';
+
+  import Header from './Header.svelte';
+  import Footer from './Footer.svelte';
+  import ErrorBox from './ErrorBox.svelte';
+  import UserChip from './UserChip.svelte';
 
   export let current_version;
   export let news_link;
@@ -8,16 +18,6 @@
   export let discourse_url;
   export let ums_url;
   export let returnto;
-
-  import { getCookie } from './lib/util.js';
-
-  import Client from './lib/client.js';
-
-  import Header from './Header.svelte';
-  import Footer from './Footer.svelte';
-  import ErrorBox from './ErrorBox.svelte';
-
-  import UserChip from './UserChip.svelte';
 
   const client = new Client(
     gls_url,
@@ -33,6 +33,24 @@
   client.getFlags()
     .then((f) => flags = f.flags)
     .catch((err) => error = err); 
+
+  function mdInit() {
+    const defaults = {
+      html: false,
+      xhtmlOut: false,
+      breaks: false,
+      langPrefix: 'language-',
+      linkify: true,
+      typographer: true,
+  //    highlight: doHighlight
+    };
+
+    const md = markdownIt(defaults);
+
+    return md;
+  }
+
+  const md = mdInit();
 
 </script>
 
@@ -74,7 +92,7 @@ tr:nth-child(even) {
         <td>{flag.flagged_at}</td>
       </tr>
       <tr>
-        <td colspan="4">{flag.message ?? ""}</td>
+        <td colspan="4">{@html DOMPurify.sanitize(md.render(flag.message))}</td>
       </tr>
     {/each}
     {/if}
