@@ -36,6 +36,14 @@
 
 </script>
 
+<style>
+
+tr:nth-child(even) {
+  border-bottom: 1px solid black;
+}
+
+</style>
+
 <svelte:head>
   <title>Module Library - Vassal</title>
 </svelte:head>
