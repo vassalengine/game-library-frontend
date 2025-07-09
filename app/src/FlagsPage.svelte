@@ -52,7 +52,7 @@
     {#if flags !== null}
     {#each flags as flag}
       <tr>
-        <td>{flag.project}</td>
+        <td><a href="{base_url}/projects/{flag.project}">{flag.project}</a></td>
         <td>{flag.flag}</td>
         <td><UserChip {ums_url} username={flag.flagged_by} size=24 /></td>
         <td>{flag.flagged_at}</td>
