@@ -1,4 +1,4 @@
-import RootPage from './FlagsPage.svelte';
+import FlagsPage from './FlagsPage.svelte';
 import { CONFIG } from './lib/setup.js';
 
 // strip last two component from path to get base path
