@@ -110,6 +110,10 @@ fn routes(base_path: &str, log_headers: bool) -> Router {
             &format!("{base_path}/new"),
             ServeFile::new(format!("{DIST_DIR}/new.html"))
         )
+        .route_service(
+            &format!("{base_path}/admin/flags"),
+            ServeFile::new(format!("{DIST_DIR}/flags.html"))
+        )
         .nest_service(
             &format!("{base_path}/"),
             ServeDir::new(DIST_DIR)

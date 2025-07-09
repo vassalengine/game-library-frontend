@@ -382,6 +382,18 @@ class Client {
       }
     );
   }
+
+  async getFlags() {
+    await this.refreshTokenIfExpired();
+    return this.fetchOk(
+      `${this.gls_api}/admin/flags`,
+      {
+        method: 'GET',
+        headers: this.authJSONHeaders(),
+        body: JSON.stringify(data)
+      }
+    );
+  }
 }
 
 export default Client;
