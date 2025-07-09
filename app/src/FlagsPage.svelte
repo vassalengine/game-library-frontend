@@ -31,7 +31,7 @@
   let error = null;
 
   client.getFlags()
-    .then((f) => flags = f)
+    .then((f) => flags = f.flags)
     .catch((err) => error = err); 
 
 </script>
