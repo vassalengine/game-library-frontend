@@ -385,12 +385,11 @@ class Client {
 
   async getFlags() {
     await this.refreshTokenIfExpired();
-    return this.fetchOk(
+    return this.fetchJSON(
       `${this.gls_api}/admin/flags`,
       {
         method: 'GET',
-        headers: this.authJSONHeaders(),
-        body: JSON.stringify(data)
+        headers: this.authJSONHeaders()
       }
     );
   }
