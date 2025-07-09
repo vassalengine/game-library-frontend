@@ -17,6 +17,8 @@
   import Footer from './Footer.svelte';
   import ErrorBox from './ErrorBox.svelte';
 
+  import UserChip from './UserChip.svelte';
+
   const client = new Client(
     gls_url,
     ums_url,
@@ -49,7 +51,12 @@
     <tbody>
     {#if flags !== null}
     {#each flags as flag}
-      <tr> 
+      <tr>
+        <td>{flags.project}</td>
+        <td>{flags.flag}</td>
+        <td><UserChip {ums_url} username={flags.flagged_by} size=24 /></td>
+        <td>{flags.flagged_at}</td>
+        <td>{flags.message}</td>
       </tr>
     {/each}
     {/if}
