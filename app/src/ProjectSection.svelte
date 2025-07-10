@@ -126,7 +126,8 @@
   <div class="container">
     <div class="row">
       <form action="" on:submit|preventDefault={submitEdit}>
-        <input type="text" class="form-control" use:setupOwnersInput>
+        <label for="owners_input" class="form-label">Owners</label>
+        <input id="owners_input" type="text" class="form-control" use:setupOwnersInput>
 <!--
         <auto-complete id="newownerauto" api="{GL_BASE}/u/search/users?term=${newowner}&include_groups=false&limit=6" resultdata="users" resultname="username" querymin="2" optionmax="100" inputdelay="200">
           <input class="form-control" type="text" id="newowner" name="newowner">
