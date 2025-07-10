@@ -86,7 +86,7 @@
     case "other":
       message = `You raised ${flag_type} flag on project [${flag.project}](${proj_url}):
 
-> ${flag.message}
+> ${flag.message.replace("\n\n", "\n>\n>")}
 
 Thanks for your report.`
       break;
