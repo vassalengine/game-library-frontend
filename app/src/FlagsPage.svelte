@@ -135,7 +135,7 @@ tr:nth-child(even) {
           <UserChip {ums_url} username={flag.flagged_by} size=24 />
         </td>
         <td>{flag.flag}</td>
-        <td>{flag.flagged_at}</td>
+        <td>{flag.flagged_at.replace(/\.[0-9]+Z/, "Z")}</td>
       </tr>
       <tr>
         <td colspan="4">{@html DOMPurify.sanitize(md.render(flag.message))}</td>
