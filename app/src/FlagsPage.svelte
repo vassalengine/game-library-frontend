@@ -62,27 +62,27 @@
 
     switch (flag.flag) {
     case "inappropriate":
-      flag_type = `an ${flag.flag} flag`;
+      flag_type = `an ${flag.flag}`;
       break;
     case "spam":
-      flag_type = `a ${flag.flag} flag`;
+      flag_type = `a ${flag.flag}`;
       break;
     case "illegal":
-      flag_type = `an ${flag.flag} flag`;
+      flag_type = `an ${flag.flag}`;
       break;
     case "other":
-      flag_type = `a flag`;
+      flag_type = `a`;
       break;
     }
 
     switch (flag.flag) {
     case "inappropriate":
     case "spam":
-      message = `You raised ${flag_type} on project ${flag.project}. Thanks for your report.`
+      message = `You raised ${flag_type} flag on project [${flag.project}](${base_url}/projects/${flag.project}). Thanks for your report.`
       break;
     case "illegal":
     case "other":
-      message = `You raised ${flag_type} on project ${flag.project}:
+      message = `You raised ${flag_type} flag on project [${flag.project}](${base_url}/projects/${flag.project}):
 
 > ${flag.message}
 
