@@ -52,6 +52,10 @@
 
   const md = mdInit();
 
+  function replyTitle(flag) {
+    return encodeURIComponent(`Flag for project ${flag.project}`);
+  }
+
   function replyBody(flag) {
     let flag_type;
     let message;
@@ -86,7 +90,7 @@ Thanks for your report.`
       break;
     }
 
-    return message;
+    return encodeURIComponent(message);
   }
 
 </script>
@@ -125,7 +129,7 @@ tr:nth-child(even) {
       <tr>
         <td><a href="{base_url}/projects/{flag.project}">{flag.project}</a></td>
         <td>
-          <a href="{discourse_url}/new-message?username={flag.flagged_by}&title=Flag for project {flag.project}&body={replyBody(flag)}"><svg class="svg-icon"><use xlink:href="#reply"></use></svg></a>
+          <a href="{discourse_url}/new-message?username={flag.flagged_by}&title={replyTitle(flag)}&body={replyBody(flag)}"><svg class="svg-icon"><use xlink:href="#reply"></use></svg></a>
           <UserChip {ums_url} username={flag.flagged_by} size=24 />
         </td>
         <td>{flag.flag}</td>
