@@ -86,11 +86,11 @@ tr:nth-child(even) {
     {#if flags !== null}
     {#each flags as flag}
       <tr>
+        <td><a href="{base_url}/projects/{flag.project}">{flag.project}</a></td>
         <td>
           <a href="{discourse_url}/new-message?username={flag.flagged_by}&title=Flag for project {flag.project}&body=> {flag.message}"><svg class="svg-icon"><use xlink:href="#reply"></use></svg></a>
           <UserChip {ums_url} username={flag.flagged_by} size=24 />
         </td>
-        <td><a href="{base_url}/projects/{flag.project}">{flag.project}</a></td>
         <td>{flag.flag}</td>
         <td>{flag.flagged_at}</td>
       </tr>
