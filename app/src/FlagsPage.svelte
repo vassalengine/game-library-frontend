@@ -75,14 +75,16 @@
       break;
     }
 
+    const proj_url = `${window.location.origin}${base_url}/projects/${flag.project}`;
+
     switch (flag.flag) {
     case "inappropriate":
     case "spam":
-      message = `You raised ${flag_type} flag on project [${flag.project}](${base_url}/projects/${flag.project}). Thanks for your report.`
+      message = `You raised ${flag_type} flag on project [${flag.project}](${proj_url}). Thanks for your report.`
       break;
     case "illegal":
     case "other":
-      message = `You raised ${flag_type} flag on project [${flag.project}](${base_url}/projects/${flag.project}):
+      message = `You raised ${flag_type} flag on project [${flag.project}](${proj_url}):
 
 > ${flag.message}
 
