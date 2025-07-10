@@ -448,20 +448,20 @@
           <div>
             <svg class="svg-icon"><use xlink:href="#industry"></use></svg>
             {#if proj.game.publisher}
-            <a href="">{proj.game.publisher}</a>{#if proj.game.publisher}, {/if}
+            <a href=".">{proj.game.publisher}</a>{#if proj.game.publisher}, {/if}
             {/if}
             {#if proj.game.year}
-            <a href="">{proj.game.year}</a>
+            <a href=".">{proj.game.year}</a>
             {/if}
           </div>
-          <div><svg class="svg-icon"><use xlink:href="#user-group"></use></svg> <a href="">{players_slug}</a></div>
-          <div><svg class="svg-icon"><use xlink:href="#clock"></use></svg> <a href="">{length_slug}</a></div>
+          <div><svg class="svg-icon"><use xlink:href="#user-group"></use></svg> <a href=".">{players_slug}</a></div>
+          <div><svg class="svg-icon"><use xlink:href="#clock"></use></svg> <a href=".">{length_slug}</a></div>
         </div>
         <div class="d-flex flex-wrap gap-2">
           <svg class="align-self-center svg-icon"><use xlink:href="#tags"></use></svg>
           <ul class="d-flex flex-wrap list-unstyled gap-3 mb-0">
             {#each proj.tags as tag}
-            <li><a href="">{tag.replace(':', ': ')}</a></li>
+            <li><a href=".">{tag.replace(':', ': ')}</a></li>
             {/each}
           </ul>
         </div>
