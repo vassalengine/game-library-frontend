@@ -81,7 +81,9 @@
   {#if edit}
     <div class="package_tmpl_top border rounded p-3 my-2">
       <form action="" on:submit|preventDefault={submitEdit}>
-        <PackageEditor packages={proj.packages} {cancelEdit} />
+        <PackageEditor packages={proj.packages} />
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </form>
     </div>
   {/if}
