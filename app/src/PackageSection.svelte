@@ -202,7 +202,11 @@ details[open] > summary::before {
   </h3>
   <div>{pkg.description}</div>
   {#if editPackage}
-    <PackageEditor {pkg} packages={proj.packages} submitEdit={submitEditPackage} cancelEdit={cancelEditPackage} />
+    <div class="package_tmpl_top border rounded p-3 my-2">
+      <form action="" on:submit|preventDefault={submitEditPackage}>
+        <PackageEditor {pkg} packages={proj.packages} cancelEdit={cancelEditPackage} />
+      </form>
+    </div>
   {/if}
   <ol class="list-unstyled">
     {#if editRelease}

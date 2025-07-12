@@ -79,7 +79,11 @@
   </h2>
   <div>
   {#if edit}
-    <PackageEditor packages={proj.packages} {submitEdit} {cancelEdit} />
+    <div class="package_tmpl_top border rounded p-3 my-2">
+      <form action="" on:submit|preventDefault={submitEdit}>
+        <PackageEditor packages={proj.packages} {cancelEdit} />
+      </form>
+    </div>
   {/if}
   {#each proj.packages as pkg}
     <PackageSection bind:proj={proj} {pkg} {client} {username} {ums_url} bind:editing={editing} />
