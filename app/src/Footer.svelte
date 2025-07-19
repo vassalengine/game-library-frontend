@@ -28,7 +28,7 @@
 
     <div id="colophon" class="text-center pt-5">
       <div class="row text-muted">
-        <p class="col mb-0">Library content is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike</a> unless otherwise noted. <svg class="svg-icon"><use xlink:href="#creative-commons"></use></svg><svg class="svg-icon"><use xlink:href="#creative-commons-by"></use></svg><svg class="svg-icon"><use xlink:href="#creative-commons-sa"></use></svg></p>
+        <p class="col mb-0">Library content is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC-BY-SA</a> unless otherwise noted. <svg class="svg-icon"><use xlink:href="#creative-commons"></use></svg><svg class="svg-icon"><use xlink:href="#creative-commons-by"></use></svg><svg class="svg-icon"><use xlink:href="#creative-commons-sa"></use></svg></p>
       </div>
       <div class="row text-muted">
         <p class="col">
