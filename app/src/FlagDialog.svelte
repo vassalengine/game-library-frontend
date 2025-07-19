@@ -66,8 +66,6 @@
   async function submitFlag(event) {
     const fdata = new FormData(event.target);
 
-    console.log(fdata);
-
     const flag = fdata.get('flag');
     const message = fdata.get('message');
 
