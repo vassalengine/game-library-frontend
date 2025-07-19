@@ -37,7 +37,7 @@
     const fd = new FormData(event.target);
 
     const data = {
-      'name': fd.get('package_name'),
+      'name': fd.get('package_name')?.trim(),
       'sort_key': Number(fd.get('sort_key'))
     };
 

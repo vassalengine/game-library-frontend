@@ -32,7 +32,7 @@
 
     const fdata = new FormData(event.target);
 
-    const pname = fdata.get('project_name')
+    const pname = fdata.get('project_name')?.trim();
     if (pname) {
       const data = {
         description: "",

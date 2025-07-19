@@ -35,7 +35,7 @@
   async function submitEdit(event) {
     const fd = new FormData(event.target);
 
-    const pkg = fd.get('package_name');
+    const pkg = fd.get('package_name')?.trim();
 
     const data = {
       'sort_key': Number(fd.get('sort_key')),

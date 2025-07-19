@@ -106,14 +106,14 @@
 
     const description = fdata.get('description');
     if (description !== proj.description) {
-      data.description = description;
+      data.description = description?.trim();
     }
 
     // check for updates to properties which cannot be null
     for (const k of ['title', 'publisher', 'year']) {
       const fv = fdata.get(`game_${k}`);
       if (fv !== proj.game[k]) {
-        (data.game ??= {})[k] = fv;
+        (data.game ??= {})[k] = fv?.trim();
       }
     }
 

@@ -67,7 +67,7 @@
     const fdata = new FormData(event.target);
 
     const flag = fdata.get('flag');
-    const message = fdata.get('message');
+    const message = fdata.get('message')?.trim();
 
     try {
       await client.addFlag(flag, message);
