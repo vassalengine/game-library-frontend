@@ -28,7 +28,7 @@
 
     <div id="colophon" class="text-center pt-5">
       <div class="row text-muted">
-        <p class="col mb-0">Copyright © 2009–2025 The Vassal Team</p>
+        <p class="col mb-0">Library content is available under <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike</a> unless otherwise noted.</p>
       </div>
       <div class="row text-muted">
         <p class="col">
