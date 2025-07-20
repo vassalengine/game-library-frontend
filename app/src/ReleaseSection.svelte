@@ -22,7 +22,7 @@
     if (filename.endsWith('.vmod')) {
       return 0;
     }
-    else if (filename.endsWith('.vext')) {
+    else if (filename.endsWith('.vmdx')) {
       return 1;
     }
     else if (filename.endsWith('.vsav')) {
@@ -101,7 +101,7 @@
 
       // extensions aren't version checked because they live
       // in releases whose versions match the module's version
-      if (!file.name.endsWith(".vext")) {
+      if (!file.name.endsWith(".vmdx")) {
         // check for a version in anything else
         const version = await extractVersion(file);
 
