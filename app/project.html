@@ -4,7 +4,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="Vassal is an open-source game engine for building and playing online adaptations of board games and card games.">
+{% match self.0 %}
+  {% when Ok with (pdata) %}
+  <title>{{ pdata.game.title }} - Module Library - Vassal</title>
+  <meta name="project-data" id="project-data" content="{{pdata|json}}">
+  {% when Err with (err) %}
   <title>Module Library - Vassal</title>
+  <meta name="project-error" id="project-error" content="{{err}}">
+{% endmatch %}
+{% match self.1 %}
+  {% when Ok with (pdata) %}
+  <meta name="players-data" id="players-data" content="{{pdata|json}}">
+  {% when Err with (err) %}
+  <meta name="players-error" id="players-error" content="{{err}}">
+{% endmatch %}
   <link rel="icon" sizes="any" href="/favicon.ico">
   <link rel="icon" type="image/svg+xml" href="/icon.svg">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">

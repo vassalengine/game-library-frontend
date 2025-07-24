@@ -8,6 +8,10 @@
   export let discourse_url;
   export let ums_url;
   export let returnto;
+  export let proj;
+  export let proj_error;
+  export let players;
+  export let players_error;
 
   import { getCookie } from './lib/util.js';
 
@@ -31,20 +35,6 @@
     getCookie('token'),
     getCookie('refresh')
   );
-
-  let proj = null;
-  let proj_error = null;
-
-  client.getProject()
-    .then((p) => proj = p)
-    .catch((err) => proj_error = err);
-
-  let players = null;
-  let players_error = null;
-
-  client.getPlayers()
-    .then((p) => players = p)
-    .catch((err) => players_error = err);
 
   let editing = false;
 

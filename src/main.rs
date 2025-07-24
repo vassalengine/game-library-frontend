@@ -1,13 +1,28 @@
+use askama::Template;
 use axum::{
     Router, serve,
     body::Body,
-    extract::{ConnectInfo, Request}
+    http::StatusCode,
+    extract::{ConnectInfo, Path, Request, State},
+    response::{Html, IntoResponse, Response},
+    routing::get
 };
-use serde::Deserialize;
+use bytes::{Buf, Bytes};
+use futures::future;
+use mime::APPLICATION_JSON;
+use reqwest::{
+    Client,
+    header::ACCEPT
+};
+use serde::{
+    Deserialize, Serialize,
+    de::DeserializeOwned
+};
 use std::{
     fs,
     io,
     net::{IpAddr, SocketAddr},
+    sync::Arc,
     time::Duration
 };
 use tokio::net::TcpListener;
@@ -92,19 +107,19 @@ enum StartupError {
     Io(#[from] io::Error)
 }
 
-fn routes(base_path: &str, log_headers: bool) -> Router {
+fn routes(base_path: &str, log_headers: bool) -> Router<Arc<AppState>> {
     Router::new()
         .route_service(
-            &format!("{base_path}"),
+            base_path,
             ServeFile::new(format!("{DIST_DIR}/root.html"))
         )
         .route_service(
             &format!("{base_path}/projects"),
             ServeFile::new(format!("{DIST_DIR}/projects.html"))
         )
-        .route_service(
-            &format!("{base_path}/projects/{{project}}"),
-            ServeFile::new(format!("{DIST_DIR}/project.html"))
+        .route(
+            &format!("{base_path}/test/{{project}}"),
+            get(project_page)
         )
         .route_service(
             &format!("{base_path}/new"),
@@ -133,6 +148,163 @@ fn routes(base_path: &str, log_headers: bool) -> Router {
         )
 }
 
+#[derive(Clone)]
+pub struct AppState {
+    client: Client,
+    api_url: String
+}
+
+#[derive(Debug, thiserror::Error)]
+enum AppError {
+    #[error("{0}")]
+    BackendError(#[from] reqwest::Error),
+    #[error("{0}")]
+    JsonError(#[from] serde_json::Error)
+}
+
+impl IntoResponse for AppError {
+    fn into_response(self) -> Response {
+        error!("{}", self);
+        (StatusCode::INTERNAL_SERVER_ERROR, self.to_string()).into_response()
+    }
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
+pub struct Range {
+    pub min: Option<i64>,
+    pub max: Option<i64>
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Eq, PartialEq, Serialize)]
+pub struct GameData {
+    pub title: String,
+    pub title_sort_key: String,
+    pub publisher: String,
+    pub year: String,
+    pub players: Range,
+    pub length: Range
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct FileData {
+    pub filename: String,
+    pub url: String,
+    pub size: i64,
+    pub sha256: String,
+    pub published_at: String,
+    pub published_by: String,
+    pub requires: Option<String>
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ReleaseData {
+    pub version: String,
+    pub files: Vec<FileData>
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct PackageData {
+    pub name: String,
+    pub sort_key: i64,
+    pub description: String,
+    pub releases: Vec<ReleaseData>
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct GalleryImage {
+    pub filename: String,
+    pub description: String
+}
+
+#[derive(Clone, Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct ProjectData {
+    pub name: String,
+    pub description: String,
+    pub revision: i64,
+    pub created_at: String,
+    pub modified_at: String,
+    pub tags: Vec<String>,
+    pub game: GameData,
+    pub readme: String,
+    pub image: Option<String>,
+    pub owners: Vec<String>,
+    pub packages: Vec<PackageData>,
+    pub gallery: Vec<GalleryImage>
+}
+
+#[derive(Debug, Deserialize, Eq, PartialEq, Serialize)]
+pub struct Users {
+    pub users: Vec<String>
+}
+
+#[derive(Template)]
+#[template(path = "project.html")]
+struct ProjectTemplate(
+    Result<ProjectData, AppError>,
+    Result<Users, AppError>
+);
+
+struct HtmlTemplate<T>(T);
+
+impl<T: Template> IntoResponse for HtmlTemplate<T> {
+    fn into_response(self) -> Response {
+        match self.0.render() {
+            Ok(html) => Html(html).into_response(),
+            Err(err) => (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                format!("Failed to render template. Error: {}", err),
+            ).into_response(),
+        }
+    }
+}
+
+async fn get_data(
+    client: &Client,
+    url: &str
+) -> Result<Bytes, AppError>
+{
+    Ok(
+        client.get(url)
+            .header(ACCEPT, APPLICATION_JSON.as_ref())
+            .send()
+            .await?
+            .error_for_status()?
+            .bytes()
+            .await?
+    )
+}
+
+fn parse_data<T>(
+    bytes: Bytes
+) -> Result<T, AppError>
+where
+    T: DeserializeOwned
+{
+    Ok(serde_json::from_reader(bytes.reader())?)
+}
+
+async fn project_page(
+    Path(project): Path<String>,
+    State(state): State<Arc<AppState>>
+) -> HtmlTemplate<ProjectTemplate>
+{
+    let players_url = format!("{}/projects/{project}/players", state.api_url);
+    let proj_url = &players_url[..players_url.rfind('/').expect("impossible")];
+
+    let urls = [ proj_url, &players_url ];
+
+    // fetch the project and players data
+    let mut r = future::join_all(urls.iter().map(|url|
+        get_data(&state.client, url)
+    )).await
+    .into_iter();
+
+    let proj = r.next().expect("impossible").and_then(parse_data);
+    let players = r.next().expect("impossible").and_then(parse_data);
+
+    HtmlTemplate(ProjectTemplate(proj, players))
+}
+
 async fn shutdown_signal() {
     use tokio::signal::unix::{signal, SignalKind};
 
@@ -158,18 +330,28 @@ pub struct Config {
     pub base_path: String,
     pub listen_ip: String,
     pub listen_port: u16,
-    pub log_headers: bool
+    pub log_headers: bool,
+    pub api_url: String
 }
 
 async fn run() -> Result<(), StartupError> {
     info!("Reading config.toml");
     let config: Config = toml::from_str(&fs::read_to_string("config.toml")?)?;
 
+    let state = Arc::new(AppState {
+        client: Client::builder()
+            .timeout(Duration::from_secs(10))
+            .build()
+            .unwrap(),
+        api_url: config.api_url
+    });
+
     // set up router
     let app = routes(
         &config.base_path,
         config.log_headers
-    );
+    )
+    .with_state(state);
 
     // serve pages
     let ip: IpAddr = config.listen_ip.parse()?;

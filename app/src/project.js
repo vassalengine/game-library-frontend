@@ -10,13 +10,23 @@ const project = path.substring(i + 1);
 const base_path = path.substring(0, path.lastIndexOf('/', i - 1));
 const base_url = window.location.origin + base_path;
 
+let proj = JSON.parse(document.getElementById("project-data")?.content ?? null);
+let proj_error = document.getElementById("project-error")?.content ?? null;
+
+let players = JSON.parse(document.getElementById("players-data")?.content ?? null);
+let players_error = document.getElementById("players-error")?.content ?? null;
+
 const app = new ProjectPage({
   target: document.body,
   anchor: document.body.firstChild,
   props: {
     ...CONFIG,
     base_url,
-    project
+    project,
+    proj,
+    proj_error,
+    players,
+    players_error
   }
 });
 
