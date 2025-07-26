@@ -36,7 +36,7 @@
     // percent-encode non-ascii
     return encodeURIComponent(
       // replace whitespace with hyphens
-      s.replaceAll(/\w/, '-')
+      s.replaceAll(/\s/, '-')
         // remove all special characters
         .replaceAll(/[:\/?#\[\]@!$&'()*+,;=%"<>\\^`{}|]/, '')
         // coalesce consecutive hyphens

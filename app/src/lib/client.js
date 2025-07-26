@@ -286,7 +286,6 @@ class Client {
 
   async addPackage(pkg, data) {
     await this.refreshTokenIfExpired();
-    pkg = encodeURIComponent(pkg);
     return this.fetchOk(
       `${this.gls_api}/projects/${this.project}/packages/${pkg}`,
       {
@@ -299,7 +298,6 @@ class Client {
 
   async updatePackage(pkg, data) {
     await this.refreshTokenIfExpired();
-    pkg = encodeURIComponent(pkg);
     return this.fetchOk(
       `${this.gls_api}/projects/${this.project}/packages/${pkg}`,
       {
@@ -312,7 +310,6 @@ class Client {
 
   async removePackage(pkg) {
     await this.refreshTokenIfExpired();
-    pkg = encodeURIComponent(pkg);
     return this.fetchOk(
       `${this.gls_api}/projects/${this.project}/packages/${pkg}`,
       {
@@ -324,7 +321,6 @@ class Client {
 
   async addRelease(pkg, version) {
     await this.refreshTokenIfExpired();
-    pkg = encodeURIComponent(pkg);
     return this.fetchOk(
       `${this.gls_api}/projects/${this.project}/packages/${pkg}/${version}`,
       {
@@ -336,7 +332,6 @@ class Client {
 
   async removeRelease(pkg, version) {
     await this.refreshTokenIfExpired();
-    pkg = encodeURIComponent(pkg);
     return this.fetchOk(
       `${this.gls_api}/projects/${this.project}/packages/${pkg}/${version}`,
       {
@@ -352,7 +347,6 @@ class Client {
 
   async addFile(pkg, version, file, callbacks={}) {
     await this.refreshTokenIfExpired();
-    pkg = encodeURIComponent(pkg);
     return doUpload(
       file,
       'application/octet-stream',
