@@ -36,14 +36,14 @@
     // percent-encode non-ascii
     return encodeURIComponent(
       // replace whitespace with hyphens
-      s.replaceAll(/\s/, '-')
+      s.replace(/\s/g, '-')
         // remove all special characters
-        .replaceAll(/[:\/?#\[\]@!$&'()*+,;=%"<>\\^`{}|]/, '')
+        .replace(/[:\/?#\[\]@!$&'()*+,;=%"<>\\^`{}|]/g, '')
         // coalesce consecutive hyphens
-        .replaceAll(/-+/, '-')
+        .replace(/-+/g, '-')
     )
     // remove leading and trailing hyphens
-    .replaceAll(/^-+|-+$/, '');
+    .replace(/^-+|-+$/g, '');
   }
 
   async function submitEdit(event) {
