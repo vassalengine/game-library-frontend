@@ -202,7 +202,7 @@
     <div class="p-2 border rounded d-flex flex-wrap">
       <div class="me-auto">
         <div>
-          <a class="fs-5 fw-bolder" href="{`${base_url}/projects/${proj.name}`}">{proj.game.title}</a>
+          <a class="fs-5 fw-bolder" href="{`${base_url}/projects/${proj.slug}`}">{proj.game.title}</a>
         </div>
         <div>{proj.name}</div>
         <div>{proj.description}</div>

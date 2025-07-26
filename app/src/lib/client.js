@@ -149,7 +149,7 @@ class Client {
   constructor(gls_api, ums_api, project, token, refresh) {
     this.gls_api = gls_api;
     this.ums_api = ums_api;
-    this.project = encodeURIComponent(project);
+    this.project = project;
     this.token = token;
     this.refresh = refresh;
     this.fetch_timeout = 10000; // ms
