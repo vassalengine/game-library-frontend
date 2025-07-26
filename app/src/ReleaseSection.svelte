@@ -47,7 +47,7 @@
 
   async function deleteRelease(event) {
     try {
-      await client.removeRelease(pkg.name, release.version);
+      await client.removeRelease(pkg.slug, release.version);
       error = null;
     }
     catch (err) {
@@ -152,7 +152,7 @@
 
       try {
         const [xhr, promise] = await client.addFile(
-          pkg.name,
+          pkg.slug,
           release.version,
           file,
           callbacks

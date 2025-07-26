@@ -42,7 +42,7 @@
     };
 
     try {
-      await client.updatePackage(pkg.name, data);
+      await client.updatePackage(pkg.slug, data);
       error = null;
     }
     catch (err) {
@@ -70,7 +70,7 @@
 
   async function deletePackage(event) {
     try {
-      await client.removePackage(pkg.name);
+      await client.removePackage(pkg.slug);
       error = null;
     }
     catch (err) {
@@ -133,7 +133,7 @@
 
     try {
       await client.addRelease(
-        pkg.name,
+        pkg.slug,
         release_version
       );
       error = null;

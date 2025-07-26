@@ -32,18 +32,34 @@
     error = null;
   }
 
+  function slug_for(s) {
+    // percent-encode non-ascii
+    return encodeURIComponent(
+      // replace whitespace with hyphens
+      s.replaceAll(/\w/, '-')
+        // remove all special characters
+        .replaceAll(/[:\/?#\[\]@!$&'()*+,;=%"<>\\^`{}|]/, '')
+        // coalesce consecutive hyphens
+        .replaceAll(/-+/, '-')
+    )
+    // remove leading and trailing hyphens
+    .replaceAll(/^-+|-+$/, '');
+  }
+
   async function submitEdit(event) {
     const fd = new FormData(event.target);
 
-    const pkg = fd.get('package_name')?.trim();
+    const name = fd.get('package_name')?.trim();
+    const slug = slug_for(name);
 
     const data = {
+      'name': name,
       'sort_key': Number(fd.get('sort_key')),
       'description': ''
     };
 
     try {
-      await client.addPackage(pkg, data);
+      await client.addPackage(slug, data);
       error = null;
     }
     catch (err) {
