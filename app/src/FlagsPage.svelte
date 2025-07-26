@@ -75,7 +75,7 @@
       break;
     }
 
-    const proj_url = `${window.location.origin}${base_url}/projects/${flag.project}`;
+    const proj_url = `${window.location.origin}${base_url}/projects/${flag.slug}`;
 
     switch (flag.flag) {
     case "inappropriate":
@@ -129,7 +129,7 @@ tr:nth-child(even) {
     {#if flags !== null}
     {#each flags as flag}
       <tr>
-        <td><a href="{base_url}/projects/{flag.project}">{flag.project}</a></td>
+        <td><a href="{base_url}/projects/{flag.slug}">{flag.project}</a></td>
         <td>
           <a href="{discourse_url}/new-message?username={flag.flagged_by}&title={replyTitle(flag)}&body={replyBody(flag)}"><svg class="svg-icon"><use xlink:href="#reply"></use></svg></a>
           <UserChip {ums_url} username={flag.flagged_by} size=24 />
