@@ -1,5 +1,4 @@
 <script>
-
   export let current_version;
   export let news_link;
   export let base_url;

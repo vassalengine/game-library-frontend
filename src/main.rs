@@ -263,6 +263,7 @@ async fn get_data(
     url: &str
 ) -> Result<Bytes, AppError>
 {
+    info!("getting {url}");
     Ok(
         client.get(url)
             .header(ACCEPT, APPLICATION_JSON.as_ref())
@@ -288,6 +289,8 @@ async fn project_page(
     State(state): State<Arc<AppState>>
 ) -> HtmlTemplate<ProjectTemplate>
 {
+    let project = urlencoding::encode(&project);
+
     let players_url = format!("{}/projects/{project}/players", state.api_url);
     let proj_url = &players_url[..players_url.rfind('/').expect("impossible")];
 
