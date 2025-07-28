@@ -78,6 +78,7 @@
   let uploadFilename = '';
 
   let extractVersion;
+  let validateStrict;
 
   async function startFile(event) {
     edit = true;
@@ -85,6 +86,9 @@
 
     const module = await import("./lib/module.js");
     extractVersion = module.extractVersion;
+
+    const compare = await import("https://cdn.jsdelivr.net/npm/compare-versions@6.1.1/+esm");
+    validateStrict = compare.validateStrict;
   }
 
   function cancelFile(event) {
@@ -99,25 +103,34 @@
     if (event.target.files.length === 1) {
       const file = event.target.files[0];
 
-      // extensions aren't version checked because they live
-      // in releases whose versions match the module's version
-      if (!file.name.endsWith(".vmdx")) {
-        // check for a version in anything else
-        const version = await extractVersion(file);
+      const version = await extractVersion(file);
+      if (version !== null) {
+        if (!file.name.endsWith(".vmdx")) {
+          // not an extension; it must be a module
 
-        if (version === null) {
-          // no version in a .vmod is an error
-          if (file.name.endsWith(".vmod")) {
-            msg = "No version found in module file.";
+          if (!file.name.endsWith(".vmod")) {
+            // modules must have a .vmod extension
+            msg = "Module does not have .vmod extension.";
+          }
+          else if (version !== release.version) {
+            // modules must match the version of their release
+            msg = `Module version ${version} does not equal release version ${release.version}.`;
           }
         }
-        else if (version !== release.version) {
-          // version mismatch in a file with a version is an error
-          msg = `Module version ${version} does not equal release version ${release.version}.`;
+        else {
+          // extensions must have valid version numbers
+          if (!validateStrict(version)) {
+            msg = `Extension has invalid version.`;
+          }
         }
-        else if (!file.name.endsWith(".vmod")) {
-          // module without .vmod extension is an error
-          msg = "Module does not have .vmod extension.";
+      }
+      else {
+        // modules and extensions must have moduledata
+        if (file.name.endsWith(".vmod")) {
+          msg = "No version found in module file.";
+        }
+        else if (file.name.endsWith(".vmdx")) {
+          msg = "No version found in extension file.";
         }
       }
     }
