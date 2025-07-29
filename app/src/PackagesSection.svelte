@@ -3,6 +3,8 @@
   import PackageSection from './PackageSection.svelte';
   import PackageEditor from './PackageEditor.svelte';
 
+  import { slug_for } from './lib/util.js';
+
   export let ums_url;
 
   export let proj;
@@ -30,20 +32,6 @@
     edit = false;
     editing = false;
     error = null;
-  }
-
-  function slug_for(s) {
-    // percent-encode non-ascii
-    return encodeURIComponent(
-      // replace whitespace with hyphens
-      s.replace(/\s/g, '-')
-        // remove all special characters
-        .replace(/[:\/?#\[\]@!$&'()*+,;=%"<>\\^`{}|]/g, '')
-        // coalesce consecutive hyphens
-        .replace(/-+/g, '-')
-    )
-    // remove leading and trailing hyphens
-    .replace(/^-+|-+$/g, '');
   }
 
   async function submitEdit(event) {

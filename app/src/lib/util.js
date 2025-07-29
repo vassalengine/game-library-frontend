@@ -85,3 +85,17 @@ export function intlFormatDistance(rtf, date, base) {
   // Do the formatting
   return rtf.format(Math.floor(dsec / divisor), units[unitIndex]);
 }
+
+export function slug_for(s) {
+  // percent-encode non-ascii
+  return encodeURIComponent(
+    // replace whitespace with hyphens
+    s.replace(/\s/g, '-')
+      // remove all special characters
+      .replace(/[:\/?#\[\]@!$&'()*+,;=%"<>\\^`{}|]/g, '')
+      // coalesce consecutive hyphens
+      .replace(/-+/g, '-')
+  )
+  // remove leading and trailing hyphens
+  .replace(/^-+|-+$/g, '');
+}

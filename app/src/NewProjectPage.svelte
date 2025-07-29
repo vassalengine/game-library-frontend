@@ -8,7 +8,7 @@
   export let ums_url;
   export let returnto;
 
-  import { getCookie } from './lib/util.js';
+  import { getCookie, slug_for } from './lib/util.js';
 
   import Client from './lib/client.js';
 
@@ -34,6 +34,7 @@
     const pname = fdata.get('project_name')?.trim();
     if (pname) {
       const data = {
+        name: pname,
         description: "",
         tags: [],
         game: {
@@ -52,7 +53,7 @@
         readme: ""
       };
 
-      client.project = pname;
+      client.project = slug_for(pname);
 
       try {
         await client.createProject(data);
