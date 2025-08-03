@@ -10,12 +10,12 @@
   export let limit;
 
   import { makeRequestURL, unpackParams } from './lib/params.js';
-  import { intlFormatDistance } from './lib/util.js';
   import { fetchJSON } from './lib/client.js';
 
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
   import ErrorBox from './ErrorBox.svelte';
+  import ProjectListItem from './ProjectListItem.svelte';
 
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
   const now = new Date();
@@ -198,33 +198,7 @@
 <ol class="list-unstyled m-0 p-0">
 {#if projects}
   {#each projects as proj}
-  <li class="my-1">
-    <div class="p-2 border rounded d-flex flex-wrap">
-      <div class="me-auto">
-        <div>
-          <a class="fs-5 fw-bolder" href="{`${base_url}/projects/${proj.slug}`}">{proj.game.title}</a>
-        </div>
-        <div>{proj.name}</div>
-        <div>{proj.description}</div>
-      </div>
-      <div class="ms-auto">
-<!--
-        <div>
-          <svg class="svg-icon"><use xlink:href="#arrow-down-to-bracket"></use></svg> 
-          All-Time:
-        </div>
-        <div>
-          <svg class="svg-icon"><use xlink:href="#arrow-down-to-bracket"></use></svg>
-          Recent:
-        </div>
--->
-        <div>
-          <svg class="svg-icon"><use xlink:href="#arrows-rotate"></use></svg> 
-          Updated {intlFormatDistance(rtf, new Date(proj.modified_at), now)}
-        </div>
-      </div>
-    </div>
-  </li>
+  <ProjectListItem {base_url} {proj} {rtf} {now} />
   {/each}
 {/if}
 </ol>
