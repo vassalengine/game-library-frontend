@@ -138,7 +138,7 @@ tr:nth-child(even) {
         <td>{flag.flagged_at.replace(/\.[0-9]+Z/, "").replace("T", " ")}</td>
       </tr>
       <tr>
-        <td colspan="4">{@html DOMPurify.sanitize(md.render(flag.message))}</td>
+        <td colspan="4">{@html flag.message ? DOMPurify.sanitize(md.render(flag.message)) : ""}</td>
       </tr>
     {/each}
     {/if}
