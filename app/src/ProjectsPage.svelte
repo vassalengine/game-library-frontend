@@ -21,9 +21,9 @@
   const now = new Date();
 
   const params = new URLSearchParams(window.location.search);
- 
+
   let unpacked;
-  try { 
+  try {
     unpacked = unpackParams(params);
   }
   catch (err) {
@@ -47,7 +47,7 @@
 
   function loadProjects(url) {
      fetchJSON(url)
-      .then((result) => ( { projects, meta } = result ))
+      .then((result) => ({ projects, meta } = result))
       .catch((err) => error = err);
   }
 
@@ -71,6 +71,43 @@
   }
 
   loadProjects(makeRequestURL(gls_url, params, limit));
+
+  function handleIntersect(entries) {
+    if (!entries[0].isIntersecting) {
+      return;
+    }
+
+    if (!meta.next_page) {
+      return;
+    }
+
+    const target = entries[0].target;
+
+    observer.unobserve(target);
+
+    const page = meta.next_page;
+    const projects_list = document.getElementById('projects_list');
+
+    const s_query = page.substring(1);
+    const s_params = new URLSearchParams(s_query);
+    const s_url = makeRequestURL(gls_url, s_params, limit);
+
+    fetchJSON(s_url)
+        .then((result) => {
+          meta.next_page = result.meta.next_page;
+          // must reassign to projects so it works reactively
+          projects = projects.concat(result.projects);
+        })
+        .then(() => observer.observe(target))
+        .catch((err) => error = err);
+  }
+
+  const observer = new IntersectionObserver(handleIntersect);
+
+  const scrollLoad = (el) => {
+    observer.observe(el);
+  };
+
 </script>
 
 <style>
@@ -195,19 +232,14 @@
 <ErrorBox {error} />
 {/if}
 
-<ol class="list-unstyled m-0 p-0">
 {#if projects}
+<ol id="projects_list" class="list-unstyled m-0 p-0">
   {#each projects as proj}
   <ProjectListItem {base_url} {proj} {rtf} {now} />
   {/each}
-{/if}
 </ol>
-
-<nav class="d-flex mt-3 align-items-center justify-content-center">
-  <a class="mx-2" title="previous page" href={state && meta?.prev_page ? `${meta.prev_page}&s=${state}` : ''} style:visibility={meta?.prev_page ? 'visible' : 'hidden'}><svg width="29" height="29" viewBox="0 0 29 29" xmlns="http://www.w3.org/2000/svg"><circle fill="#D6D6D5" cx="14.5" cy="14.5" r="14.5"></circle><path fill="#FFF" d="M14.5 19v-3h5v-3h-5v-3L9 14.5z"></path></svg></a>
-
-  <a class="mx-2" title="next page" href={state && meta?.next_page ? `${meta.next_page}&s=${state}` : ''} style:visibility={meta?.next_page ? 'visible' : 'hidden'}><svg width="29" height="29" viewBox="0 0 29 29" xmlns="http://www.w3.org/2000/svg"><circle fill="#D6D6D5" cx="14.5" cy="14.5" r="14.5"></circle><path fill="#FFF" d="M15 19v-3h-5v-3h5v-3l5.5 4.5z"></path></svg></a>
-</nav>
+<div use:scrollLoad id="scroll_forward" class="infinite-scroll"></div>
+{/if}
 
 </main>
 
