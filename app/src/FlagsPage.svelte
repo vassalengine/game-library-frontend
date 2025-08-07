@@ -106,7 +106,7 @@ tr:nth-child(even) {
 </style>
 
 <svelte:head>
-  <title>Module Library - Vassal</title>
+  <title>Admin - Flags - Module Library - Vassal</title>
 </svelte:head>
 
 <Header {base_url} {user_info} {discourse_url} {ums_url} {returnto} {current_version} {news_link} />
