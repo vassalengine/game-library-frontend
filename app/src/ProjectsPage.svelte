@@ -157,7 +157,7 @@
   <div class="small me-auto mx-1 my-1 order-md-0">
 <!-- TODO: Is there some way to provide a range for the count? -->
     <span class="text-muted">Displaying</span>
-    <b>{Math.min(params.get('limit') ?? limit, meta.total)}</b>
+    <b>{projects.length}</b>
     <span class="text-muted">of</span>
     <b>{meta.total}</b>
     <span class="text-muted">{params.has('q') ? "search result" : "module"}{meta.total === 1 ? "" : "s"}</span>
