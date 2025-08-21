@@ -31,7 +31,7 @@
     window.location.replace(window.location.origin + window.location.pathname);
   }
 
-  const [sort, query, state] = unpacked;
+  const [sort_by, query, state] = unpacked;
 
   let error = null;
   let meta = null;
@@ -54,8 +54,10 @@
   function updateSort(event) {
     const url = new URL(window.location);
 
-    // clear seek, from, s
-    url.searchParams.delete('seek');
+    // clear sort_by, dir, anchor, from, s
+    url.searchParams.delete('sort_by');
+    url.searchParams.delete('dir');
+    url.searchParams.delete('anchor');
     url.searchParams.delete('from');
     url.searchParams.delete('s');
 
@@ -63,7 +65,7 @@
       url.searchParams.set('q', query);
     }
 
-    url.searchParams.set('sort', event.target.value);
+    url.searchParams.set('sort_by', event.target.value);
 
     // update page instead of reloading
     loadProjects(makeRequestURL(gls_url, url.searchParams, limit));
@@ -181,33 +183,33 @@
 {#if query === null}
 <nav id="index" class="my-2">
   <ol>
-    <li><a href="?sort=t">0–9</a></li>
-    <li><a href="?sort=t&from=A">A</a></li>
-    <li><a href="?sort=t&from=B">B</a></li>
-    <li><a href="?sort=t&from=C">C</a></li>
-    <li><a href="?sort=t&from=D">D</a></li>
-    <li><a href="?sort=t&from=E">E</a></li>
-    <li><a href="?sort=t&from=F">F</a></li>
-    <li><a href="?sort=t&from=G">G</a></li>
-    <li><a href="?sort=t&from=H">H</a></li>
-    <li><a href="?sort=t&from=I">I</a></li>
-    <li><a href="?sort=t&from=J">J</a></li>
-    <li><a href="?sort=t&from=K">K</a></li>
-    <li><a href="?sort=t&from=L">L</a></li>
-    <li><a href="?sort=t&from=M">M</a></li>
-    <li><a href="?sort=t&from=N">N</a></li>
-    <li><a href="?sort=t&from=O">O</a></li>
-    <li><a href="?sort=t&from=P">P</a></li>
-    <li><a href="?sort=t&from=Q">Q</a></li>
-    <li><a href="?sort=t&from=R">R</a></li>
-    <li><a href="?sort=t&from=S">S</a></li>
-    <li><a href="?sort=t&from=T">T</a></li>
-    <li><a href="?sort=t&from=U">U</a></li>
-    <li><a href="?sort=t&from=V">V</a></li>
-    <li><a href="?sort=t&from=W">W</a></li>
-    <li><a href="?sort=t&from=X">X</a></li>
-    <li><a href="?sort=t&from=Y">Y</a></li>
-    <li><a href="?sort=t&from=Z">Z</a></li>
+    <li><a href="?sort_by=t">0–9</a></li>
+    <li><a href="?sort_by=t&from=A">A</a></li>
+    <li><a href="?sort_by=t&from=B">B</a></li>
+    <li><a href="?sort_by=t&from=C">C</a></li>
+    <li><a href="?sort_by=t&from=D">D</a></li>
+    <li><a href="?sort_by=t&from=E">E</a></li>
+    <li><a href="?sort_by=t&from=F">F</a></li>
+    <li><a href="?sort_by=t&from=G">G</a></li>
+    <li><a href="?sort_by=t&from=H">H</a></li>
+    <li><a href="?sort_by=t&from=I">I</a></li>
+    <li><a href="?sort_by=t&from=J">J</a></li>
+    <li><a href="?sort_by=t&from=K">K</a></li>
+    <li><a href="?sort_by=t&from=L">L</a></li>
+    <li><a href="?sort_by=t&from=M">M</a></li>
+    <li><a href="?sort_by=t&from=N">N</a></li>
+    <li><a href="?sort_by=t&from=O">O</a></li>
+    <li><a href="?sort_by=t&from=P">P</a></li>
+    <li><a href="?sort_by=t&from=Q">Q</a></li>
+    <li><a href="?sort_by=t&from=R">R</a></li>
+    <li><a href="?sort_by=t&from=S">S</a></li>
+    <li><a href="?sort_by=t&from=T">T</a></li>
+    <li><a href="?sort_by=t&from=U">U</a></li>
+    <li><a href="?sort_by=t&from=V">V</a></li>
+    <li><a href="?sort_by=t&from=W">W</a></li>
+    <li><a href="?sort_by=t&from=X">X</a></li>
+    <li><a href="?sort_by=t&from=Y">Y</a></li>
+    <li><a href="?sort_by=t&from=Z">Z</a></li>
   </ol>
 </nav>
 {/if}
@@ -216,7 +218,7 @@
   <div class="row">
     <div class="col-auto ms-auto pe-0">
       <label for="sort_selector">Sort by</label>
-      <select name="sort" id="sort_selector" value={sort} on:change={updateSort}>
+      <select name="sort_by" id="sort_selector" value={sort_by} on:change={updateSort}>
         {#if query !== null}
         <option value="r">Relevance</option>
         {/if}
