@@ -21,17 +21,7 @@
   const now = new Date();
 
   const params = new URLSearchParams(window.location.search);
-
-  let unpacked;
-  try {
-    unpacked = unpackParams(params);
-  }
-  catch (err) {
-    // Invalid params, go back to start
-    window.location.replace(window.location.origin + window.location.pathname);
-  }
-
-  const [sort_by, query, state] = unpacked;
+  const [sort_by, query] = unpackParams(params);
 
   let error = null;
   let meta = null;
@@ -54,12 +44,9 @@
   function updateSort(event) {
     const url = new URL(window.location);
 
-    // clear sort_by, dir, anchor, from, s
+    // clear sort_by, from
     url.searchParams.delete('sort_by');
-    url.searchParams.delete('dir');
-    url.searchParams.delete('anchor');
     url.searchParams.delete('from');
-    url.searchParams.delete('s');
 
     if (query !== null) {
       url.searchParams.set('q', query);
