@@ -11,12 +11,8 @@ export function makeRequestURL(api_url, params, limit) {
   // Construct API request
   const req_url = new URL(`${api_url}/projects`);
 
-  // Pass on only params the API knows
-  for (const k of ['q', 'sort_by', 'from', 'limit']) {
-    const v = params.get(k);
-    if (v !== null) {
-      req_url.searchParams.set(k, v);
-    }
+  for (const [k, v] of params.entries()) {
+    req_url.searchParams.set(k, v);
   }
 
   if (!req_url.searchParams.has('limit')) {
