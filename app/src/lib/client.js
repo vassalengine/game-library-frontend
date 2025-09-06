@@ -368,7 +368,8 @@ class Client {
   }
 
   imageUrl(filename) {
-    return `${this.gls_api}/projects/${this.project}/images/${filename}`;
+    const enc_filename = encodeURIComponent(filename);
+    return `${this.gls_api}/projects/${this.project}/images/${enc_filename}`;
   }
 
   async addFlag(flag, message) {
