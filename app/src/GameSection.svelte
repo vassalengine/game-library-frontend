@@ -104,9 +104,9 @@
 
     const data = {};
 
-    const description = fdata.get('description');
+    const description = fdata.get('description')?.trim();
     if (description !== proj.description) {
-      data.description = description?.trim();
+      data.description = description;
     }
 
     // check for updates to properties which cannot be null
