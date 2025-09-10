@@ -119,11 +119,26 @@
     }
 
     // check for updates to min/max players, length, which can be null
+
+    const num_pat = /^(0|([1-9][0-9]*))$/;
+
     for (const k0 of ['players', 'length']) {
       for (const k1 of ['min', 'max']) {
-        const fv = fdata.get(`game_${k0}_${k1}`) || null;
-        if (fv !== (proj.game[k0]?.[k1] ?? null)) {
-          ((data.game ??= {})[k0] ??= {})[k1] = fv ? parseInt(fv) : null;
+        let fv = fdata.get(`game_${k0}_${k1}`).trim();
+        if (num_pat.test(fv)) {
+          // set value to a nonnegative int
+          fv = Number(fv);
+        }
+        else if (fv === "") {
+          // clear the value
+          fv = null;
+        }
+        else {
+          continue;
+        }
+
+        if (fv !== proj.game[k0][k1]) {
+          ((data.game ??= {})[k0] ??= {})[k1] = fv;
         }
       }
     }
