@@ -146,12 +146,21 @@
         data.image = box_image.name;
 
         try {
-          await client.addImage(
+          const [_, promise] = await client.addImage(
             box_image.name,
             box_image,
             box_image.type
           );
+
+          const result = await promise;
           error = null;
+
+          switch (result) {
+            case Client.UPLOAD_OK:
+              break;
+            case Client.UPLOAD_ABORTED:
+              return;
+          }
         }
         catch (err) {
           error = err;
