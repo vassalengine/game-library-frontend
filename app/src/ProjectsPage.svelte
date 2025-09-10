@@ -9,7 +9,6 @@
   export let returnto;
   export let limit;
 
-  import { makeRequestURL, unpackParams } from './lib/params.js';
   import { fetchJSON } from './lib/client.js';
 
   import Header from './Header.svelte';
@@ -17,11 +16,48 @@
   import ErrorBox from './ErrorBox.svelte';
   import ProjectListItem from './ProjectListItem.svelte';
 
+  function unpackParams(params) {
+    const query = params.get('q');
+    const publisher = params.get('publisher');
+    const year = params.get('year');
+    const tags = params.getAll('tag');
+    const owners = params.getAll('owner');
+    const players = params.getAll('player');
+
+    // default query sort is relevance, otherwise title
+    const sort_by = params.get('sort_by') ?? (query !== null ? 'r' : 't');
+
+    return [sort_by, query, publisher, year, tags, owners, players];
+  }
+
+  function makeRequestURL(api_url, params, limit) {
+    // Construct API request
+    const req_url = new URL(`${api_url}/projects`);
+
+    for (const [k, v] of params.entries()) {
+      req_url.searchParams.append(k, v);
+    }
+
+    if (!req_url.searchParams.has('limit')) {
+      req_url.searchParams.set('limit', limit);
+    }
+
+    return req_url;
+  }
+
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
   const now = new Date();
 
   const params = new URLSearchParams(window.location.search);
-  const [sort_by, query] = unpackParams(params);
+  const [
+    sort_by,
+    query,
+    publisher,
+    year,
+    tags,
+    owners,
+    players
+  ] = unpackParams(params);
 
   let error = null;
   let meta = null;
@@ -59,8 +95,6 @@
     window.history.replaceState(null, '', url.toString());
   }
 
-  loadProjects(makeRequestURL(gls_url, params, limit));
-
   function handleIntersect(entries) {
     if (!entries[0].isIntersecting) {
       return;
@@ -90,6 +124,8 @@
         .then(() => observer.observe(target))
         .catch((err) => error = err);
   }
+
+  loadProjects(makeRequestURL(gls_url, params, limit));
 
   const observer = new IntersectionObserver(handleIntersect);
 
