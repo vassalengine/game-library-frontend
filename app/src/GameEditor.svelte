@@ -225,19 +225,19 @@
       </div>
       <div class="col-3">
         <label for="game_players_min_input" class="form-label">Minimum Players</label>
-        <input id="game_players_min_input" type="text" name="game_players_min" class="form-control" value={proj.game.players?.min ?? ''}>
+        <input id="game_players_min_input" type="number" min="1" step="1" name="game_players_min" class="form-control" value={proj.game.players?.min ?? ''}>
       </div>
       <div class="col-3">
         <label for="game_players_max_input" class="form-label">Maximum Players</label>
-        <input id="game_players_max_input" type="text" name="game_players_max" class="form-control" value={proj.game.players?.max ?? ''}>
+        <input id="game_players_max_input" type="number" min="1" step="1" name="game_players_max" class="form-control" value={proj.game.players?.max ?? ''}>
       </div>
       <div class="col-3">
         <label for="game_length_min_input" class="form-label">Minimum Length</label>
-        <input id="game_length_min_input" type="text" name="game_length_min" class="form-control" value={proj.game.length?.min ?? ''}>
+        <input id="game_length_min_input" type="number" min="1" step="1" name="game_length_min" class="form-control" value={proj.game.length?.min ?? ''}>
       </div>
       <div class="col-3">
         <label for="game_length_max_input" class="form-label">Maximum Length</label>
-        <input id="game_length_max_input" type="text" name="game_length_max" class="form-control" value={proj.game.length?.max ?? ''}>
+        <input id="game_length_max_input" type="number" min="1" step="1" name="game_length_max" class="form-control" value={proj.game.length?.max ?? ''}>
       </div>
       <div class="col-12">
         <label for="description_input" class="form-label">Description</label>
