@@ -9,8 +9,11 @@
   // box image
   //
 
+  let box_img_clear = false;
+
   function clearImage(event) {
     box_img = '';
+    box_img_clear = true;
   }
 
   function is_single_image(files) {
@@ -22,6 +25,7 @@
     reader.readAsDataURL(file);
     reader.onload = (e) => {
       box_img = e.target.result;
+      box_img_clear = false;
     };
   }
 
@@ -203,7 +207,7 @@
           <svg><use xlink:href="#pencil"></use></svg>
         </div>
       </label>
-      <input type="hidden" name="box_image_clear" value="">
+      <input type="hidden" name="box_image_clear" value={box_img_clear}>
       <input id="box_image_input" type="file" name="box_image" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/avif" on:change={selectImage}>
     </div>
     <div class="row">
