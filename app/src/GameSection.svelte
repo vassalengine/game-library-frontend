@@ -1,4 +1,6 @@
 <script>
+  import Client from './lib/client.js';
+
   import ErrorBox from './ErrorBox.svelte';
   import GameEditor from './GameEditor.svelte';
 
