@@ -122,7 +122,7 @@
     for (const k0 of ['players', 'length']) {
       for (const k1 of ['min', 'max']) {
         let fv = fdata.get(`game_${k0}_${k1}`).trim();
-        fv = fv === "" ? null : Number(fv);
+        fv = fv === '' ? null : Number(fv);
 
         if (fv !== proj.game[k0][k1]) {
           ((data.game ??= {})[k0] ??= {})[k1] = fv;
