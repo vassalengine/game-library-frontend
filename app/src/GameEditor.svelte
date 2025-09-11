@@ -78,6 +78,51 @@
     return t;
   }
 
+  //
+  // players, length
+  //
+
+  let players_min = proj.game.players?.min ?? '';
+  let players_max = proj.game.players?.max ?? '';
+  let length_min = proj.game.length?.min ?? '';
+  let length_max = proj.game.length?.max ?? '';
+
+  function validateRange(event, min, max, kind) {
+    event.target.setCustomValidity('');
+    if (!event.target.validity.valid) {
+      return;
+    }
+
+    if (min === '' || isNaN(min)) {
+      min = null;
+    }
+
+    if (max === '' || isNaN(max)) {
+      max = null;
+    }
+
+    event.target.setCustomValidity(
+      min === null || max === null || min <= max ?
+      '' : `Minimum ${kind} must not be greater than maximum ${kind}`
+    );
+  }
+
+  function validatePlayersMin(event) {
+    validateRange(event, event.target.valueAsNumber, players_max, 'players');
+  }
+
+  function validatePlayersMax(event) {
+    validateRange(event, players_min, event.target.valueAsNumber, 'players');
+  }
+
+  function validateLengthMin(event) {
+    validateRange(event, event.target.valueAsNumber, length_max, 'length');
+  }
+
+  function validateLengthMax(event) {
+    validateRange(event, length_min, event.target.valueAsNumber, 'length');
+  }
+
 </script>
 
 <style>
@@ -229,19 +274,19 @@
       </div>
       <div class="col-3">
         <label for="game_players_min_input" class="form-label">Minimum Players</label>
-        <input id="game_players_min_input" type="number" min="1" step="1" name="game_players_min" class="form-control" value={proj.game.players?.min ?? ''}>
+        <input id="game_players_min_input" type="number" min="1" step="1" name="game_players_min" class="form-control" on:input={validatePlayersMin} bind:value={players_min}>
       </div>
       <div class="col-3">
         <label for="game_players_max_input" class="form-label">Maximum Players</label>
-        <input id="game_players_max_input" type="number" min="1" step="1" name="game_players_max" class="form-control" value={proj.game.players?.max ?? ''}>
+        <input id="game_players_max_input" type="number" min="1" step="1" name="game_players_max" class="form-control" on:input={validatePlayersMax} bind:value={players_max}>
       </div>
       <div class="col-3">
         <label for="game_length_min_input" class="form-label">Minimum Length</label>
-        <input id="game_length_min_input" type="number" min="1" step="1" name="game_length_min" class="form-control" value={proj.game.length?.min ?? ''}>
+        <input id="game_length_min_input" type="number" min="1" step="1" name="game_length_min" class="form-control" on:input={validateLengthMin} bind:value={length_min}>
       </div>
       <div class="col-3">
         <label for="game_length_max_input" class="form-label">Maximum Length</label>
-        <input id="game_length_max_input" type="number" min="1" step="1" name="game_length_max" class="form-control" value={proj.game.length?.max ?? ''}>
+        <input id="game_length_max_input" type="number" min="1" step="1" name="game_length_max" class="form-control" on:input={validateLengthMax} bind:value={length_max}>
       </div>
       <div class="col-12">
         <label for="description_input" class="form-label">Description</label>
