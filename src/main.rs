@@ -110,7 +110,7 @@ enum StartupError {
 fn routes(base_path: &str, log_headers: bool) -> Router<Arc<AppState>> {
     Router::new()
         .route_service(
-            if base_path.is_empty() { "/" } else { base_path },
+            &format!("{base_path}/"),
             ServeFile::new(format!("{DIST_DIR}/root.html"))
         )
         .route_service(
