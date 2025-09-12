@@ -132,7 +132,7 @@
   <div class="container">
     <div class="row">
       <div class="col-6">
-        <textarea id="readme_source" class="source full-height" bind:value={source} />
+        <textarea id="readme_source" class="source full-height" bind:value={source}></textarea>
       </div>
       <section class="col-6">
 <!-- TODO: do we need to sanitize here? -->
