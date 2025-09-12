@@ -245,7 +245,7 @@
       <div class="col">
         <h1 class="">
           {proj.game.title}
-          <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startEdit}>
+          <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Edit" on:click={startEdit}>
             <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
           </button>
         </h1>

@@ -49,9 +49,9 @@
     Players
     {#if !editing && username}
       {#if players.users.includes(username)}
-    <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={removePlayer}><svg class="svg-icon"><use xlink:href="#user-minus"></use></svg></button>
+    <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Remove" on:click={removePlayer}><svg class="svg-icon"><use xlink:href="#user-minus"></use></svg></button>
       {:else}
-    <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={addPlayer}><svg class="svg-icon"><use xlink:href="#user-plus"></use></svg></button>
+    <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Add" on:click={addPlayer}><svg class="svg-icon"><use xlink:href="#user-plus"></use></svg></button>
       {/if}
     {/if}
   </h2>

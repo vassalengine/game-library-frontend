@@ -77,7 +77,7 @@
   <h2>
     <svg class="svg-icon"><use xlink:href="#cubes"></use></svg>
     Packages
-    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startEdit}>
+    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Edit" on:click={startEdit}>
       <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
     </button>
   </h2>
@@ -86,8 +86,8 @@
     <div class="package_tmpl_top border rounded p-3 my-2">
       <form action="" on:submit|preventDefault={submitEdit}>
         <PackageEditor packages={proj.packages} />
-        <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit" aria-label="Submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </form>
     </div>
   {/if}

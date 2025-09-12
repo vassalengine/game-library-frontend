@@ -244,7 +244,7 @@
           <div>no image</div>
         </div>
         <div id="box_image_delete_overlay">
-          <button type="button" on:click={clearImage}>
+          <button type="button" aria-label="Clear" on:click={clearImage}>
             <svg class="svg-icon"><use xlink:href="#xmark"></use></svg>
           </button>
         </div>
@@ -293,8 +293,8 @@
         <input id="description_input" type="text" name="description" class="form-control" value={proj.description}>
       </div>
       <div class="col-12">
-        <button type="submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-        <button type="button" class="btn btn-primary" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        <button type="submit" aria-label="Submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+        <button type="button" aria-label="Cancel" class="btn btn-primary" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </div>
     </div>
   </form>

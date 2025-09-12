@@ -124,7 +124,7 @@
   <h2>
     <svg class="svg-icon"><use xlink:href="#info-circle"></use></svg>
     Readme
-    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startEdit}>
+    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Edit" on:click={startEdit}>
       <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
     </button>
   </h2>
@@ -141,8 +141,8 @@
     </div>
     <div class="row">
       <form id="readme_form" action="" on:submit|preventDefault={submitEdit}>
-        <button type="submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-        <button id="cancel" type="button" class="btn btn-primary" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        <button type="submit" aria-label="Submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+        <button id="cancel" aria-label="Cancel" type="button" class="btn btn-primary" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </form>
     </div>
   </div>

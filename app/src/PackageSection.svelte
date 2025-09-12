@@ -190,13 +190,13 @@ details[open] > summary::before {
   <h3>
     <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
     {pkg.name}
-    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startRelease}>
+    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Add" on:click={startRelease}>
       <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
     </button>
-    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startEditPackage}>
+    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Edit" on:click={startEditPackage}>
       <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
     </button>
-    <button class="delete_button" class:is_deletable={!editing && user_is_owner() && pkg.releases.length == 0} type="button" on:click={deletePackage}>
+    <button class="delete_button" class:is_deletable={!editing && user_is_owner() && pkg.releases.length == 0} type="button" aria-label="Delete" on:click={deletePackage}>
       <svg class="svg-icon delete_icon"><use xlink:href="#trash-can"></use></svg>
     </button>
   </h3>
@@ -205,8 +205,8 @@ details[open] > summary::before {
     <div class="package_tmpl_top border rounded p-3 my-2">
       <form action="" on:submit|preventDefault={submitEditPackage}>
         <PackageEditor {pkg} packages={proj.packages} />
-        <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelEditPackage}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit" aria-label="Submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" on:click={cancelEditPackage}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </form>
     </div>
   {/if}
@@ -218,8 +218,8 @@ details[open] > summary::before {
 <!--
         <input id="release_file_input" class="release_tmpl_name form-control" type="file" name="release_file" required>
 -->
-        <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelRelease}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit" aria-label="Submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" on:click={cancelRelease}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </form>
     </li>
     {/if}

@@ -117,8 +117,8 @@
         <form action="" on:submit|preventDefault={submitEdit}>
           <label for="project_name_input" class="form-label">Project name</label>
           <input id="project_name_input" type="text" name="project_name" class="form-control" required on:input={validateProjectName}>
-          <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-          <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+          <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit" aria-label="Submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+          <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
         </form>
       </div>
     </div>

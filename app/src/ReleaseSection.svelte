@@ -229,10 +229,10 @@
 
 <div>
   <div class="badge rounded-pill fs-5" class:current_release={current} class:release={!current}>{release.version}</div>
-  <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" on:click={startFile}>
+  <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Add" on:click={startFile}>
     <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
   </button>
-  <button class="delete_button" class:is_deletable={!editing && user_is_owner() && release.files.length == 0} type="button" on:click={deleteRelease}>
+  <button class="delete_button" class:is_deletable={!editing && user_is_owner() && release.files.length == 0} type="button" aria-label="Delete" on:click={deleteRelease}>
       <svg class="svg-icon delete_icon"><use xlink:href="#trash-can"></use></svg>
   </button>
 </div>
@@ -246,12 +246,12 @@
     <form action="" on:submit|preventDefault={submitFile}>
       <input id="file_input" class="form-control" type="file" name="file" required style:display={uploading ? 'none' : 'inline'} on:change={validateFile}>
       {#if !uploading}
-      <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-      <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelFile}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+      <button class="btn btn-primary p-1 mx-1 rounded-0" aria-label="Submit" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
+      <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" on:click={cancelFile}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       {:else}
       <div>{uploadFilename}</div>
       <div class="d-flex align-items-center">
-        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" on:click={cancelUpload}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" on:click={cancelUpload}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
         <progress class="upload_progress text-primary flex-fill w-auto" value={uploadProgress} max="100"></progress>
       </div>
       {/if}

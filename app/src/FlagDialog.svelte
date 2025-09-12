@@ -162,7 +162,7 @@
   <form id="flag_form" action="" on:submit|preventDefault={submitFlag}>
     <header class="d-flex align-items-center border-bottom ps-4 pe-3 py-3">
       <h1 class="fs-4 m-0">Thanks for keeping our community civil!</h1>
-      <button id="flag_dialog_close" class="close_button ms-auto fs-4" type="button" on:click={closeDialog}><svg class="svg-icon close_icon"><use xlink:href="#xmark"></use></svg></button>
+      <button id="flag_dialog_close" class="close_button ms-auto fs-4" type="button" aria-label="Close" on:click={closeDialog}><svg class="svg-icon close_icon"><use xlink:href="#xmark"></use></svg></button>
     </header>
     <div class="px-4 pt-4 pb-3">
       <p>All flags are received by moderators and will be reviewed as soon as possible.</p>
