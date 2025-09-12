@@ -45,6 +45,6 @@ textarea {
 </style>
 
 <div>
-  <textarea name={name} class="w-100 p-2" placeholder={placeholder} on:input={updateValidFromEvent} bind:value />
+  <textarea name={name} class="w-100 p-2" placeholder={placeholder} on:input={updateValidFromEvent} bind:value></textarea>
   <div class="text-secondary"><small>{textLengthMessage(value.length)}</small></div>
 </div>
