@@ -1,28 +1,31 @@
-import { slug_for } from './util.js';
+import { formatSizeWithUnit, slug_for } from './util.js';
 
 import { expect, test } from 'vitest';
 
-test('slug_for_abcd', () => {
-  expect(slug_for('abcd')).toEqual('abcd');
-});
+test.each([
+  [0, '0 B'],
+  [1, '1 B'],
+  [1023, '1023 B'],
+  [1024, '1 KiB'],
+  [1048575, '1023 KiB'],
+  [1048576, '1 MiB'],
+  [1073741823, '1023 MiB'],
+  [1073741824, '1 GiB'],
+  [1099511627775, '1023 GiB'],
+  [1099511627776, '1 TiB']
+])(
+  'formatSizeWithUnit %i',
+  (n, exp) => expect(formatSizeWithUnit(n)).toEqual(exp)
+);
 
-test('slug_for_whitespace', () => {
-  expect(slug_for('x      x')).toEqual('x-x');
-});
-
-test('slug_for_consecutive_hyphens', () => {
-  expect(slug_for('x----x---x')).toEqual('x-x-x');
-});
-
-test('slug_for_trim_hyphens', () => {
-  expect(slug_for('-x-')).toEqual('x');
-});
-
-test('slug_for_special', () => {
-  expect(slug_for("x/#?*x")).toEqual("xx");
-});
-
-test('slug_for_nonascii', () => {
-  expect(slug_for("x💩x")).toEqual("x%F0%9F%92%A9x");
-});
-
+test.each([
+  ['abcd' , 'abcd'],
+  ['x      x', 'x-x'],
+  ['x----x---x', 'x-x-x'],
+  ['-x-', 'x'],
+  ['x/#?*x', 'xx'],
+  ['x💩x', 'x%F0%9F%92%A9x']
+])(
+  'slug_for %s',
+  (name, exp) => expect(slug_for(name)).toEqual(exp)
+);
