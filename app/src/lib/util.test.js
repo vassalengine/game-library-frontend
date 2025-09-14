@@ -1,4 +1,4 @@
-import { formatSizeWithUnit, slug_for } from './util.js';
+import { formatDistance, formatSizeWithUnit, slug_for } from './util.js';
 
 import { expect, test } from 'vitest';
 

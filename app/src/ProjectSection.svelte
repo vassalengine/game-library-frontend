@@ -1,5 +1,5 @@
 <script>
-  import { intlFormatDistance } from './lib/util.js';
+  import { formatDistance } from './lib/util.js';
 
   import ErrorBox from './ErrorBox.svelte';
   import UserChip from './UserChip.svelte';
@@ -169,13 +169,13 @@
         <div>
           <time datetime={proj.modified_at} title={proj.modified_at}>
             <svg class="svg-icon"><use xlink:href="#arrows-rotate"></use></svg>
-            Updated {intlFormatDistance(rtf, new Date(proj.modified_at), now)}
+            Updated {formatDistance(rtf, new Date(proj.modified_at), now)}
           </time>
         </div>
         <div>
           <time datetime={proj.created_at} title={proj.created_at}>
             <svg class="svg-icon"><use xlink:href="#star"></use></svg>
-            Created {intlFormatDistance(rtf, new Date(proj.created_at), now)}
+            Created {formatDistance(rtf, new Date(proj.created_at), now)}
           </time>
         </div>
       </div>

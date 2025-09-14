@@ -46,7 +46,7 @@ export function formatSizeWithUnit(n) {
   return `${count} ${unit}`;
 }
 
-export function intlFormatDistance(rtf, date, base) {
+export function formatDistance(rtf, date, base) {
   // https://www.builder.io/blog/relative-time
 
   // Get the amount of seconds between the date and base 

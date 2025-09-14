@@ -1,6 +1,6 @@
 <script>
 
-  import { intlFormatDistance } from './lib/util.js';
+  import { formatDistance } from './lib/util.js';
   let {
     base_url,
     proj,
@@ -31,7 +31,7 @@
 -->
       <div>
         <svg class="svg-icon"><use xlink:href="#arrows-rotate"></use></svg>
-        Updated {intlFormatDistance(rtf, new Date(proj.modified_at), now)}
+        Updated {formatDistance(rtf, new Date(proj.modified_at), now)}
       </div>
     </div>
   </div>
