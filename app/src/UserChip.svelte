@@ -1,7 +1,5 @@
 <script>
-  export let ums_url;
-  export let username;
-  export let size;
+  let { ums_url, username, size } = $props();
 </script>
 
 <style>

@@ -2,9 +2,8 @@
   import { formatSizeWithUnit, intlFormatDistance } from './lib/util.js';
   import UserChip from './UserChip.svelte';
 
-  export let ums_url;
 
-  export let file;
+  let { ums_url, file } = $props();
 
   const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
 

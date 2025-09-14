@@ -1,11 +1,13 @@
 <script>
-  export let base_url;
-  export let user_info;
-  export let discourse_url;
-  export let ums_url;
-  export let returnto;
-  export let current_version;
-  export let news_link;
+  let {
+    base_url,
+    user_info,
+    discourse_url,
+    ums_url,
+    returnto,
+    current_version,
+    news_link
+  } = $props();
 </script>
 
 <style>

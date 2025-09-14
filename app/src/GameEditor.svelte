@@ -1,15 +1,16 @@
 <script>
-  export let proj;
-  export let box_img;
-
-  export let submitEdit;
-  export let cancelEdit;
+  let {
+    proj,
+    box_img = $bindable(),
+    submitEdit,
+    cancelEdit
+  } = $props();
 
   //
   // box image
   //
 
-  let box_img_clear = false;
+  let box_img_clear = $state(false);
 
   function clearImage(event) {
     box_img = '';
@@ -39,12 +40,19 @@
   }
 
   function handleDragEnter(event) {
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   function handleDragOver(event) {
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   function handleDrop(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     const dt = event.dataTransfer;
     if (is_single_image(dt.files)) {
       setImage(dt.files[0]);
@@ -56,7 +64,7 @@
   // title sort key
   //
 
-  let game_title = proj.game.title;
+  let game_title = $state(proj.game.title);
 
   function sortKeyFor(t) {
     t = t.normalize("NFKD")
@@ -82,10 +90,10 @@
   // players, length
   //
 
-  let players_min = proj.game.players?.min ?? '';
-  let players_max = proj.game.players?.max ?? '';
-  let length_min = proj.game.length?.min ?? '';
-  let length_max = proj.game.length?.max ?? '';
+  let players_min = $state(proj.game.players?.min ?? '');
+  let players_max = $state(proj.game.players?.max ?? '');
+  let length_min = $state(proj.game.length?.min ?? '');
+  let length_max = $state(proj.game.length?.max ?? '');
 
   function validateRange(event, min, max, kind) {
     event.target.setCustomValidity('');
@@ -236,15 +244,15 @@
 </style>
 
 <div>
-  <form id="game_section_form" action="" on:submit|preventDefault={submitEdit}>
+  <form id="game_section_form" action="" onsubmit={submitEdit}>
     <div class="float-left my-2 ms-2 me-3" class:no_image={!box_img}>
-      <label id="box_image_label" for="box_image_input" on:dragenter|stopPropagation|preventDefault={handleDragEnter} on:dragover|stopPropagation|preventDefault={handleDragOver} on:drop|stopPropagation|preventDefault={handleDrop}>
+      <label id="box_image_label" for="box_image_input" ondragenter={handleDragEnter} ondragover={handleDragOver} ondrop={handleDrop}>
         <img id="box_image" class="rounded border img-fluid" src={box_img} alt="box cover">
         <div id="box_image_none" class="rounded border">
           <div>no image</div>
         </div>
         <div id="box_image_delete_overlay">
-          <button type="button" aria-label="Clear" on:click={clearImage}>
+          <button type="button" aria-label="Clear" onclick={clearImage}>
             <svg class="svg-icon"><use xlink:href="#xmark"></use></svg>
           </button>
         </div>
@@ -253,7 +261,7 @@
         </div>
       </label>
       <input type="hidden" name="box_image_clear" value={box_img_clear}>
-      <input id="box_image_input" type="file" name="box_image" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/avif" on:change={selectImage}>
+      <input id="box_image_input" type="file" name="box_image" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/avif" onchange={selectImage}>
     </div>
     <div class="row">
       <div class="col-12">
@@ -274,19 +282,19 @@
       </div>
       <div class="col-3">
         <label for="game_players_min_input" class="form-label">Minimum Players</label>
-        <input id="game_players_min_input" type="number" min="1" step="1" name="game_players_min" class="form-control" on:input={validatePlayersMin} bind:value={players_min}>
+        <input id="game_players_min_input" type="number" min="1" step="1" name="game_players_min" class="form-control" oninput={validatePlayersMin} bind:value={players_min}>
       </div>
       <div class="col-3">
         <label for="game_players_max_input" class="form-label">Maximum Players</label>
-        <input id="game_players_max_input" type="number" min="1" step="1" name="game_players_max" class="form-control" on:input={validatePlayersMax} bind:value={players_max}>
+        <input id="game_players_max_input" type="number" min="1" step="1" name="game_players_max" class="form-control" oninput={validatePlayersMax} bind:value={players_max}>
       </div>
       <div class="col-3">
         <label for="game_length_min_input" class="form-label">Minimum Length</label>
-        <input id="game_length_min_input" type="number" min="1" step="1" name="game_length_min" class="form-control" on:input={validateLengthMin} bind:value={length_min}>
+        <input id="game_length_min_input" type="number" min="1" step="1" name="game_length_min" class="form-control" oninput={validateLengthMin} bind:value={length_min}>
       </div>
       <div class="col-3">
         <label for="game_length_max_input" class="form-label">Maximum Length</label>
-        <input id="game_length_max_input" type="number" min="1" step="1" name="game_length_max" class="form-control" on:input={validateLengthMax} bind:value={length_max}>
+        <input id="game_length_max_input" type="number" min="1" step="1" name="game_length_max" class="form-control" oninput={validateLengthMax} bind:value={length_max}>
       </div>
       <div class="col-12">
         <label for="description_input" class="form-label">Description</label>
@@ -294,7 +302,7 @@
       </div>
       <div class="col-12">
         <button type="submit" aria-label="Submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-        <button type="button" aria-label="Cancel" class="btn btn-primary" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        <button type="button" aria-label="Cancel" class="btn btn-primary" onclick={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </div>
     </div>
   </form>

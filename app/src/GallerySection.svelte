@@ -4,10 +4,12 @@
 
   import ErrorBox from './ErrorBox.svelte';
 
-  export let proj;
-  export let client;
-  export let username;
-  export let editing;
+  let {
+    proj,
+    client,
+    username,
+    editing = $bindable()
+  } = $props();
 
   function mdInit() {
     const defaults = {
@@ -32,7 +34,7 @@
   //
 
   let edit = false;
-  let error = null;
+  let error = $state(null);
 
   function startEdit(event) {
     edit = true;

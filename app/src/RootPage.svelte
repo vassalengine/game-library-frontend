@@ -1,15 +1,17 @@
 <script>
 
-  export let current_version;
-  export let news_link;
-  export let base_url;
-  export let user_info;
-  export let discourse_url;
-  export let ums_url;
-  export let returnto;
 
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
+  let {
+    current_version,
+    news_link,
+    base_url,
+    user_info,
+    discourse_url,
+    ums_url,
+    returnto
+  } = $props();
 </script>
 
 <svelte:head>

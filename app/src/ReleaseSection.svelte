@@ -4,15 +4,16 @@
   import ErrorBox from './ErrorBox.svelte';
   import FileSection from './FileSection.svelte';
 
-  export let ums_url;
-
-  export let proj;
-  export let pkg;
-  export let release;
-  export let client;
-  export let current = false;
-  export let username;
-  export let editing;
+  let {
+    ums_url,
+    proj = $bindable(),
+    pkg,
+    release,
+    client,
+    current = false,
+    username,
+    editing = $bindable()
+  } = $props();
 
   function user_is_owner() {
      return username && proj.owners.includes(username);
@@ -70,12 +71,12 @@
   // edit mode
   //
 
-  let edit = false;
-  let error = null;
+  let edit = $state(false);
+  let error = $state(null);
 
-  let uploading = false;
-  let uploadProgress = 0;
-  let uploadFilename = '';
+  let uploading = $state(false);
+  let uploadProgress = $state(0);
+  let uploadFilename = $state('');
 
   let extractVersion;
   let validateStrict;
@@ -141,9 +142,11 @@
     }
   }
 
-  let cancelUpload = () => {};
+  let cancelUpload = $state(() => {});
 
   async function submitFile(event) {
+    event.preventDefault();
+
     const fdata = new FormData(event.target);
     const file = fdata.get('file');
 
@@ -229,10 +232,10 @@
 
 <div>
   <div class="badge rounded-pill fs-5" class:current_release={current} class:release={!current}>{release.version}</div>
-  <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Add" on:click={startFile}>
+  <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Add" onclick={startFile}>
     <svg class="svg-icon edit_icon"><use xlink:href="#plus"></use></svg>
   </button>
-  <button class="delete_button" class:is_deletable={!editing && user_is_owner() && release.files.length == 0} type="button" aria-label="Delete" on:click={deleteRelease}>
+  <button class="delete_button" class:is_deletable={!editing && user_is_owner() && release.files.length == 0} type="button" aria-label="Delete" onclick={deleteRelease}>
       <svg class="svg-icon delete_icon"><use xlink:href="#trash-can"></use></svg>
   </button>
 </div>
@@ -243,15 +246,15 @@
     {#if error}
     <ErrorBox {error} />
     {/if}
-    <form action="" on:submit|preventDefault={submitFile}>
-      <input id="file_input" class="form-control" type="file" name="file" required style:display={uploading ? 'none' : 'inline'} on:change={validateFile}>
+    <form action="" onsubmit={submitFile}>
+      <input id="file_input" class="form-control" type="file" name="file" required style:display={uploading ? 'none' : 'inline'} onchange={validateFile}>
       {#if !uploading}
       <button class="btn btn-primary p-1 mx-1 rounded-0" aria-label="Submit" type="submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-      <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" on:click={cancelFile}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+      <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" onclick={cancelFile}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       {:else}
       <div>{uploadFilename}</div>
       <div class="d-flex align-items-center">
-        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" on:click={cancelUpload}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" onclick={cancelUpload}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
         <progress class="upload_progress text-primary flex-fill w-auto" value={uploadProgress} max="100"></progress>
       </div>
       {/if}

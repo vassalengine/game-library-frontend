@@ -10,14 +10,16 @@
   import ErrorBox from './ErrorBox.svelte';
   import UserChip from './UserChip.svelte';
 
-  export let current_version;
-  export let news_link;
-  export let base_url;
-  export let user_info;
-  export let gls_url;
-  export let discourse_url;
-  export let ums_url;
-  export let returnto;
+  let {
+    current_version,
+    news_link,
+    base_url,
+    user_info,
+    gls_url,
+    discourse_url,
+    ums_url,
+    returnto
+  } = $props();
 
   const client = new Client(
     gls_url,
@@ -27,8 +29,8 @@
     getCookie('refresh')
   );
 
-  let flags = null;
-  let error = null;
+  let flags = $state(null);
+  let error = $state(null);
 
   client.getFlags()
     .then((f) => flags = f.flags)

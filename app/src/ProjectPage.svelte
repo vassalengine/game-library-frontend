@@ -1,17 +1,4 @@
 <script>
-  export let current_version;
-  export let news_link;
-  export let base_url;
-  export let user_info;
-  export let project;
-  export let gls_url;
-  export let discourse_url;
-  export let ums_url;
-  export let returnto;
-  export let proj;
-  export let proj_error;
-  export let players;
-  export let players_error;
 
   import { getCookie } from './lib/util.js';
 
@@ -27,6 +14,21 @@
   import ReadmeSection from './ReadmeSection.svelte';
   import GallerySection from './GallerySection.svelte';
   import PlayersSection from './PlayersSection.svelte';
+  let {
+    current_version,
+    news_link,
+    base_url,
+    user_info,
+    project,
+    gls_url,
+    discourse_url,
+    ums_url,
+    returnto,
+    proj = $bindable(),
+    proj_error,
+    players,
+    players_error
+  } = $props();
 
   const client = new Client(
     gls_url,
@@ -36,9 +38,9 @@
     getCookie('refresh')
   );
 
-  let editing = false;
+  let editing = $state(false);
 
-  let flag_dialog = null;
+  let flag_dialog = $state(null);
 </script>
 
 <style>
@@ -139,7 +141,7 @@
 {/if}
 
 {#if user_info}
-<button id="flag_button" class="btn bg-secondary-subtle p-1 mx-1 rounded-0" type="button" on:click={() => flag_dialog.openDialog()}><svg class="svg-icon"><use xlink:href="#flag"></use></svg> Flag</button>
+<button id="flag_button" class="btn bg-secondary-subtle p-1 mx-1 rounded-0" type="button" onclick={() => flag_dialog.openDialog()}><svg class="svg-icon"><use xlink:href="#flag"></use></svg> Flag</button>
 {/if}
 </main>
 

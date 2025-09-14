@@ -1,8 +1,7 @@
 <script>
   import { onMount } from 'svelte';
 
-  export let pkg;
-  export let packages;
+  let { pkg, packages } = $props();
 
   let pkg_names;
   let pkg_sort_keys;
@@ -39,6 +38,6 @@
 
 <svg class="svg-icon"><use xlink:href="#cube"></use></svg>
 <label for="package_name_input" class="form-label">Package name</label>
-<input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control" required on:input={validatePackageName} value={pkg?.name ?? ""}>
+<input id="package_name_input" type="text" name="package_name" class="package_tmpl_name form-control" required oninput={validatePackageName} value={pkg?.name ?? ""}>
 <label for="sort_key_input" class="form-label">Package sort key</label>
-<input id="sort_key_input" type="number" min={Number.MIN_SAFE_INTEGER} max={Number.MAX_SAFE_INTEGER} step="1" name="sort_key" class="package_tmpl_name form-control" required on:input={validatePackageSortKey} value={pkg?.sort_key ?? ""}>
+<input id="sort_key_input" type="number" min={Number.MIN_SAFE_INTEGER} max={Number.MAX_SAFE_INTEGER} step="1" name="sort_key" class="package_tmpl_name form-control" required oninput={validatePackageSortKey} value={pkg?.sort_key ?? ""}>

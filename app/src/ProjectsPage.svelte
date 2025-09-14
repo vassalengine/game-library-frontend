@@ -1,13 +1,4 @@
 <script>
-  export let current_version;
-  export let news_link;
-  export let base_url;
-  export let user_info;
-  export let gls_url;
-  export let discourse_url;
-  export let ums_url;
-  export let returnto;
-  export let limit;
 
   import { fetchJSON } from './lib/client.js';
 
@@ -15,6 +6,17 @@
   import Footer from './Footer.svelte';
   import ErrorBox from './ErrorBox.svelte';
   import ProjectListItem from './ProjectListItem.svelte';
+  let {
+    current_version,
+    news_link,
+    base_url,
+    user_info,
+    gls_url,
+    discourse_url,
+    ums_url,
+    returnto,
+    limit
+  } = $props();
 
   function unpackParams(params) {
     const query = params.get('q');
@@ -59,9 +61,9 @@
     players
   ] = unpackParams(params);
 
-  let error = null;
-  let meta = null;
-  let projects = null;
+  let error = $state(null);
+  let meta = $state(null);
+  let projects = $state(null);
 
   function normalizeWhitespace(s) {
     return s.split(/\s+/).filter(s => s.length > 0).join(' ');
@@ -174,7 +176,7 @@
 <main class="container px-5 mb-5">
 
 <nav class="d-flex flex-wrap align-items-center my-3">
-  <form class="mx-md-2 my-1 flex-grow-1 order-md-1" action="{base_url}/projects" on:formdata={cleanupSearch}>
+  <form class="mx-md-2 my-1 flex-grow-1 order-md-1" action="{base_url}/projects" onformdata={cleanupSearch}>
     <input class="form-control" type="search" name="q" placeholder="Search..." value={query} required>
   </form>
   <div class="w-100 d-md-none"></div>
@@ -241,7 +243,7 @@
   <div class="row">
     <div class="col-auto ms-auto pe-0">
       <label for="sort_selector">Sort by</label>
-      <select name="sort_by" id="sort_selector" value={sort_by} on:change={updateSort}>
+      <select name="sort_by" id="sort_selector" value={sort_by} onchange={updateSort}>
         {#if query !== null}
         <option value="r">Relevance</option>
         {/if}

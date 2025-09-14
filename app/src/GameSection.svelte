@@ -4,16 +4,18 @@
   import ErrorBox from './ErrorBox.svelte';
   import GameEditor from './GameEditor.svelte';
 
-  export let proj;
-  export let client;
-  export let username;
-  export let editing;
+  let {
+    proj = $bindable(),
+    client,
+    username,
+    editing = $bindable()
+  } = $props();
 
   function user_is_owner() {
      return username && proj.owners.includes(username);
   }
 
-  let players_slug;
+  let players_slug = $state();
 
   function plural(v) {
     return v === 1 ? '' : 's';
@@ -23,7 +25,7 @@
     return makeRangeSlug(min, 'player', max, 'player');
   }
 
-  let length_slug;
+  let length_slug = $state();
 
   function roundNearest(v, step) {
     return Math.round(v / step) * step;
@@ -66,7 +68,7 @@
   // box image
   //
 
-  let box_img = proj.image ? client.imageUrl(proj.image) : '';
+  let box_img = $state(proj.image ? client.imageUrl(proj.image) : '');
 
   function init() {
     box_img = proj.image ? client.imageUrl(proj.image) : '';
@@ -86,8 +88,8 @@
   // edit mode
   //
 
-  let edit = false;
-  let error = null;
+  let edit = $state(false);
+  let error = $state(null);
 
   function startEdit(event) {
     edit = true;
@@ -102,6 +104,9 @@
   }
 
   async function submitEdit(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
     const fdata = new FormData(event.target);
 
     const data = {};
@@ -245,7 +250,7 @@
       <div class="col">
         <h1 class="">
           {proj.game.title}
-          <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Edit" on:click={startEdit}>
+          <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Edit" onclick={startEdit}>
             <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
           </button>
         </h1>

@@ -1,13 +1,4 @@
 <script>
-  export let current_version;
-  export let news_link;
-  export let base_url;
-  export let user_info;
-  export let gls_url;
-  export let discourse_url;
-  export let ums_url;
-  export let returnto;
-
   import { getCookie, slug_for } from './lib/util.js';
 
   import Client from './lib/client.js';
@@ -15,8 +6,18 @@
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
   import ErrorBox from './ErrorBox.svelte';
+  let {
+    current_version,
+    news_link,
+    base_url,
+    user_info,
+    gls_url,
+    discourse_url,
+    ums_url,
+    returnto
+  } = $props();
 
-  let error = null;
+  let error = $state(null);
 
   const client = new Client(
     gls_url,
@@ -27,6 +28,8 @@
   );
 
   async function submitEdit(event) {
+    event.preventDefault();
+
     error = null;
 
     const fdata = new FormData(event.target);
@@ -114,11 +117,11 @@
 {#if user_info}
     <div class="container">
       <div class="row">
-        <form action="" on:submit|preventDefault={submitEdit}>
+        <form action="" onsubmit={submitEdit}>
           <label for="project_name_input" class="form-label">Project name</label>
-          <input id="project_name_input" type="text" name="project_name" class="form-control" required on:input={validateProjectName}>
+          <input id="project_name_input" type="text" name="project_name" class="form-control" required oninput={validateProjectName}>
           <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit" aria-label="Submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-          <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+          <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Cancel" onclick={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
         </form>
       </div>
     </div>

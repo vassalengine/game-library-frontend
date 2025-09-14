@@ -1,5 +1,6 @@
 import ProjectPage from './ProjectPage.svelte';
 import { CONFIG } from './lib/setup.js';
+import { mount } from "svelte";
 
 // determine what project to display
 const path = window.location.pathname;
@@ -16,7 +17,7 @@ let proj_error = document.getElementById("project-error")?.content ?? null;
 let players = JSON.parse(document.getElementById("players-data")?.content ?? null);
 let players_error = document.getElementById("players-error")?.content ?? null;
 
-const app = new ProjectPage({
+const app = mount(ProjectPage, {
   target: document.body,
   anchor: document.body.firstChild,
   props: {

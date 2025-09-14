@@ -1,10 +1,12 @@
 <script>
-  export let base_url;
-  export let proj;
-  export let rtf;
-  export let now;
 
   import { intlFormatDistance } from './lib/util.js';
+  let {
+    base_url,
+    proj,
+    rtf,
+    now
+  } = $props();
 </script>
 
 <li class="my-1">

@@ -4,10 +4,12 @@
 
   import ErrorBox from './ErrorBox.svelte';
 
-  export let proj;
-  export let client;
-  export let username;
-  export let editing;
+  let {
+    proj = $bindable(),
+    client,
+    username,
+    editing = $bindable()
+  } = $props();
 
   function user_is_owner() {
      return username && proj.owners.includes(username);
@@ -47,14 +49,14 @@
 
   const md = mdInit();
 
-  let source = proj.readme;
+  let source = $state(proj.readme);
 
   //
   // edit mode
   //
 
-  let edit = false;
-  let error = null;
+  let edit = $state(false);
+  let error = $state(null);
 
   function startEdit(event) {
     edit = true;
@@ -68,6 +70,8 @@
   }
 
   async function submitEdit(event) {
+    event.preventDefault();
+
     const data = { readme: source };
 
     try {
@@ -124,7 +128,7 @@
   <h2>
     <svg class="svg-icon"><use xlink:href="#info-circle"></use></svg>
     Readme
-    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Edit" on:click={startEdit}>
+    <button class="edit_button" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Edit" onclick={startEdit}>
       <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
     </button>
   </h2>
@@ -140,9 +144,9 @@
       </section>
     </div>
     <div class="row">
-      <form id="readme_form" action="" on:submit|preventDefault={submitEdit}>
+      <form id="readme_form" action="" onsubmit={submitEdit}>
         <button type="submit" aria-label="Submit" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
-        <button id="cancel" aria-label="Cancel" type="button" class="btn btn-primary" on:click={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
+        <button id="cancel" aria-label="Cancel" type="button" class="btn btn-primary" onclick={cancelEdit}><svg class="svg-icon"><use xlink:href="#xmark"></use></svg></button>
       </form>
     </div>
   </div>

@@ -2,14 +2,16 @@
   import ErrorBox from './ErrorBox.svelte';
   import UserChip from './UserChip.svelte';
 
-  export let ums_url;
 
-  export let players;
-  export let client;
-  export let username;
-  export let editing;
+  let {
+    ums_url,
+    players = $bindable(),
+    client,
+    username,
+    editing
+  } = $props();
 
-  let error = null;
+  let error = $state(null);
 
   async function addPlayer(event) {
     try {
@@ -49,9 +51,9 @@
     Players
     {#if !editing && username}
       {#if players.users.includes(username)}
-    <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Remove" on:click={removePlayer}><svg class="svg-icon"><use xlink:href="#user-minus"></use></svg></button>
+    <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Remove" onclick={removePlayer}><svg class="svg-icon"><use xlink:href="#user-minus"></use></svg></button>
       {:else}
-    <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Add" on:click={addPlayer}><svg class="svg-icon"><use xlink:href="#user-plus"></use></svg></button>
+    <button class="btn btn-primary p-1 mx-1 rounded-0" type="button" aria-label="Add" onclick={addPlayer}><svg class="svg-icon"><use xlink:href="#user-plus"></use></svg></button>
       {/if}
     {/if}
   </h2>

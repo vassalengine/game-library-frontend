@@ -1,9 +1,10 @@
 <script>
-  export let name;
-  export let placeholder;
-
-  export let valid = false;
-  export let value = '';
+  let {
+    name,
+    placeholder,
+    valid = $bindable(false),
+    value = $bindable('')
+  } = $props();
 
   const min_len = 10;
   const max_len = 500;
@@ -45,6 +46,6 @@ textarea {
 </style>
 
 <div>
-  <textarea name={name} class="w-100 p-2" placeholder={placeholder} on:input={updateValidFromEvent} bind:value></textarea>
+  <textarea name={name} class="w-100 p-2" placeholder={placeholder} oninput={updateValidFromEvent} bind:value></textarea>
   <div class="text-secondary"><small>{textLengthMessage(value.length)}</small></div>
 </div>

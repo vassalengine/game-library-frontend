@@ -2,17 +2,17 @@
   import CountingTextArea from './CountingTextArea.svelte';
   import ErrorBox from './ErrorBox.svelte';
 
-  export let client;
+  let { client } = $props();
 
-  let flag_dialog;
+  let flag_dialog = $state();
 
-  let flag_selected = null;
+  let flag_selected = $state(null);
 
-  let explanation = '';
-  let explanation_valid = false;
-  let explanation_area;
+  let explanation = $state('');
+  let explanation_valid = $state(false);
+  let explanation_area = $state();
 
-  let illegal_checked = false;
+  let illegal_checked = $state(false);
 
   function isValid(flag_selected, explanation_valid, illegal_checked) {
     switch (flag_selected) {
@@ -61,9 +61,10 @@
     }
   }
 
-  let error = null;
+  let error = $state(null);
 
   async function submitFlag(event) {
+    event.preventDefault();
     const fdata = new FormData(event.target);
 
     const flag = fdata.get('flag');
@@ -155,14 +156,14 @@
 
 </style>
 
-<dialog id="flag_dialog" class="container p-0 border-0 shadow-lg " bind:this={flag_dialog} on:close={closeDialog} on:mousedown={maybeCloseDialog}>
+<dialog id="flag_dialog" class="container p-0 border-0 shadow-lg " bind:this={flag_dialog} onclose={closeDialog} onmousedown={maybeCloseDialog}>
   {#if error}
   <ErrorBox {error} />
   {/if}
-  <form id="flag_form" action="" on:submit|preventDefault={submitFlag}>
+  <form id="flag_form" action="" onsubmit={submitFlag}>
     <header class="d-flex align-items-center border-bottom ps-4 pe-3 py-3">
       <h1 class="fs-4 m-0">Thanks for keeping our community civil!</h1>
-      <button id="flag_dialog_close" class="close_button ms-auto fs-4" type="button" aria-label="Close" on:click={closeDialog}><svg class="svg-icon close_icon"><use xlink:href="#xmark"></use></svg></button>
+      <button id="flag_dialog_close" class="close_button ms-auto fs-4" type="button" aria-label="Close" onclick={closeDialog}><svg class="svg-icon close_icon"><use xlink:href="#xmark"></use></svg></button>
     </header>
     <div class="px-4 pt-4 pb-3">
       <p>All flags are received by moderators and will be reviewed as soon as possible.</p>
@@ -172,12 +173,12 @@
         <div class="flag_type_description mb-1">This page contains content that a reasonable person would consider offensive, abusive, to be hateful conduct or a violation of <a href="/guidelines">our community guidelines</a>.</div>
       </label>
       <label class="flag_item pt-1 mb-1">
-        <input class="flag_type_radio" type="radio" name="flag" bind:group={flag_selected} value="spam" on:change={selectFlagType} />
+        <input class="flag_type_radio" type="radio" name="flag" bind:group={flag_selected} value="spam" onchange={selectFlagType} />
         <strong class="flag_type">It's Spam</strong>
         <div class="flag_type_description mb-1">This page contains an advertisement, or vandalism. It is not useful or relevant to the current topic.</div>
       </label>
       <label class="flag_item pt-1 mb-1">
-        <input class="flag_type_radio" type="radio" name="flag" bind:group={flag_selected} value="illegal" on:change={selectFlagType} />
+        <input class="flag_type_radio" type="radio" name="flag" bind:group={flag_selected} value="illegal" onchange={selectFlagType} />
         <strong class="flag_type">It's Illegal</strong>
         <div class="flag_type_description mb-1">This page requires staff attention because I believe it contains content that is illegal.</div>
         {#if flag_selected === 'illegal'}
@@ -190,7 +191,7 @@
         {/if}
       </label>
       <label class="flag_item pt-1 mb-1">
-        <input class="flag_type_radio" type="radio" name="flag" bind:group={flag_selected} value="other" on:change={selectFlagType} />
+        <input class="flag_type_radio" type="radio" name="flag" bind:group={flag_selected} value="other" onchange={selectFlagType} />
         <strong class="flag_type">Something Else</strong>
         <div class="flag_type_description mb-1">This post requires staff attention for another reason not listed above.</div>
         {#if flag_selected === 'other'}

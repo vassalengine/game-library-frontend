@@ -1,5 +1,5 @@
 <script>
-  export let error;
+  let { error } = $props();
 </script>
 
 <div class="border rounded border-danger border-3 p-3 my-2">
