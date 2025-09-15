@@ -1,6 +1,21 @@
-import { formatDistance, formatSizeWithUnit, slug_for } from './util.js';
+import {
+  formatDistance,
+  formatSizeWithUnit,
+  slug_for,
+  truncateString
+} from './util.js';
 
 import { expect, test } from 'vitest';
+
+test.each([
+  ['abc', 4, 'abc'],
+  ['abcd', 4, 'abcd'],
+  ['abcde', 4, 'abc…'],
+  ['abcdef', 4, 'abc…']
+])(
+  'truncateString %s %i',
+  (s, limit, exp) => expect(truncateString(s, limit)).toEqual(exp)
+);
 
 test.each([
   [0, '0 B'],

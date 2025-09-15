@@ -39,6 +39,10 @@ export function parseJWT(token) {
   return JSON.parse(jsonPayload);
 }
 
+export function truncateString(s, limit) {
+  return s.length <= limit ? s : s.slice(0, limit-1) + '…';
+}
+
 export function formatSizeWithUnit(n) {
   const k = n > 0 ? Math.floor((Math.log2(n) / 10)) : 0;
   const unit = (k > 0 ? 'KMGT'[k - 1] + 'i' : '') + 'B';

@@ -1,6 +1,6 @@
 <script>
+  import { formatDistance, truncateString } from './lib/util.js';
 
-  import { formatDistance } from './lib/util.js';
   let {
     base_url,
     proj,
@@ -16,7 +16,7 @@
         <a class="fs-5 fw-bolder" href="{`${base_url}/projects/${proj.slug}`}">{proj.game.title}</a>
       </div>
       <div>{proj.name}</div>
-      <div>{proj.description}</div>
+      <div>{truncateString(proj.description, 256)}</div>
     </div>
     <div class="ms-auto">
 <!--
