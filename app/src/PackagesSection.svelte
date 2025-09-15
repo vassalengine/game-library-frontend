@@ -3,7 +3,7 @@
   import PackageSection from './PackageSection.svelte';
   import PackageEditor from './PackageEditor.svelte';
 
-  import { slug_for } from './lib/util.js';
+  import { slugFor } from './lib/util.js';
 
 
   let {
@@ -42,7 +42,7 @@
     const fd = new FormData(event.target);
 
     const name = fd.get('package_name')?.trim();
-    const slug = slug_for(name);
+    const slug = slugFor(name);
 
     const data = {
       'name': name,

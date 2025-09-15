@@ -1,5 +1,5 @@
 <script>
-  import { getCookie, slug_for } from './lib/util.js';
+  import { getCookie, slugFor } from './lib/util.js';
 
   import Client from './lib/client.js';
 
@@ -56,7 +56,7 @@
         readme: ""
       };
 
-      client.project = slug_for(pname);
+      client.project = slugFor(pname);
 
       try {
         await client.createProject(data);

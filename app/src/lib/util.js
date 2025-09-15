@@ -91,7 +91,7 @@ export function formatDistance(rtf, date, base) {
   return rtf.format(Math.trunc(dsec / divisor), unit[unitIndex]);
 }
 
-export function slug_for(s) {
+export function slugFor(s) {
   // percent-encode non-ascii
   return encodeURIComponent(
     // replace whitespace with hyphens
