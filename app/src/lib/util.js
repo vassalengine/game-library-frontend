@@ -51,12 +51,13 @@ export function formatSizeWithUnit(n) {
 }
 
 export function formatDistance(rtf, date, base) {
-  // https://www.builder.io/blog/relative-time
+  // Based on https://www.builder.io/blog/relative-time,
+  // modified for better rounding.
 
   // Get the amount of seconds between the date and base 
-  const dsec = Math.round((date.getTime() - base.getTime()) / 1000);
+  const dsec = (date.getTime() - base.getTime()) / 1000;
 
-  // Array reprsenting one minute, hour, day, week, month, year in seconds
+  // One minute, hour, day, week, month, year in seconds
   const cutoffs = [
     60,
     3600,
@@ -67,8 +68,8 @@ export function formatDistance(rtf, date, base) {
     Infinity
   ];
 
-  // Array equivalent to the above but in the string representation of the units
-  const units = [
+  // Words for units, parallel to above
+  const unit = [
     "second",
     "minute",
     "hour",
@@ -78,16 +79,16 @@ export function formatDistance(rtf, date, base) {
     "year"
   ];
 
-  // Grab the ideal cutoff unit
+  // Find the ideal cutoff unit
   const unitIndex = cutoffs.findIndex(cutoff => cutoff > Math.abs(dsec));
 
   // Get the divisor to divide from the seconds. E.g., if our unit is "day"
   // our divisor is one day in seconds, so we can divide our seconds by
-  // this to get the # of days
+  // this to get the number of days
   const divisor = unitIndex ? cutoffs[unitIndex - 1] : 1;
 
-  // Do the formatting
-  return rtf.format(Math.floor(dsec / divisor), units[unitIndex]);
+  // Do the formatting, rounding toward zero
+  return rtf.format(Math.trunc(dsec / divisor), unit[unitIndex]);
 }
 
 export function slug_for(s) {
