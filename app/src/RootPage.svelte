@@ -25,6 +25,18 @@
   margin: 0 auto;
 }
 
+article section {
+  margin-top: 1.5em;
+}
+
+article header {
+  margin-bottom: 1.5em;
+}
+
+article li {
+  margin-bottom: 0.5em;
+}
+
 </style>
 
 <Header {base_url} {user_info} {discourse_url} {ums_url} {returnto} {current_version} {news_link} />
@@ -45,11 +57,19 @@
 <article class="container">
 <div id="content">
 
+<section>
+<header>
 <h1>Welcome to the Module Library</h1>
+</header>
 
 <p>The Module Library is a central repository for players, designers, and publishers to store or access Vassal modules and related files. Read on for an overview of its structure and some examples.</p>
 
+</section>
+
+<section>
+<header>
 <h2>Concepts</h2>
+</header>
 
 <ul>
 
@@ -79,7 +99,12 @@
 
 <p>If you are working with a module that was on a page in the old module library which contained multiple competing modules for the same game, including but not limited to <a href="https://forum.vassalengine.org/t/switching-to-the-new-module-library/85164/17">modules listed here</a>, <b>PLEASE CONSULT WITH THE SITE ADMINS BEFORE PROCEEDING</b> by posting in the <a href="https://forum.vassalengine.org/c/site-feedback/2">forum</a>.</p>
 
+</section>
+
+<section>
+<header>
 <h2>Examples</h2>
+</header>
 
 <ul>
 <li>
@@ -105,6 +130,7 @@
 <p><b>DON'T</b> create a project for each module.</p>
 </li>
 </ul>
+</section>
 
 </div>
 </article>
