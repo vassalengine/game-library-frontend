@@ -18,6 +18,15 @@
   <title>Module Library - Vassal</title>
 </svelte:head>
 
+<style>
+
+#content {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+</style>
+
 <Header {base_url} {user_info} {discourse_url} {ums_url} {returnto} {current_version} {news_link} />
 
 <main class="container px-5 mb-5">
@@ -33,7 +42,8 @@
   </div>
 </nav>
 
-<div>
+<article class="container">
+<div id="content">
 
 <h1>Welcome to the Module Library</h1>
 
@@ -97,6 +107,7 @@
 </ul>
 
 </div>
+</article>
 
 </main>
 
