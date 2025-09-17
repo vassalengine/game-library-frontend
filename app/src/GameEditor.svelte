@@ -269,7 +269,7 @@
         <input id="game_title_input" type="text" name="game_title" class="form-control" required bind:value={game_title}>
       </div>
       <div class="col-12">
-        <label for="game_title_sort_key_input" class="form-label">Title Sort Key</label>
+        <label for="game_title_sort_key_input" class="form-label">Title Sort Key <span title="If the automatically generated sort key is incorrect for your game title, please raise a flag on the project so an admin may correct it."><svg class="svg-icon"><use xlink:href="#info-circle"></use></svg></span></label>
         <input id="game_title_sort_key_input" type="text" name="game_title_sort_key" class="form-control" readonly disabled value={sortKeyFor(game_title.trim())}>
       </div>
       <div class="col-8">
