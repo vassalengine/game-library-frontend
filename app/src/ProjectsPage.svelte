@@ -1,11 +1,11 @@
 <script>
-
   import { fetchJSON } from './lib/client.js';
 
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
   import ErrorBox from './ErrorBox.svelte';
   import ProjectListItem from './ProjectListItem.svelte';
+
   let {
     current_version,
     news_link,
