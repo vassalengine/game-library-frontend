@@ -1,7 +1,7 @@
 import {
   formatDistance,
   formatSizeWithUnit,
-  slug_for,
+  slugFor,
   truncateString
 } from './util.js';
 
