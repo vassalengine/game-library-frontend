@@ -104,3 +104,13 @@ export function slugFor(s) {
   // remove leading and trailing hyphens
   .replace(/^-+|-+$/g, '');
 }
+
+export function isValidProjectName(name) {
+  return !(
+    name.length === 0 ||
+    name.length > 64 ||
+    name != name.trim() ||
+    /[^\p{L}\p{M}\p{N}\p{P}\p{Z}]/u.test(name) ||
+    /\s\s/.test(name)
+  );
+}

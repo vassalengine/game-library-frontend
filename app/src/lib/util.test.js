@@ -82,3 +82,15 @@ test.each([
   'slugFor %s',
   (name, exp) => expect(slugFor(name)).toEqual(exp)
 );
+
+test.each([
+  ['', false],
+  ['abc', true],
+  ['x'.repeat(65), false],
+  [' x ', false],
+  ['x  x', false],
+  ['x💩x', false]
+])(
+  'isValidProjectName "%s"',
+  (name, exp) => expect(isValidProjectName(name)).toEqual(exp)
+);
