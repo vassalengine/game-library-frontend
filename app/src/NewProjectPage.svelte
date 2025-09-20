@@ -57,7 +57,8 @@
         readme: ""
       };
 
-      client.project = slugFor(pname);
+      const slug = slugFor(pname);
+      client.project = slug;
 
       try {
         await client.createProject(data);
@@ -69,7 +70,7 @@
       }
 
       // redirect to the new project page
-      window.location.replace(`${base_url}/projects/${pname}`);
+      window.location.replace(`${base_url}/projects/${slug}`);
     }
   }
 
