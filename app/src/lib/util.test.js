@@ -79,7 +79,7 @@ test.each([
   ['x/#?*x', 'xx'],
   ['x💩x', 'x%F0%9F%92%A9x']
 ])(
-  'slugFor %s',
+  'slugFor "%s"',
   (name, exp) => expect(slugFor(name)).toEqual(exp)
 );
 
