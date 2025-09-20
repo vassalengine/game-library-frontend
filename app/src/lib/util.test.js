@@ -85,7 +85,9 @@ test.each([
 
 test.each([
   ['', false],
-  ['abc', true],
+  ['abcd', false],
+  ['abcde', true],
+  ['ab de', true],
   ['x'.repeat(65), false],
   [' x ', false],
   ['x  x', false],

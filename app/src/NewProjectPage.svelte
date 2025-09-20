@@ -1,11 +1,12 @@
 <script>
-  import { getCookie, slugFor } from './lib/util.js';
+  import { getCookie, isValidProjectName, slugFor } from './lib/util.js';
 
   import Client from './lib/client.js';
 
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
   import ErrorBox from './ErrorBox.svelte';
+
   let {
     current_version,
     news_link,
@@ -73,7 +74,10 @@
   }
 
   function validateProjectName(event) {
-
+    const msg = isValidProjectName(event.target.value) ?
+      '' :
+      'Project names must be 5 to 64 characters long without leading, trailing, or consecutive whitespace and contain only letters, numbers, punctuation, separators, and marks.';
+    event.target.setCustomValidity(msg);
   }
 
   function cancelEdit(event) {
