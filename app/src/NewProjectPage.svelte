@@ -81,12 +81,7 @@
     event.target.setCustomValidity(msg);
   }
 
-  function cancelEdit(event) {
-
-  }
-
 </script>
-
 
 <svelte:head>
   <title>Module Library - Vassal</title>
