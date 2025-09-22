@@ -36,13 +36,15 @@
     const fdata = new FormData(event.target);
 
     const pname = fdata.get('project_name')?.trim();
+    const gtitle = fdata.get('game_title')?.trim();
+
     if (pname) {
       const data = {
         name: pname,
         description: "",
         tags: [],
         game: {
-          title: pname,
+          title: gtitle,
           publisher: "",
           year: "",
           players: {
@@ -120,6 +122,8 @@
         <form action="" onsubmit={submitEdit}>
           <label for="project_name_input" class="form-label">Project name</label>
           <input id="project_name_input" type="text" name="project_name" class="form-control" required oninput={validateProjectName}>
+          <label for="game_title_input" class="form-label">Game title</label>
+          <input id="game_title_input" type="text" name="game_title" class="form-control" required>
           <button class="btn btn-primary p-1 mx-1 rounded-0" type="submit" aria-label="Submit"><svg class="svg-icon"><use xlink:href="#check"></use></svg></button>
         </form>
       </div>
