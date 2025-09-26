@@ -3,7 +3,7 @@ import { BlobReader, TextWriter, ZipReader } from 'https://cdn.jsdelivr.net/npm/
 async function getFileEntry(zipreader, filename) {
   for await (const e of zipreader.getEntriesGenerator()) {
     if (!e.directory && e.filename === filename) {
-      return e;   
+      return e;
     }
   }
   return null;
@@ -22,7 +22,7 @@ function versionInModuledata(md) {
 
   // This is the entirely crazy way XML parsing errors are reported
   if (doc.querySelector('parsererror')) {
-    return null; 
+    return null;
   }
 
   return doc.evaluate(
