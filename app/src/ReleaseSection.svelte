@@ -35,11 +35,10 @@
   }
 
   function sortFiles(files) {
-    files.sort((a, b) => {
+    return files.toSorted((a, b) => {
       return (extPriority(a.filename) - extPriority(b.filename)) ||
         a.filename.localeCompare(b.filename);
     });
-    return files;
   }
 
   //
