@@ -1,11 +1,16 @@
 import { BlobReader, TextWriter, ZipReader } from 'https://cdn.jsdelivr.net/npm/@zip.js/zip.js@2.7.62/+esm';
 
 async function getFileEntry(zipreader, filename) {
-  for await (const e of zipreader.getEntriesGenerator()) {
-    if (!e.directory && e.filename === filename) {
-      return e;
+  try {
+    for await (const e of zipreader.getEntriesGenerator()) {
+      if (!e.directory && e.filename === filename) {
+        return e;
+      }
     }
   }
+  catch {
+  }
+
   return null;
 }
 
