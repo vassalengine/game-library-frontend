@@ -345,11 +345,11 @@ class Client {
 
   static UPLOAD_ABORTED = UPLOAD_ABORTED;
 
-  async addFile(pkg, version, file, callbacks={}) {
+  async addFile(pkg, version, file, type, callbacks={}) {
     await this.refreshTokenIfExpired();
     return doUpload(
       file,
-      'application/octet-stream',
+      type,
       `${this.gls_api}/projects/${this.project}/packages/${pkg}/${version}/${file.name}`,
       this.token,
       callbacks

@@ -170,6 +170,7 @@
           pkg.slug,
           release.version,
           file,
+          file.type,
           callbacks
         );
 
