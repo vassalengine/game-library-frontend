@@ -97,45 +97,74 @@
     error = null;
   }
 
+  function extension(s, delim) {
+    const i = s.lastIndexOf('.');
+    return i != -1 ? s.substr(i + 1) : '';
+  }
+
   async function validateFile(event) {
     let msg = "";
 
     if (event.target.files.length === 1) {
       const file = event.target.files[0];
 
+      const ext = extension(file.name);
+
       const version = await extractVersion(file);
       if (version !== null) {
-        if (!file.name.endsWith(".vmdx")) {
-          // not an extension; it must be a module
+        // we found moduledata
 
-          if (!file.name.endsWith(".vmod")) {
-            // modules must have a .vmod extension
-            msg = "Module does not have .vmod extension.";
+        if (version !== release.version) {
+          let vtype = null;
+
+          switch (ext) {
+          case 'vmod':
+            vtype = 'Module';
+            break;
+          case 'vsav':
+            vtype = 'Save';
+            break;
+          case 'vlog':
+            vtype = 'Log';
+            break;
           }
-          else if (version !== release.version) {
-            // modules must match the version of their release
-            msg = `Module version ${version} does not equal release version ${release.version}.`;
-          }
-        }
-        else {
-          // extensions must have valid version numbers
-          if (!validateStrict(version)) {
-            msg = `Extension has invalid version.`;
+
+          if (vtype !== null) {
+            // modules, saves, logs must match the version of their release
+            msg = `${vtype} version ${version} does not equal release version ${release.version}.`;
           }
         }
       }
       else {
-        // modules and extensions must have moduledata
-        if (file.name.endsWith(".vmod")) {
-          msg = "No version found in module file.";
+        // we found no moduledata
+        // this is an error for modules, extensions, logs, saves
+
+        let vtype = null;
+
+        switch (ext) {
+        case 'vmod':
+          vtype = 'module';
+          break;
+        case 'vmdx':
+          vtype = 'extension';
+          break;
+        case 'vsav':
+          vtype = 'save';
+          break;
+        case 'vlog':
+          vtype = 'log';
+          break;
         }
-        else if (file.name.endsWith(".vmdx")) {
-          msg = "No version found in extension file.";
+
+        if (vtype !== null) {
+          // this is a vassal type, should have moduledata
+          msg = `No version found in ${vtype} file.`;
         }
       }
     }
 
     event.target.setCustomValidity(msg);
+
     if (msg) {
       error = msg;
     }
