@@ -133,7 +133,9 @@ function doUpload(file, type, url, token, callbacks) {
 
     xhr.open('POST', url);
     xhr.setRequestHeader('Authorization', `Bearer ${token}`);
-    xhr.setRequestHeader('Content-Type', type);
+    if (type) {
+      xhr.setRequestHeader('Content-Type', type);
+    }
     xhr.send(file);
   });
 
