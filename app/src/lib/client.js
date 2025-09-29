@@ -386,6 +386,17 @@ class Client {
     );
   }
 
+  async closeFlag(flag) {
+    await this.refreshTokenIfExpired();
+    return this.fetchOk(
+      `${this.gls_api}/admin/flags/${flag}`,
+      {
+        method: 'PATCH',
+        headers: this.authHeaders()
+      }
+    );
+  }
+
   async getFlags() {
     await this.refreshTokenIfExpired();
     return this.fetchJSON(

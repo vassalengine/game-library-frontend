@@ -97,8 +97,16 @@ Thanks for your report.`
     return encodeURIComponent(message);
   }
 
-  function closeFlag(flag_id) {
-
+  async function closeFlag(flag_id) {
+    // close the selected flag
+    try {
+      await client.closeFlag(flag_id);
+      error = null;
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
 
   }
 
