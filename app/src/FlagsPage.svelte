@@ -150,7 +150,7 @@ tr.closed, tr.closed + tr {
     <tbody>
     {#if flags !== null}
     {#each flags as flag}
-      <tr id="flag.{flag_id}">
+      <tr id="flag.{flag.flag_id}">
         <td><button class="btn p-1 mx-1 rounded-0" type="button" aria-label="Close" onclick={() => closeFlag(flag.flag_id)}><svg class="svg-icon close_icon"><use xlink:href="#xmark"></use></svg></button></td>
         <td><a href="{base_url}/projects/{flag.slug}">{flag.project}</a></td>
         <td>
