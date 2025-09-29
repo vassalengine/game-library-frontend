@@ -108,8 +108,10 @@ Thanks for your report.`
       return;
     }
 
-    // hide the now-closed flag
-    document.getElementById(`flag.${flag_id}`).classList.add('closed');
+    // remove rows for the now-closed flag
+    const frow = document.getElementById(`flag.${flag_id}`);
+    frow.nextSibling.remove();
+    frow.remove();
   }
 
 </script>
@@ -118,10 +120,6 @@ Thanks for your report.`
 
 tr:nth-child(even) {
   border-bottom: 1px solid black;
-}
-
-tr.closed, tr.closed + tr {
-  display: hidden;
 }
 
 </style>
