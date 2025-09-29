@@ -145,7 +145,7 @@ tr:nth-child(even) {
     {#if flags !== null}
     {#each flags as flag}
       <tr>
-        <td><button class="btn p-1 mx-1 rounded-0" type="button" aria-label="Close" onclick={closeFlag(flag.flag_id)}><svg class="svg-icon close_icon"><use xlink:href="#xmark"></use></svg></button></td>
+        <td><button class="btn p-1 mx-1 rounded-0" type="button" aria-label="Close" onclick={() => closeFlag(flag.flag_id)}><svg class="svg-icon close_icon"><use xlink:href="#xmark"></use></svg></button></td>
         <td><a href="{base_url}/projects/{flag.slug}">{flag.project}</a></td>
         <td>
           <a href="{discourse_url}/new-message?username={flag.flagged_by}&title={replyTitle(flag)}&body={replyBody(flag)}" aria-label="Reply"><svg class="svg-icon"><use xlink:href="#reply"></use></svg></a>
