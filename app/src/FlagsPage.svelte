@@ -109,7 +109,7 @@ Thanks for your report.`
     }
 
     // remove rows for the now-closed flag
-    for (const el of document.querySelectorAll(`flag-${flag_id}`)) {
+    for (const el of document.querySelectorAll(`.flag-${flag_id}`)) {
       el.remove();
     }
   }
