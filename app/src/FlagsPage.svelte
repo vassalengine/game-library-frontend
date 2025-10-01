@@ -109,9 +109,9 @@ Thanks for your report.`
     }
 
     // remove rows for the now-closed flag
-    const frow = document.getElementById(`flag.${flag_id}`);
-    frow.nextSibling.remove();
-    frow.remove();
+    for (const el of document.querySelectorAll(`flag-${flag_id}`)) {
+      el.remove();
+    }
   }
 
 </script>
@@ -148,7 +148,7 @@ tr:nth-child(even) {
     <tbody>
     {#if flags !== null}
     {#each flags as flag}
-      <tr id="flag.{flag.flag_id}">
+      <tr class="flag-{flag.flag_id}">
         <td><button class="btn p-1 mx-1 rounded-0" type="button" aria-label="Close" onclick={() => closeFlag(flag.flag_id)}><svg class="svg-icon close_icon"><use xlink:href="#xmark"></use></svg></button></td>
         <td><a href="{base_url}/projects/{flag.slug}">{flag.project}</a></td>
         <td>
@@ -158,7 +158,7 @@ tr:nth-child(even) {
         <td>{flag.flag}</td>
         <td>{flag.flagged_at.replace(/\.[0-9]+Z/, "").replace("T", " ")}</td>
       </tr>
-      <tr>
+      <tr class="flag-{flag.flag_id}">
         <td colspan="4">{@html flag.message ? DOMPurify.sanitize(md.render(flag.message)) : ""}</td>
       </tr>
     {/each}
