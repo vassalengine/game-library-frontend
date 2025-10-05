@@ -122,6 +122,10 @@ fn routes(base_path: &str, log_headers: bool) -> Router<Arc<AppState>> {
             get(project_page)
         )
         .route_service(
+            &format!("{base_path}/publishers"),
+            ServeFile::new(format!("{DIST_DIR}/publishers.html"))
+        )
+        .route_service(
             &format!("{base_path}/new"),
             ServeFile::new(format!("{DIST_DIR}/new.html"))
         )

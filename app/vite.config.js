@@ -13,6 +13,7 @@ export default defineConfig({
         new: './new.html',
         projects: './projects.html',
         project: './project.html',
+        publishers: './publishers.html',
         flags: './flags.html'
       }
     }
