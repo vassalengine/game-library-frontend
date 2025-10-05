@@ -37,32 +37,6 @@
 
 </script>
 
-<style>
-
-/* Alphabetical index */
-
-#index ol {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  padding: 0;
-  margin: 0 auto;
-  gap: 0.4em;
-}
-
-#index li {
-  list-style: none;
-  white-space: nowrap;
-}
-
-@media only screen and (max-width:767px) {
-  #index ol {
-    max-width: 15em;
-  }
-}
-
-</style>
-
 <svelte:head>
   <title>Tags - Module Library - Vassal</title>
 </svelte:head>
