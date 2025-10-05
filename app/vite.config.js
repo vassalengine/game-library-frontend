@@ -14,6 +14,7 @@ export default defineConfig({
         projects: './projects.html',
         project: './project.html',
         publishers: './publishers.html',
+        tags: './tags.html',
         flags: './flags.html'
       }
     }
