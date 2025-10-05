@@ -3,6 +3,7 @@
 
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
+  import Search from './Search.svelte';
   import ErrorBox from './ErrorBox.svelte';
   import ProjectListItem from './ProjectListItem.svelte';
 
@@ -65,13 +66,7 @@
   let meta = $state(null);
   let projects = $state(null);
 
-  function normalizeWhitespace(s) {
-    return s.split(/\s+/).filter(s => s.length > 0).join(' ');
-  }
-
-  function cleanupSearch(event) {
-    event.formData.set('q', normalizeWhitespace(event.formData.get('q')));
-  }
+  let search_message = $state(null);
 
   function loadProjects(url) {
      fetchJSON(url)
@@ -134,7 +129,6 @@
   const scrollLoad = (el) => {
     observer.observe(el);
   };
-
 </script>
 
 <style>
@@ -175,12 +169,8 @@
 
 <main class="container px-5 mb-5">
 
-<nav class="d-flex flex-wrap align-items-center my-3">
-  <form class="mx-md-2 my-1 flex-grow-1 order-md-1" action="{base_url}/projects" onformdata={cleanupSearch}>
-    <input class="form-control" type="search" name="q" placeholder="Search..." value={query} required>
-  </form>
-  <div class="w-100 d-md-none"></div>
-{#if projects}
+{#snippet search_msg()}
+  {#if projects}
   <div class="small me-auto mx-1 my-1 order-md-0">
 <!-- TODO: Is there some way to provide a range for the count? -->
     <span class="text-muted">Displaying</span>
@@ -189,11 +179,12 @@
     <b>{meta.total}</b>
     <span class="text-muted">{params.has('q') ? "search result" : "module"}{meta.total === 1 ? "" : "s"}</span>
   </div>
-{/if}
-  <div class="ms-auto mx-1 my-1 pe-0 order-md-2">
-    <a href="{base_url}/projects">Browse All Projects</a>
-  </div>
-</nav>
+  {:else}
+  <div class="d-lg-block d-none w-25 order-md-0"></div>
+  {/if}
+{/snippet}
+
+<Search {base_url} {query} message={search_msg} />
 
 <div class="my-1 p-3 bg-light rounded">
   <h1 class="m-0">
