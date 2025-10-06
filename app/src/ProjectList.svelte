@@ -11,13 +11,11 @@
 
 </script>
 
-{#if projects}
 <ol id="projects_list" class="list-unstyled m-0 p-0">
   {#each projects as proj}
   <ProjectListItem {base_url} {proj} {rtf} {now} />
   {/each}
 </ol>
-{/if}
 
 <div class="svg-sprites">
   <div class="fontawesome">
