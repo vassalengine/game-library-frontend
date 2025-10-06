@@ -5,7 +5,7 @@
   import Footer from './Footer.svelte';
   import Search from './Search.svelte';
   import ErrorBox from './ErrorBox.svelte';
-  import ProjectListItem from './ProjectListItem.svelte';
+  import ProjectList from './ProjectList.svelte';
 
   let {
     current_version,
@@ -47,9 +47,6 @@
 
     return req_url;
   }
-
-  const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-  const now = new Date();
 
   const params = new URLSearchParams(window.location.search);
   const [
@@ -122,13 +119,10 @@
         .catch((err) => error = err);
   }
 
-  loadProjects(makeRequestURL(gls_url, params, limit));
-
   const observer = new IntersectionObserver(handleIntersect);
+  const watchScroll = (el) => observer.observe(el);
 
-  const scrollLoad = (el) => {
-    observer.observe(el);
-  };
+  loadProjects(makeRequestURL(gls_url, params, limit));
 </script>
 
 <style>
@@ -250,13 +244,9 @@
 <ErrorBox {error} />
 {/if}
 
+<ProjectList {base_url} {projects} />
 {#if projects}
-<ol id="projects_list" class="list-unstyled m-0 p-0">
-  {#each projects as proj}
-  <ProjectListItem {base_url} {proj} {rtf} {now} />
-  {/each}
-</ol>
-<div use:scrollLoad id="scroll_forward" class="infinite-scroll"></div>
+<div {@attach watchScroll} id="scroll_forward" class="infinite-scroll"></div>
 {/if}
 
 </main>
