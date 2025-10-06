@@ -63,8 +63,6 @@
   let meta = $state(null);
   let projects = $state(null);
 
-  let search_message = $state(null);
-
   function loadProjects(url) {
      fetchJSON(url)
       .then((result) => ({ projects, meta } = result))
