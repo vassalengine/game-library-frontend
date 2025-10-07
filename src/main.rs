@@ -130,6 +130,10 @@ fn routes(base_path: &str, log_headers: bool) -> Router<Arc<AppState>> {
             ServeFile::new(format!("{DIST_DIR}/tags.html"))
         )
         .route_service(
+            &format!("{base_path}/search"),
+            ServeFile::new(format!("{DIST_DIR}/search.html"))
+        )
+        .route_service(
             &format!("{base_path}/new"),
             ServeFile::new(format!("{DIST_DIR}/new.html"))
         )

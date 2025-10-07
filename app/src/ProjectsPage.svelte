@@ -1,11 +1,11 @@
 <script>
   import { fetchJSON } from './lib/client.js';
+  import { makeRequestURL } from './lib/search.js';
 
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
   import Search from './Search.svelte';
-  import ErrorBox from './ErrorBox.svelte';
-  import ProjectList from './ProjectList.svelte';
+  import SearchPageGuts from './SearchPageGuts.svelte';
 
   let {
     current_version,
@@ -19,106 +19,27 @@
     limit
   } = $props();
 
-  function unpackParams(params) {
-    const query = params.get('q');
-    const publisher = params.get('publisher');
-    const year = params.get('year');
-    const tags = params.getAll('tag');
-    const owners = params.getAll('owner');
-    const players = params.getAll('player');
-
-    // default query sort is relevance, otherwise title
-    const sort_by = params.get('sort_by') ?? (query !== null ? 'r' : 't');
-
-    return [sort_by, query, publisher, year, tags, owners, players];
-  }
-
-  function makeRequestURL(api_url, params, limit) {
-    // Construct API request
-    const req_url = new URL(`${api_url}/projects`);
-
-    for (const [k, v] of params.entries()) {
-      req_url.searchParams.append(k, v);
-    }
-
-    if (!req_url.searchParams.has('limit')) {
-      req_url.searchParams.set('limit', limit);
-    }
-
-    return req_url;
-  }
-
-  const params = new URLSearchParams(window.location.search);
-  const [
-    sort_by,
-    query,
-    publisher,
-    year,
-    tags,
-    owners,
-    players
-  ] = unpackParams(params);
-
   let error = $state(null);
   let meta = $state(null);
   let projects = $state(null);
+
+  function unpackParams(params) {
+    const q = params.get('q');
+
+    // default query sort is relevance, otherwise title
+    const sort_by = params.get('sort_by') ?? (!!q ? 'r' : 't');
+
+    return [sort_by, q];
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const [ sort_by, query ] = unpackParams(params);
 
   function loadProjects(url) {
      fetchJSON(url)
       .then((result) => ({ projects, meta } = result))
       .catch((err) => error = err);
   }
-
-  function updateSort(event) {
-    const url = new URL(window.location);
-
-    // clear sort_by, from
-    url.searchParams.delete('sort_by');
-    url.searchParams.delete('from');
-
-    if (query !== null) {
-      url.searchParams.set('q', query);
-    }
-
-    url.searchParams.set('sort_by', event.target.value);
-
-    // update page instead of reloading
-    loadProjects(makeRequestURL(gls_url, url.searchParams, limit));
-    window.history.replaceState(null, '', url.toString());
-  }
-
-  function handleIntersect(entries) {
-    if (!entries[0].isIntersecting) {
-      return;
-    }
-
-    if (!meta.next_page) {
-      return;
-    }
-
-    const target = entries[0].target;
-
-    observer.unobserve(target);
-
-    const page = meta.next_page;
-    const projects_list = document.getElementById('projects_list');
-
-    const s_query = page.substring(1);
-    const s_params = new URLSearchParams(s_query);
-    const s_url = makeRequestURL(gls_url, s_params, limit);
-
-    fetchJSON(s_url)
-        .then((result) => {
-          meta.next_page = result.meta.next_page;
-          // must reassign to projects so it works reactively
-          projects = projects.concat(result.projects);
-        })
-        .then(() => observer.observe(target))
-        .catch((err) => error = err);
-  }
-
-  const observer = new IntersectionObserver(handleIntersect);
-  const watchScroll = (el) => observer.observe(el);
 
   loadProjects(makeRequestURL(gls_url, params, limit));
 </script>
@@ -176,7 +97,7 @@
   {/if}
 {/snippet}
 
-<Search {base_url} {query} message={search_msg} />
+<Search {base_url} initial_query={query} message={search_msg} />
 
 <div class="my-1 p-3 bg-light rounded">
   <h1 class="m-0">
@@ -222,30 +143,7 @@
 </nav>
 {/if}
 
-<div class="container mx-0 my-2">
-  <div class="row">
-    <div class="col-auto ms-auto pe-0">
-      <label for="sort_selector">Sort by</label>
-      <select name="sort_by" id="sort_selector" value={sort_by} onchange={updateSort}>
-        {#if query !== null}
-        <option value="r">Relevance</option>
-        {/if}
-        <option value="t">Alphabetical</option>
-        <option value="m">Recent Updates</option>
-        <option value="c">Newly Added</option>
-      </select>
-    </div>
-  </div>
-</div>
-
-{#if error}
-<ErrorBox {error} />
-{/if}
-
-{#if projects}
-<ProjectList {base_url} {projects} />
-<div {@attach watchScroll} id="scroll_forward" class="infinite-scroll"></div>
-{/if}
+<SearchPageGuts {base_url} {gls_url} {sort_by} relevance={!!query} {limit} {loadProjects} bind:error={error} bind:meta={meta} bind:projects={projects} />
 
 </main>
 
