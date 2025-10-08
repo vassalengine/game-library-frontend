@@ -3,17 +3,17 @@
 
   let {
     base_url,
-    initial_query = "",
+    query = "",
     message = null,
   } = $props();
 
-  let query = $state(initial_query);
-
   function gotoAdvancedSearch(event) {
     const url = new URL(`${base_url}/search`);
-    const q = normalizeWhitespace(query);
-    if (q) {
-      url.searchParams.append('q', q);
+    if (query) {
+      const q = normalizeWhitespace(query);
+      if (q) {
+        url.searchParams.append('q', q);
+      }
     }
     window.location.assign(url);
   }

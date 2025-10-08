@@ -97,7 +97,7 @@
   {/if}
 {/snippet}
 
-<Search {base_url} initial_query={query} message={search_msg} />
+<Search {base_url} {query} message={search_msg} />
 
 <div class="my-1 p-3 bg-light rounded">
   <h1 class="m-0">
