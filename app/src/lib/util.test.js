@@ -1,6 +1,7 @@
 import {
   formatDistance,
   formatSizeWithUnit,
+  isValidProjectName,
   slugFor,
   truncateString
 } from './util.js';
