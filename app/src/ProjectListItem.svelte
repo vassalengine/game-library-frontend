@@ -19,6 +19,7 @@
       <div>{truncateString(proj.description, 256)}</div>
     </div>
     <div class="ms-auto">
+<!-- TODO: add tags -->
 <!--
       <div>
         <svg class="svg-icon"><use xlink:href="#arrow-down-to-bracket"></use></svg>
