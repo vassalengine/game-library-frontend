@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "devDependencies": {
+    "@smui-extra/autocomplete": "^8.0.3",
     "@smui-extra/chip-input": "^8.0.3",
     "@sveltejs/vite-plugin-svelte": "^6",
     "svelte": "^5",

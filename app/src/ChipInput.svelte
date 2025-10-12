@@ -2,69 +2,11 @@
   import ChipInput from '@smui-extra/chip-input';
 
   let {
-    fetchItemsFor,
+    fetcher,
     itemToText,
-    textToItem,
-    getCache,
-    putCache,
-    items = $bindable(),
+    items = $bindable()
   } = $props();
 
-  let item_chips = $state(items.map(textToItem));
-  let value = $state('');
-
-  let current_search_counter = 0;
-  let prev_call = Promise.resolve();
-
-  async function searchItems(key) {
-    if (key === '') {
-      return [];
-    }
-
-    // check the cache
-    let search_items = getCache(key);
-    if (search_items !== undefined) {
-      return search_items;
-    }
-
-    const my_counter = ++current_search_counter;
-    const interval = 200;
-
-    // wait interval ms after the previous request
-    await prev_call;
-    prev_call = new Promise((resolve) => setTimeout(resolve, interval));
-
-    if (my_counter !== current_search_counter) {
-      // there is a newer search; don't update using this one
-      return false;
-    }
-
-    // do the search
-    search_items = await fetchItemsFor(key);
-    putCache(key, search_items);
-
-    if (my_counter !== current_search_counter) {
-      // there is a newer search; don't update using this one
-      return false;
-    }
-
-    return search_items;
-  }
-
-  function addItem(event) {
-    event.preventDefault();
-    item_chips.push(event.detail);
-    items.push(itemToText(event.detail));
-    value = '';
-  }
-
-  function removeItem(event) {
-    event.preventDefault();
-    const irem = itemToText(event.detail.chipId);
-    item_chips = item_chips.filter((i) => itemToText(i) !== irem);
-    items = items.filter((i) => i !== irem);
-    value = '';
-  }
 </script>
 
 <style>
@@ -98,16 +40,13 @@
 
 <div class="form-control item-chip-outer">
   <ChipInput
-    bind:chips={item_chips}
-    bind:value
+    bind:chips={items}
     key={itemToText}
     getChipLabel={itemToText}
     getChipText={itemToText}
-    autocomplete$search={searchItems}
+    autocomplete$search={(k) => fetcher.searchItems(k)}
     autocomplete$getOptionLabel={itemToText}
     chipTrailingAction$aria-label="Remove element"
-    onSMUIChipInputSelect={addItem}
-    onSMUIChipRemoval={removeItem}
   >
     {#snippet loading()}
       <div class="spinner-border" role="status">

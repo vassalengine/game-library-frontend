@@ -1,11 +1,12 @@
 <script>
   import { fetchJSON } from './lib/client.js';
-  import { cleanupSearch, makeRequestURL } from './lib/search.js';
+  import AutocompleteFetcher, { cleanupSearch, makeRequestURL } from './lib/search.js';
 
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
   import SearchPageGuts from './SearchPageGuts.svelte';
   import ChipInput from './ChipInput.svelte';
+  import Autocomplete from './Autocomplete.svelte';
 
   let {
     current_version,
@@ -39,35 +40,50 @@
   // default query sort is relevance, otherwise title
   const sort_by = params.get('sort_by') ?? (!!q ? 'r' : 't');
 
-  // owners, players chip inputs
+  // publishers input
 
-  const users_cache = new Map();
+  let publishers_cache = null;
 
-  let owners_select = $state([...owners]);
-  let players_select = $state([...players]);
+  let publisher_auto = $state(textToPublisher(publisher));
 
-  async function fetchUsersStartingWith(prefix) {
-    const url = new URL(`${ums_url}/users`);
-    url.searchParams.append('term', prefix);
-    url.searchParams.append('include_groups', false);
-    url.searchParams.append('limit', 6);
+  async function fetchPublishersContaining(s) {
+    if (publishers_cache === null) {
+      const url = new URL(`${gls_url}/publishers`);
+      const result = (await fetchJSON(url)).publishers;
 
-    return (await fetchJSON(url)).users;
+      publishers_cache = result
+        .map(textToPublisher)
+        .sort((a, b) => a.key.localeCompare(b.key));
+    }
+
+    if (!s) {
+      return [];
+    }
+
+    s = s.toLowerCase();
+    // FIXME: slow
+    return publishers_cache.filter((t) => t.key.includes(s));
   }
 
-  function userToText(u) {
-    return u?.username;
+  function publisherToText(p) {
+    return p?.publisher ?? '';
   }
 
-  function textToUser(u) {
-    return { username: u };
+  function textToPublisher(p) {
+    return { key: p.toLowerCase(), publisher: p };
   }
+
+  const publishers_fetcher = new AutocompleteFetcher(
+    (k) => undefined,
+    (k, v) => {},
+    fetchPublishersContaining
+  );
 
   // tags chip input
 
   let tags_cache = null;
 
-  let tags_select = $state([...tags]);
+  let tags_select = $state(tags.map(textToTag));
 
   async function fetchTagsContaining(s) {
     if (tags_cache === null) {
@@ -96,6 +112,42 @@
     return { key: t.toLowerCase(), tag: t };
   }
 
+  const tags_fetcher = new AutocompleteFetcher(
+    (k) => undefined,
+    (k, v) => {},
+    fetchTagsContaining
+  );
+
+  // owners, players chip inputs
+
+  const users_cache = new Map();
+
+  let owners_select = $state(owners.map(textToUser));
+  let players_select = $state(players.map(textToUser));
+
+  async function fetchUsersStartingWith(prefix) {
+    const url = new URL(`${ums_url}/users`);
+    url.searchParams.append('term', prefix);
+    url.searchParams.append('include_groups', false);
+    url.searchParams.append('limit', 6);
+
+    return (await fetchJSON(url)).users;
+  }
+
+  function userToText(u) {
+    return u?.username;
+  }
+
+  function textToUser(u) {
+    return { username: u };
+  }
+
+  const users_fetcher = new AutocompleteFetcher(
+    (k) => users_cache.get(k),
+    (k, v) => users_cache.set(k, v),
+    fetchUsersStartingWith
+  );
+
   function loadProjects(url) {
      fetchJSON(url)
       .then((result) => ({ projects, meta } = result))
@@ -117,16 +169,20 @@
       }
     }
 
+    if (publisher_auto) {
+      url.searchParams.set('publisher', publisherToText(publisher_auto));
+    }
+
     for (const t of tags_select) {
-      url.searchParams.append('tag', t);
+      url.searchParams.append('tag', tagToText(t));
     }
 
     for (const u of owners_select) {
-      url.searchParams.append('owner', u);
+      url.searchParams.append('owner', userToText(u));
     }
 
     for (const u of players_select) {
-      url.searchParams.append('player', u);
+      url.searchParams.append('player', userToText(u));
     }
 
     window.location.assign(url);
@@ -155,7 +211,6 @@
 
 <!-- TODO: players needs to support exact and inclusive matches -->
 <!-- TODO: restrict players, length to numbers -->
-<!-- TODO: add chip selection for tags -->
 
 <nav>
   <form action="" onformdata={cleanupSearch} onsubmit={submitSearch}>
@@ -168,7 +223,7 @@
     <div class="row">
       <div class="col">
         <label for="publisher_input" class="form-label">Publisher</label>
-        <input id="publisher_input" class="form-control" type="text" name="publisher" value={publisher} />
+        <Autocomplete fetcher={publishers_fetcher} itemToText={publisherToText} bind:value={publisher_auto} />
       </div>
       <div class="col">
         <label for="year_input" class="form-label">Year</label>
@@ -188,6 +243,8 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="row">
       <div class="col-6">
         <label for="length_min_input" class="form-label">Length</label>
         <div class="row">
@@ -204,19 +261,19 @@
     <div class="row">
       <div class="col">
         <label for="tags_input" class="form-label">Tags</label>
-        <ChipInput fetchItemsFor={fetchTagsContaining} itemToText={tagToText} textToItem={textToTag}  getCache={(k) => undefined} putCache={(k, v) => {}} bind:items={tags_select} />
+        <ChipInput fetcher={tags_fetcher} itemToText={tagToText} bind:items={tags_select} />
       </div>
     </div>
     <div class="row">
       <div class="col">
         <label for="owners_input" class="form-label">Project owners</label>
-        <ChipInput fetchItemsFor={fetchUsersStartingWith} itemToText={userToText} textToItem={textToUser} getCache={(k) => users_cache.get(k)} putCache={(k, v) => users_cache.set(k, v)} bind:items={owners_select} />
+        <ChipInput fetcher={users_fetcher} itemToText={userToText} bind:items={owners_select} />
       </div>
     </div>
     <div class="row">
       <div class="col">
         <label for="players_input" class="form-label">Players</label>
-        <ChipInput fetchItemsFor={fetchUsersStartingWith} itemToText={userToText} textToItem={textToUser} getCache={(k) => users_cache.get(k)} putCache={(k, v) => users_cache.set(k, v)} bind:items={players_select} />
+        <ChipInput fetcher={users_fetcher} itemToText={userToText} bind:items={players_select} />
       </div>
     </div>
     <button type="submit" aria-label="Search" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#magnifying-glass"></use></svg> Search</button>
