@@ -43,7 +43,6 @@
   // publishers input
 
   let publishers_cache = null;
-
   let publisher_select = $state(publisher ? textToPublisher(publisher) : null);
 
   async function fetchPublishersContaining(s) {
@@ -82,7 +81,6 @@
   // tags chip input
 
   let tags_cache = null;
-
   let tags_select = $state(tags.map(textToTag));
 
   async function fetchTagsContaining(s) {
@@ -121,7 +119,6 @@
   // owners, players chip inputs
 
   const users_cache = new Map();
-
   let owners_select = $state(owners.map(textToUser));
   let players_select = $state(players.map(textToUser));
 
