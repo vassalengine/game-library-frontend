@@ -5,7 +5,7 @@
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
   import SearchPageGuts from './SearchPageGuts.svelte';
-  import UserChipInput from './UserChipInput.svelte';
+  import ChipInput from './ChipInput.svelte';
 
   let {
     current_version,
@@ -43,6 +43,23 @@
 
   let owners_select = $state([...owners]);
   let players_select = $state([...players]);
+
+  async function fetchUsersStartingWith(prefix) {
+    const url = new URL(`${ums_url}/users`);
+    url.searchParams.append('term', prefix);
+    url.searchParams.append('include_groups', false);
+    url.searchParams.append('limit', 6);
+
+    return (await fetchJSON(url)).users;
+  }
+
+  function userToText(u) {
+    return u?.username;
+  }
+
+  function textToUser(u) {
+    return { username: u };
+  }
 
   function loadProjects(url) {
      fetchJSON(url)
@@ -154,13 +171,13 @@
     <div class="row">
       <div class="col">
         <label for="owners_input" class="form-label">Project owners</label>
-        <UserChipInput {ums_url} bind:users={owners_select} bind:users_cache />
+        <ChipInput fetchItemsFor={fetchUsersStartingWith} itemToText={userToText} textToItem={textToUser} bind:items={owners_select} bind:items_cache={users_cache} />
       </div>
     </div>
     <div class="row">
       <div class="col">
         <label for="players_input" class="form-label">Players</label>
-        <UserChipInput {ums_url} bind:users={players_select} bind:users_cache />
+        <ChipInput fetchItemsFor={fetchUsersStartingWith} itemToText={userToText} textToItem={textToUser} bind:items={players_select} bind:items_cache={users_cache} />
       </div>
     </div>
     <button type="submit" aria-label="Search" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#magnifying-glass"></use></svg> Search</button>

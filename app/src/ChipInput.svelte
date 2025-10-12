@@ -1,39 +1,29 @@
 <script>
-  import { fetchJSON } from './lib/client.js';
-
   import ChipInput from '@smui-extra/chip-input';
-  import LeadingIcon from '@smui/chips';
 
   let {
-    ums_url,
-    users_cache = $bindable(),
-    users = $bindable()
+    fetchItemsFor,
+    itemToText,
+    textToItem,
+    items = $bindable(),
+    items_cache = $bindable()
   } = $props();
 
-  let user_chips = $state(users.map((u) => ({ username: u })));
+  let item_chips = $state(items.map(textToItem));
   let value = $state('');
-
-  async function fetchUsersStartingWith(prefix) {
-    const url = new URL(`${ums_url}/users`);
-    url.searchParams.append('term', prefix);
-    url.searchParams.append('include_groups', false);
-    url.searchParams.append('limit', 6);
-
-    return (await fetchJSON(url)).users;
-  }
 
   let current_search_counter = 0;
   let prev_call = Promise.resolve();
 
-  async function searchUsers(prefix) {
+  async function searchItems(prefix) {
     if (prefix === '') {
       return [];
     }
 
     // check the cache
-    let prefix_users = users_cache.get(prefix);
-    if (prefix_users !== undefined) {
-      return prefix_users;
+    let prefix_items = items_cache.get(prefix);
+    if (prefix_items !== undefined) {
+      return prefix_items;
     }
 
     const my_counter = ++current_search_counter;
@@ -49,29 +39,29 @@
     }
 
     // do the search
-    prefix_users = await fetchUsersStartingWith(prefix);
-    users_cache.set(prefix, prefix_users);
+    prefix_items = await fetchItemsFor(prefix);
+    items_cache.set(prefix, prefix_items);
 
     if (my_counter !== current_search_counter) {
       // there is a newer search; don't update using this one
       return false;
     }
 
-    return prefix_users;
+    return prefix_items;
   }
 
-  function addUser(event) {
+  function addItem(event) {
     event.preventDefault();
-    user_chips.push(event.detail);
-    users.push(event.detail.username);
+    item_chips.push(event.detail);
+    items.push(itemToText(event.detail));
     value = '';
   }
 
-  function removeUser(event) {
+  function removeItem(event) {
     event.preventDefault();
-    const udel = event.detail.chipId.username;
-    user_chips = user_chips.filter((u) => u.username !== udel);
-    users = users.filter((u) => u !== udel);
+    const idel = itemToText(event.detail.chipId);
+    item_chips = item_chips.filter((i) => itemToText(i) !== idel);
+    items = items.filter((i) => i !== idel);
     value = '';
   }
 </script>
@@ -80,21 +70,21 @@
 
 @import 'https://cdn.jsdelivr.net/npm/svelte-material-ui@8.0.3/bare.min.css';
 
-.user-chip-outer :global(.smui-text-field--standard),
-.user-chip-outer :global(.smui-text-field--standard)::before {
+.item-chip-outer :global(.smui-text-field--standard),
+.item-chip-outer :global(.smui-text-field--standard)::before {
   height: auto;
 }
 
-.user-chip-outer :global(.mdc-line-ripple::before),
-.user-chip-outer :global(.mdc-line-ripple::after) {
+.item-chip-outer :global(.mdc-line-ripple::before),
+.item-chip-outer :global(.mdc-line-ripple::after) {
   display: none;
 }
 
-.user-chip-outer :global(.smui-chip-input__autocomplete > div:focus) {
+.item-chip-outer :global(.smui-chip-input__autocomplete > div:focus) {
   outline: none;
 }
 
-.user-chip-outer:focus-within {
+.item-chip-outer:focus-within {
   /* copied from bootstrap form-control:focus */
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);
@@ -105,18 +95,18 @@
 
 </style>
 
-<div class="form-control user-chip-outer">
+<div class="form-control item-chip-outer">
   <ChipInput
-    bind:chips={user_chips}
+    bind:chips={item_chips}
     bind:value
-    key={(u) => u.username}
-    getChipLabel={(u) => u.username}
-    getChipText={(u) => u.username}
-    autocomplete$search={searchUsers}
-    autocomplete$getOptionLabel={(u) => u?.username}
+    key={itemToText}
+    getChipLabel={itemToText}
+    getChipText={itemToText}
+    autocomplete$search={searchItems}
+    autocomplete$getOptionLabel={itemToText}
     chipTrailingAction$aria-label="Remove element"
-    onSMUIChipInputSelect={addUser}
-    onSMUIChipRemoval={removeUser}
+    onSMUIChipInputSelect={addItem}
+    onSMUIChipRemoval={removeItem}
   >
     {#snippet loading()}
       <div class="spinner-border" role="status">
