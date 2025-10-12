@@ -4,7 +4,7 @@
 
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
-  import Search from './Search.svelte';
+  import SearchBar from './SearchBar.svelte';
   import SearchPageGuts from './SearchPageGuts.svelte';
 
   let {
@@ -97,7 +97,7 @@
   {/if}
 {/snippet}
 
-<Search {base_url} {query} message={search_msg} />
+<SearchBar {base_url} {query} message={search_msg} />
 
 <div class="my-1 p-3 bg-light rounded">
   <h1 class="m-0">

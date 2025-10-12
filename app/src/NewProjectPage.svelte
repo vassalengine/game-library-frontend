@@ -5,7 +5,7 @@
 
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
-  import Search from './Search.svelte';
+  import SearchBar from './SearchBar.svelte';
   import ErrorBox from './ErrorBox.svelte';
 
   let {
@@ -94,7 +94,7 @@
 
 <main class="container px-5 mb-5">
 
-<Search {base_url} />
+<SearchBar {base_url} />
 
 <div id="new_project_content">
 

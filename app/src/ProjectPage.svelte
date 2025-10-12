@@ -4,7 +4,7 @@
 
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
-  import Search from './Search.svelte';
+  import SearchBar from './SearchBar.svelte';
   import ErrorBox from './ErrorBox.svelte';
   import FlagDialog from './FlagDialog.svelte';
   import GameSection from './GameSection.svelte';
@@ -13,6 +13,7 @@
   import ReadmeSection from './ReadmeSection.svelte';
   import GallerySection from './GallerySection.svelte';
   import PlayersSection from './PlayersSection.svelte';
+
   let {
     current_version,
     news_link,
@@ -106,7 +107,7 @@
 
 <main class="container px-5 mb-5">
 
-<Search {base_url} />
+<SearchBar {base_url} />
 
 <div id="project_content">
   {#if proj_error}
