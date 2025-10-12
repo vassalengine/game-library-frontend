@@ -44,7 +44,7 @@
 
   let publishers_cache = null;
 
-  let publisher_auto = $state(textToPublisher(publisher));
+  let publisher_select = $state(textToPublisher(publisher));
 
   async function fetchPublishersContaining(s) {
     if (publishers_cache === null) {
@@ -169,8 +169,8 @@
       }
     }
 
-    if (publisher_auto) {
-      url.searchParams.set('publisher', publisherToText(publisher_auto));
+    if (publisher_select) {
+      url.searchParams.set('publisher', publisherToText(publisher_select));
     }
 
     for (const t of tags_select) {
@@ -223,7 +223,7 @@
     <div class="row">
       <div class="col">
         <label for="publisher_input" class="form-label">Publisher</label>
-        <Autocomplete fetcher={publishers_fetcher} itemToText={publisherToText} bind:value={publisher_auto} />
+        <Autocomplete fetcher={publishers_fetcher} itemToText={publisherToText} bind:value={publisher_select} />
       </div>
       <div class="col">
         <label for="year_input" class="form-label">Year</label>
