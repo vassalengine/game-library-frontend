@@ -44,7 +44,7 @@
 
   let publishers_cache = null;
 
-  let publisher_select = $state(textToPublisher(publisher));
+  let publisher_select = $state(publisher ? textToPublisher(publisher) : null);
 
   async function fetchPublishersContaining(s) {
     if (publishers_cache === null) {
