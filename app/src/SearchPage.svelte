@@ -5,6 +5,7 @@
   import Header from './Header.svelte';
   import Footer from './Footer.svelte';
   import SearchPageGuts from './SearchPageGuts.svelte';
+  import UserChipInput from './UserChipInput.svelte';
 
   let {
     current_version,
@@ -22,30 +23,26 @@
   let meta = $state(null);
   let projects = $state(null);
 
-  function unpackParams(params) {
-    const q = params.get('q');
-    const publisher = params.get('publisher');
-    const year = params.get('year');
-    const tags = params.getAll('tag');
-    const owners = params.getAll('owner');
-    const players = params.getAll('player');
+  // FIXME: title field is being used for full-text query
 
-    // default query sort is relevance, otherwise title
-    const sort_by = params.get('sort_by') ?? (!!q ? 'r' : 't');
-
-    return [sort_by, q, publisher, year, tags, owners, players];
-  }
- 
   const params = new URLSearchParams(window.location.search);
-  const [
-    sort_by,
-    query,
-    publisher,
-    year,
-    tags,
-    owners,
-    players
-  ] = unpackParams(params);
+
+  const q = params.get('q');
+  const publisher = params.get('publisher');
+  const year = params.get('year');
+  const players_min = params.get('players_min');
+  const players_max = params.get('players_max');
+  const length_min = params.get('length_min');
+  const length_max = params.get('length_max');
+  const tags = params.getAll('tag');
+  const owners = params.getAll('owner');
+  const players = params.getAll('player');
+
+  // default query sort is relevance, otherwise title
+  const sort_by = params.get('sort_by') ?? (!!q ? 'r' : 't');
+
+  let owners_select = $state([...owners]);
+  let players_select = $state([...players]);
 
   function loadProjects(url) {
      fetchJSON(url)
@@ -60,7 +57,7 @@
     const fdata = new FormData(event.target);
 
     const url = new URL(window.location);
-    url.search = "";
+    url.search = '';
 
     for (const [k, v] of fdata.entries()) {
       if (v !== '') {
@@ -68,10 +65,18 @@
       }
     }
 
-    window.location.assign(url);
-  } 
+    for (const u of owners_select) {
+      url.searchParams.append('owner', u);
+    }
 
-  if (window.location.search !== "") {
+    for (const u of players_select) {
+      url.searchParams.append('player', u);
+    }
+
+    window.location.assign(url);
+  }
+
+  if (window.location.search !== '') {
     loadProjects(makeRequestURL(gls_url, params, limit));
   }
 </script>
@@ -81,10 +86,10 @@
 </style>
 
 <svelte:head>
-  {#if query === null}
+  {#if q === null}
   <title>Module Library - Vassal</title>
   {:else}
-  <title>Search Results for {query} - Module Library - Vassal</title>
+  <title>Search Results for {q} - Module Library - Vassal</title>
   {/if}
 </svelte:head>
 
@@ -97,7 +102,7 @@
     <div class="row">
       <div class="col">
         <label for="title_input" class="form-label">Title</label>
-        <input id="title_input" class="form-control" type="text" name="q" value={query} />
+        <input id="title_input" class="form-control" type="text" name="q" value={q} />
       </div>
     </div>
     <div class="row">
@@ -112,26 +117,26 @@
     </div>
     <div class="row">
       <div class="col-6">
-        <label for="length_min_input" class="form-label">Length</label>
+        <label for="players_min_input" class="form-label">Number of players</label>
         <div class="row">
           <div class="col">
-            <input id="length_min_input" class="form-control" type="text" />
+            <input id="players_min_input" class="form-control" type="text" name="players_min" value={players_min}  />
           </div>
             to
           <div class="col">
-            <input id="length_max_input" class="form-control" type="text" />
+            <input id="players_max_input" class="form-control" type="text" name="players_max" value={players_max} />
           </div>
         </div>
       </div>
       <div class="col-6">
-        <label for="players_min_input" class="form-label">Number of players</label>
+        <label for="length_min_input" class="form-label">Length</label>
         <div class="row">
           <div class="col">
-            <input id="players_min_input" class="form-control" type="text" />
+            <input id="length_min_input" class="form-control" type="text" name="length_min" value={length_min} />
           </div>
             to
           <div class="col">
-            <input id="players_max_input" class="form-control" type="text" />
+            <input id="length_max_input" class="form-control" type="text" name="length_max" value={length_max} />
           </div>
         </div>
       </div>
@@ -145,20 +150,20 @@
     <div class="row">
       <div class="col">
         <label for="owners_input" class="form-label">Project owners</label>
-        <input id="owners_input" class="form-control" type="text" name="owner" />
+        <UserChipInput {ums_url} bind:users={owners_select} />
       </div>
     </div>
     <div class="row">
       <div class="col">
         <label for="players_input" class="form-label">Players</label>
-        <input id="players_input" class="form-control" type="text" name="player" />
+        <UserChipInput {ums_url} bind:users={players_select} />
       </div>
     </div>
     <button type="submit" aria-label="Search" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#magnifying-glass"></use></svg> Search</button>
   </form>
 </nav>
 
-<SearchPageGuts {base_url} {gls_url} {sort_by} relevance={!!query} {limit} {loadProjects} bind:error={error} bind:meta={meta} bind:projects={projects} /> 
+<SearchPageGuts {base_url} {gls_url} {sort_by} relevance={!!q} {limit} {loadProjects} bind:error={error} bind:meta={meta} bind:projects={projects} />
 </main>
 
 <div class="svg-sprites">
