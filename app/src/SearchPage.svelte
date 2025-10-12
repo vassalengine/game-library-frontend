@@ -6,7 +6,7 @@
   import Footer from './Footer.svelte';
   import SearchPageGuts from './SearchPageGuts.svelte';
   import ChipInput from './ChipInput.svelte';
-  import Autocomplete from './Autocomplete.svelte';
+  import AutocompleteInput from './AutocompleteInput.svelte';
 
   let {
     current_version,
@@ -220,7 +220,7 @@
     <div class="row">
       <div class="col">
         <label for="publisher_input" class="form-label">Publisher</label>
-        <Autocomplete fetcher={publishers_fetcher} itemToText={publisherToText} bind:value={publisher_select} />
+        <AutocompleteInput fetcher={publishers_fetcher} itemToText={publisherToText} bind:value={publisher_select} />
       </div>
       <div class="col">
         <label for="year_input" class="form-label">Year</label>
