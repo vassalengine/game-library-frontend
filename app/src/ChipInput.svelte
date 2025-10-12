@@ -60,9 +60,9 @@
 
   function removeItem(event) {
     event.preventDefault();
-    const idel = itemToText(event.detail.chipId);
-    item_chips = item_chips.filter((i) => itemToText(i) !== idel);
-    items = items.filter((i) => i !== idel);
+    const irem = itemToText(event.detail.chipId);
+    item_chips = item_chips.filter((i) => itemToText(i) !== irem);
+    items = items.filter((i) => i !== irem);
     value = '';
   }
 </script>
