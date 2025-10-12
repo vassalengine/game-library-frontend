@@ -47,7 +47,7 @@ function extractError(response) {
   try {
     return JSON.parse(response)?.error ?? response;
   }
-  catch (e) {
+  catch {
     // it's not JSON, just return it verbatim
     return response;
   }
@@ -60,7 +60,7 @@ async function extractFetchError(response) {
   try {
     response = await response.text();
   }
-  catch (e) {
+  catch {
     return "Failed to extract response text";
   }
 
