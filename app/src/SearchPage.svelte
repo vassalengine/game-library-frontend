@@ -23,7 +23,7 @@
   let meta = $state(null);
   let projects = $state(null);
 
-  // FIXME: title field is being used for full-text query
+  let users_cache = $state(new Map());
 
   const params = new URLSearchParams(window.location.search);
 
@@ -97,11 +97,15 @@
 
 <main class="container px-5 mb-5">
 
+<!-- TODO: players needs to support exact and inclusive matches -->
+<!-- TODO: restrict players, length to numbers -->
+<!-- TODO: add chip selection for tags -->
+
 <nav>
   <form action="" onformdata={cleanupSearch} onsubmit={submitSearch}>
     <div class="row">
       <div class="col">
-        <label for="title_input" class="form-label">Title</label>
+        <label for="title_input" class="form-label">Full-text search</label>
         <input id="title_input" class="form-control" type="text" name="q" value={q} />
       </div>
     </div>
@@ -150,13 +154,13 @@
     <div class="row">
       <div class="col">
         <label for="owners_input" class="form-label">Project owners</label>
-        <UserChipInput {ums_url} bind:users={owners_select} />
+        <UserChipInput {ums_url} bind:users={owners_select} bind:users_cache />
       </div>
     </div>
     <div class="row">
       <div class="col">
         <label for="players_input" class="form-label">Players</label>
-        <UserChipInput {ums_url} bind:users={players_select} />
+        <UserChipInput {ums_url} bind:users={players_select} bind:users_cache />
       </div>
     </div>
     <button type="submit" aria-label="Search" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#magnifying-glass"></use></svg> Search</button>

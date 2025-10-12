@@ -6,15 +6,12 @@
 
   let {
     ums_url,
+    users_cache = $bindable(),
     users = $bindable()
-  } = $props(); 
+  } = $props();
 
-  const request_cache = $state(new Map());
   let user_chips = $state(users.map((u) => ({ username: u })));
-
   let value = $state('');
-
-  let counter = 0;
 
   async function fetchUsersStartingWith(prefix) {
     const url = new URL(`${ums_url}/users`);
@@ -25,28 +22,38 @@
     return (await fetchJSON(url)).users;
   }
 
-  async function getUsersStartingWith(prefix) {
-    let prefix_users = request_cache.get(prefix);
-    if (prefix_users === undefined) {
-      prefix_users = await fetchUsersStartingWith(prefix);
-      request_cache.set(prefix, prefix_users);
-    }
-    return prefix_users;
-  }
+  let current_search_counter = 0;
+  let prev_call = Promise.resolve();
 
-  async function searchUsers(input) {
-    if (input === '') {
+  async function searchUsers(prefix) {
+    if (prefix === '') {
       return [];
     }
 
-// TODO: is this the right way to debounce?
-    const my_counter = ++counter;
+    // check the cache
+    let prefix_users = users_cache.get(prefix);
+    if (prefix_users !== undefined) {
+      return prefix_users;
+    }
 
-    const prefix_users = await getUsersStartingWith(input);
+    const my_counter = ++current_search_counter;
+    const interval = 200;
 
-//    await new Promise((resolve) => setTimeout(resolve, 20000));
+    // wait interval ms after the previous request
+    await prev_call;
+    prev_call = new Promise((resolve) => setTimeout(resolve, interval));
 
-    if (my_counter !== counter) {
+    if (my_counter !== current_search_counter) {
+      // there is a newer search; don't update using this one
+      return false;
+    }
+
+    // do the search
+    prefix_users = await fetchUsersStartingWith(prefix);
+    users_cache.set(prefix, prefix_users);
+
+    if (my_counter !== current_search_counter) {
+      // there is a newer search; don't update using this one
       return false;
     }
 
@@ -67,21 +74,24 @@
     users = users.filter((u) => u !== udel);
     value = '';
   }
-
 </script>
 
 <style>
 
 @import 'https://cdn.jsdelivr.net/npm/svelte-material-ui@8.0.3/bare.min.css';
 
-:global(.smui-text-field--standard),
-:global(.smui-text-field--standard)::before {
+.user-chip-outer :global(.smui-text-field--standard),
+.user-chip-outer :global(.smui-text-field--standard)::before {
   height: auto;
 }
 
-:global(.mdc-line-ripple::before),
-:global(.mdc-line-ripple::after) {
+.user-chip-outer :global(.mdc-line-ripple::before),
+.user-chip-outer :global(.mdc-line-ripple::after) {
   display: none;
+}
+
+.user-chip-outer :global(.smui-chip-input__autocomplete > div:focus) {
+  outline: none;
 }
 
 .user-chip-outer:focus-within {
@@ -92,32 +102,31 @@
   outline: 0;
   box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
 }
+
 </style>
 
 <div class="form-control user-chip-outer">
-
-<ChipInput
-  bind:chips={user_chips}
-  bind:value
-  key={(u) => u.username}
-  getChipLabel={(u) => u.username}
-  getChipText={(u) => u.username}
-  autocomplete$search={searchUsers}
-  autocomplete$getOptionLabel={(u) => u?.username}
-  chipTrailingAction$aria-label="Remove element"
-  onSMUIChipInputSelect={addUser}
-  onSMUIChipRemoval={removeUser}
->
-  {#snippet loading()}
-    <div class="spinner-border" role="status">
-<!--      <span class="sr-only">Loading...</span> -->
-    </div>
-  {/snippet}
-  {#snippet chipTrailingAction()}
-    <svg class="svg-icon"><use xlink:href="#circle-xmark"></use></svg>
-  {/snippet}
-</ChipInput>
-
+  <ChipInput
+    bind:chips={user_chips}
+    bind:value
+    key={(u) => u.username}
+    getChipLabel={(u) => u.username}
+    getChipText={(u) => u.username}
+    autocomplete$search={searchUsers}
+    autocomplete$getOptionLabel={(u) => u?.username}
+    chipTrailingAction$aria-label="Remove element"
+    onSMUIChipInputSelect={addUser}
+    onSMUIChipRemoval={removeUser}
+  >
+    {#snippet loading()}
+      <div class="spinner-border" role="status">
+  <!--      <span class="sr-only">Loading...</span> -->
+      </div>
+    {/snippet}
+    {#snippet chipTrailingAction()}
+      <svg class="svg-icon"><use xlink:href="#circle-xmark"></use></svg>
+    {/snippet}
+  </ChipInput>
 </div>
 
 <!-- TODO: Move this somewhere so it doesn't get included more than once -->
