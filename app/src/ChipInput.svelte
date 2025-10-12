@@ -5,8 +5,9 @@
     fetchItemsFor,
     itemToText,
     textToItem,
+    getCache,
+    putCache,
     items = $bindable(),
-    items_cache = $bindable()
   } = $props();
 
   let item_chips = $state(items.map(textToItem));
@@ -15,15 +16,15 @@
   let current_search_counter = 0;
   let prev_call = Promise.resolve();
 
-  async function searchItems(prefix) {
-    if (prefix === '') {
+  async function searchItems(key) {
+    if (key === '') {
       return [];
     }
 
     // check the cache
-    let prefix_items = items_cache.get(prefix);
-    if (prefix_items !== undefined) {
-      return prefix_items;
+    let search_items = getCache(key);
+    if (search_items !== undefined) {
+      return search_items;
     }
 
     const my_counter = ++current_search_counter;
@@ -39,15 +40,15 @@
     }
 
     // do the search
-    prefix_items = await fetchItemsFor(prefix);
-    items_cache.set(prefix, prefix_items);
+    search_items = await fetchItemsFor(key);
+    putCache(key, search_items);
 
     if (my_counter !== current_search_counter) {
       // there is a newer search; don't update using this one
       return false;
     }
 
-    return prefix_items;
+    return search_items;
   }
 
   function addItem(event) {

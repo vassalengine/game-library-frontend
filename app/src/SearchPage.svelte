@@ -23,8 +23,6 @@
   let meta = $state(null);
   let projects = $state(null);
 
-  let users_cache = $state(new Map());
-
   const params = new URLSearchParams(window.location.search);
 
   const q = params.get('q');
@@ -40,6 +38,10 @@
 
   // default query sort is relevance, otherwise title
   const sort_by = params.get('sort_by') ?? (!!q ? 'r' : 't');
+
+  // owners, players chip inputs
+
+  const users_cache = new Map();
 
   let owners_select = $state([...owners]);
   let players_select = $state([...players]);
@@ -61,6 +63,39 @@
     return { username: u };
   }
 
+  // tags chip input
+
+  let tags_cache = null;
+
+  let tags_select = $state([...tags]);
+
+  async function fetchTagsContaining(s) {
+    if (tags_cache === null) {
+      const url = new URL(`${gls_url}/tags`);
+      const result = (await fetchJSON(url)).tags;
+
+      tags_cache = result
+        .map(textToTag)
+        .sort((a, b) => a.key.localeCompare(b.key));
+    }
+
+    if (!s) {
+      return [];
+    }
+
+    s = s.toLowerCase();
+    // FIXME: slow
+    return tags_cache.filter((t) => t.key.includes(s));
+  }
+
+  function tagToText(t) {
+    return t?.tag;
+  }
+
+  function textToTag(t) {
+    return { key: t.toLowerCase(), tag: t };
+  }
+
   function loadProjects(url) {
      fetchJSON(url)
       .then((result) => ({ projects, meta } = result))
@@ -80,6 +115,10 @@
       if (v !== '') {
         url.searchParams.set(k, v);
       }
+    }
+
+    for (const t of tags_select) {
+      url.searchParams.append('tag', t);
     }
 
     for (const u of owners_select) {
@@ -165,19 +204,19 @@
     <div class="row">
       <div class="col">
         <label for="tags_input" class="form-label">Tags</label>
-        <input id="tags_input" class="form-control" type="text" name="tag" />
+        <ChipInput fetchItemsFor={fetchTagsContaining} itemToText={tagToText} textToItem={textToTag}  getCache={(k) => undefined} putCache={(k, v) => {}} bind:items={tags_select} />
       </div>
     </div>
     <div class="row">
       <div class="col">
         <label for="owners_input" class="form-label">Project owners</label>
-        <ChipInput fetchItemsFor={fetchUsersStartingWith} itemToText={userToText} textToItem={textToUser} bind:items={owners_select} bind:items_cache={users_cache} />
+        <ChipInput fetchItemsFor={fetchUsersStartingWith} itemToText={userToText} textToItem={textToUser} getCache={(k) => users_cache.get(k)} putCache={(k, v) => users_cache.set(k, v)} bind:items={owners_select} />
       </div>
     </div>
     <div class="row">
       <div class="col">
         <label for="players_input" class="form-label">Players</label>
-        <ChipInput fetchItemsFor={fetchUsersStartingWith} itemToText={userToText} textToItem={textToUser} bind:items={players_select} bind:items_cache={users_cache} />
+        <ChipInput fetchItemsFor={fetchUsersStartingWith} itemToText={userToText} textToItem={textToUser} getCache={(k) => users_cache.get(k)} putCache={(k, v) => users_cache.set(k, v)} bind:items={players_select} />
       </div>
     </div>
     <button type="submit" aria-label="Search" class="btn btn-primary"><svg class="svg-icon"><use xlink:href="#magnifying-glass"></use></svg> Search</button>
