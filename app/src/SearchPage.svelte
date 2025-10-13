@@ -151,6 +151,28 @@
       .catch((err) => error = err);
   }
 
+  function fixupData(event) {
+    cleanupSearch(event);
+
+    const fdata = event.formData;
+
+    if (publisher_select) {
+      fdata.set('publisher', publisherToText(publisher_select));
+    }
+
+    for (const t of tags_select) {
+      fdata.append('tag', tagToText(t));
+    }
+
+    for (const u of owners_select) {
+      fdata.append('owner', userToText(u));
+    }
+
+    for (const u of players_select) {
+      fdata.append('player', userToText(u));
+    }
+  }
+
   function submitSearch(event) {
     event.preventDefault();
     event.stopPropagation();
@@ -164,22 +186,6 @@
       if (v !== '') {
         url.searchParams.set(k, v);
       }
-    }
-
-    if (publisher_select) {
-      url.searchParams.set('publisher', publisherToText(publisher_select));
-    }
-
-    for (const t of tags_select) {
-      url.searchParams.append('tag', tagToText(t));
-    }
-
-    for (const u of owners_select) {
-      url.searchParams.append('owner', userToText(u));
-    }
-
-    for (const u of players_select) {
-      url.searchParams.append('player', userToText(u));
     }
 
     window.location.assign(url);
@@ -210,7 +216,7 @@
 <!-- TODO: restrict players, length to numbers -->
 
 <nav>
-  <form action="" onformdata={cleanupSearch} onsubmit={submitSearch}>
+  <form action="" onformdata={fixupData} onsubmit={submitSearch}>
     <div class="row">
       <div class="col">
         <label for="title_input" class="form-label">Full-text search</label>
