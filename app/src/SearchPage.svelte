@@ -266,6 +266,16 @@
           </div>
         </div>
       </div>
+      <div class="col-6 d-flex flex-column justify-content-end">
+        <div>
+          <input id="players_range_radio_inclusive" class="form-check-input" type="radio" name="players_range" value="inclusive" bind:group={players_range_type} />
+          <label class="form-check-label" for="players_range_radio_inclusive">Inclusive</label>
+        </div>
+        <div>
+          <input id="players_range_radio_exact" class="form-check-input" type="radio" name="players_range" value="exact" bind:group={players_range_type} />
+          <label class="form-check-label" for="players_range_radio_exact">Exact</label>
+        </div>
+      </div>
     </div>
     <div class="row">
       <div class="col-6">
