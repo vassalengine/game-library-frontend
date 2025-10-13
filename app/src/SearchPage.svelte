@@ -256,19 +256,19 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-6 mb-3">
+      <div class="col-4 mb-3">
         <label for="players_min_input" class="form-label">Number of players</label>
         <div class="row">
-          <div class="col">
+          <div class="col-5">
             <input id="players_min_input" class="form-control" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="1" name="players_min" value={players_min}  />
           </div>
-            to
-          <div class="col">
+          <div class="col-2 align-self-center">to</div>
+          <div class="col-5">
             <input id="players_max_input" class="form-control" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="1" name="players_max" value={players_max} />
           </div>
         </div>
       </div>
-      <div class="col-6 mb-3 d-flex flex-column justify-content-end">
+      <div class="col-2 mb-3 d-flex flex-column justify-content-end">
         <div>
           <input id="players_range_radio_inclusive" class="form-check-input" type="radio" name="players_range" value="inclusive" bind:group={players_range_type} />
           <label class="form-check-label" for="players_range_radio_inclusive">Inclusive</label>
@@ -278,16 +278,14 @@
           <label class="form-check-label" for="players_range_radio_exact">Exact</label>
         </div>
       </div>
-    </div>
-    <div class="row">
-      <div class="col-6 mb-3">
+      <div class="col-4 mb-3">
         <label for="length_min_input" class="form-label">Length</label>
         <div class="row">
-          <div class="col">
+          <div class="col-5">
             <input id="length_min_input" class="form-control" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="1" name="length_min" value={length_min} />
           </div>
-            to
-          <div class="col">
+          <div class="col-2 align-self-center">to</div>
+          <div class="col-5">
             <input id="length_max_input" class="form-control" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="1" name="length_max" value={length_max} />
           </div>
         </div>
