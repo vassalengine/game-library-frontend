@@ -177,6 +177,16 @@
       fdata.append('player', userToText(u));
     }
 
+    if (fdata.get('players_min') === "0") {
+      // don't send vacuous lower bounds
+      fdata.delete('players_min');
+    }
+
+    if (fdata.get('length_min') === "0") {
+      // don't send vacuous lower bounds
+      fdata.delete('length_min');
+    }
+
     if (!fdata.get('players_min') && !fdata.get('players_max')) {
       // don't set players range type if there is no range
       fdata.delete('players_range');
@@ -248,11 +258,11 @@
         <label for="players_min_input" class="form-label">Number of players</label>
         <div class="row">
           <div class="col">
-            <input id="players_min_input" class="form-control" type="text" name="players_min" value={players_min}  />
+            <input id="players_min_input" class="form-control" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="1" name="players_min" value={players_min}  />
           </div>
             to
           <div class="col">
-            <input id="players_max_input" class="form-control" type="text" name="players_max" value={players_max} />
+            <input id="players_max_input" class="form-control" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="1" name="players_max" value={players_max} />
           </div>
         </div>
       </div>
@@ -262,11 +272,11 @@
         <label for="length_min_input" class="form-label">Length</label>
         <div class="row">
           <div class="col">
-            <input id="length_min_input" class="form-control" type="text" name="length_min" value={length_min} />
+            <input id="length_min_input" class="form-control" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="1" name="length_min" value={length_min} />
           </div>
             to
           <div class="col">
-            <input id="length_max_input" class="form-control" type="text" name="length_max" value={length_max} />
+            <input id="length_max_input" class="form-control" type="number" min="0" max={Number.MAX_SAFE_INTEGER} step="1" name="length_max" value={length_max} />
           </div>
         </div>
       </div>
