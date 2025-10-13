@@ -9,6 +9,7 @@ use axum::{
 };
 use bytes::{Buf, Bytes};
 use futures::future;
+use http::header::{CACHE_CONTROL, HeaderValue};
 use mime::APPLICATION_JSON;
 use reqwest::{
     Client,
@@ -30,6 +31,7 @@ use tower::ServiceBuilder;
 use tower_http::{
     compression::CompressionLayer,
     services::{ServeDir, ServeFile},
+    set_header::SetResponseHeaderLayer,
     timeout::TimeoutLayer,
     trace::{DefaultOnFailure, DefaultOnResponse, MakeSpan, TraceLayer}
 };
@@ -140,6 +142,15 @@ fn routes(base_path: &str, log_headers: bool) -> Router<Arc<AppState>> {
         .route_service(
             &format!("{base_path}/admin/flags"),
             ServeFile::new(format!("{DIST_DIR}/flags.html"))
+        )
+        .nest_service(
+            &format!("{base_path}/assets/"),
+            ServiceBuilder::new()
+                .layer(SetResponseHeaderLayer::overriding(
+                    CACHE_CONTROL,
+                    HeaderValue::from_static("public, max-age=31536000, immutable")
+                ))
+                .service(ServeDir::new(format!("{DIST_DIR}/assets")))
         )
         .nest_service(
             &format!("{base_path}/"),

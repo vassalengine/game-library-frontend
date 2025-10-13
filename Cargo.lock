@@ -513,6 +513,7 @@ dependencies = [
  "axum",
  "bytes",
  "futures",
+ "http",
  "mime",
  "reqwest",
  "serde",
