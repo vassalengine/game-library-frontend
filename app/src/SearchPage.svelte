@@ -218,6 +218,11 @@
 
 <style>
 
+.advanced_search {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
 </style>
 
 <svelte:head>
@@ -232,10 +237,7 @@
 
 <main class="container px-5 mb-5">
 
-<!-- TODO: players needs to support exact and inclusive matches -->
-<!-- TODO: restrict players, length to numbers -->
-
-<nav>
+<nav class="advanced_search">
   <form action="" onformdata={fixupData} onsubmit={submitSearch}>
     <div class="row">
       <div class="col">
