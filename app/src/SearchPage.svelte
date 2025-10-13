@@ -36,9 +36,14 @@
   const tags = params.getAll('tag');
   const owners = params.getAll('owner');
   const players = params.getAll('player');
+  const players_range = params.get('players_range');
 
   // default query sort is relevance, otherwise title
   const sort_by = params.get('sort_by') ?? (!!q ? 'r' : 't');
+
+  let players_range_type = $state(
+    players_range === 'exact' ? 'exact' : 'inclusive'
+  );
 
   // publishers input
 
@@ -170,6 +175,11 @@
 
     for (const u of players_select) {
       fdata.append('player', userToText(u));
+    }
+
+    if (!fdata.get('players_min') && !fdata.get('players_max')) {
+      // don't set players range type if there is no range
+      fdata.delete('players_range');
     }
   }
 
