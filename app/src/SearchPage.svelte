@@ -240,23 +240,23 @@
 <nav class="advanced_search">
   <form action="" onformdata={fixupData} onsubmit={submitSearch}>
     <div class="row">
-      <div class="col">
+      <div class="col mb-3">
         <label for="title_input" class="form-label">Full-text search</label>
         <input id="title_input" class="form-control" type="text" name="q" value={q} />
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col mb-3">
         <label for="publisher_input" class="form-label">Publisher</label>
         <AutocompleteInput fetcher={publishers_fetcher} itemToText={publisherToText} bind:value={publisher_select} />
       </div>
-      <div class="col">
+      <div class="col mb-3">
         <label for="year_input" class="form-label">Year</label>
         <input id="year_input" class="form-control" type="text" name="year" value={year} />
       </div>
     </div>
     <div class="row">
-      <div class="col-6">
+      <div class="col-6 mb-3">
         <label for="players_min_input" class="form-label">Number of players</label>
         <div class="row">
           <div class="col">
@@ -268,7 +268,7 @@
           </div>
         </div>
       </div>
-      <div class="col-6 d-flex flex-column justify-content-end">
+      <div class="col-6 mb-3 d-flex flex-column justify-content-end">
         <div>
           <input id="players_range_radio_inclusive" class="form-check-input" type="radio" name="players_range" value="inclusive" bind:group={players_range_type} />
           <label class="form-check-label" for="players_range_radio_inclusive">Inclusive</label>
@@ -280,7 +280,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-6">
+      <div class="col-6 mb-3">
         <label for="length_min_input" class="form-label">Length</label>
         <div class="row">
           <div class="col">
@@ -294,19 +294,19 @@
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col mb-3">
         <label for="tags_input" class="form-label">Tags</label>
         <ChipInput fetcher={tags_fetcher} itemToText={tagToText} bind:items={tags_select} />
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col mb-3">
         <label for="owners_input" class="form-label">Project owners</label>
         <ChipInput fetcher={users_fetcher} itemToText={userToText} bind:items={owners_select} />
       </div>
     </div>
     <div class="row">
-      <div class="col">
+      <div class="col mb-3">
         <label for="players_input" class="form-label">Players</label>
         <ChipInput fetcher={users_fetcher} itemToText={userToText} bind:items={players_select} />
       </div>
