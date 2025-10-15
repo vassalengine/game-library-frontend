@@ -27,7 +27,7 @@
 
   function startEditPackage(event) {
     editPackage = true;
-    editing = false;
+    editing = true;
   }
 
   function cancelEditPackage(event) {
