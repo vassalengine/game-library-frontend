@@ -42,7 +42,10 @@
   const players_min = players_inc.length > 0 ? Math.min(...players_inc) : params.get('players_min');
   const players_max = players_inc.length > 1 ? Math.max(...players_inc) : params.get('players_max');
 
-  let players_range = $state(players_inc.length > 0 ? 'inclusive' : 'exact');
+  let players_range = $state(
+    params.has('players_max') || params.has('players_min') ? 'exact' :
+    'inclusive'
+  );
 
   // publishers input
 
