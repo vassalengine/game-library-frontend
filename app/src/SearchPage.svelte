@@ -29,21 +29,20 @@
   const q = params.get('q');
   const publisher = params.get('publisher');
   const year = params.get('year');
-  const players_min = params.get('players_min');
-  const players_max = params.get('players_max');
   const length_min = params.get('length_min');
   const length_max = params.get('length_max');
   const tags = params.getAll('tag');
   const owners = params.getAll('owner');
   const players = params.getAll('player');
-  const players_range = params.get('players_range');
 
   // default query sort is relevance, otherwise title
   const sort_by = params.get('sort_by') ?? (!!q ? 'r' : 't');
 
-  let players_range_type = $state(
-    players_range === 'exact' ? 'exact' : 'inclusive'
-  );
+  const players_inc = params.getAll('players_inc');
+  const players_min = players_inc.length > 0 ? Math.min(...players_inc) : params.get('players_min');
+  const players_max = players_inc.length > 1 ? Math.max(...players_inc) : params.get('players_max');
+
+  let players_range = $state(players_inc.length > 0 ? 'inclusive' : 'exact');
 
   // publishers input
 
@@ -187,10 +186,22 @@
       fdata.delete('length_min');
     }
 
-    if (!fdata.get('players_min') && !fdata.get('players_max')) {
-      // don't set players range type if there is no range
-      fdata.delete('players_range');
+    if (fdata.get('players_range') === 'inclusive') {
+      // inclusive players range uses players_inc for both bounds
+      const pmin = fdata.get('players_min');
+      if (pmin) {
+        fdata.append('players_inc', pmin);
+        fdata.delete('players_min');
+      }
+
+      const pmax = fdata.get('players_max');
+      if (pmax) {
+        fdata.append('players_inc', pmax);
+        fdata.delete('players_max');
+      }
     }
+
+    fdata.delete('players_range');
   }
 
   function submitSearch(event) {
@@ -204,7 +215,7 @@
 
     for (const [k, v] of fdata.entries()) {
       if (v !== '') {
-        url.searchParams.set(k, v);
+        url.searchParams.append(k, v);
       }
     }
 
@@ -270,11 +281,11 @@
       </div>
       <div class="col-2 mb-3 d-flex flex-column justify-content-end">
         <div>
-          <input id="players_range_radio_inclusive" class="form-check-input" type="radio" name="players_range" value="inclusive" bind:group={players_range_type} />
+          <input id="players_range_radio_inclusive" class="form-check-input" type="radio" name="players_range" value="inclusive" bind:group={players_range} />
           <label class="form-check-label" for="players_range_radio_inclusive">Inclusive</label>
         </div>
         <div>
-          <input id="players_range_radio_exact" class="form-check-input" type="radio" name="players_range" value="exact" bind:group={players_range_type} />
+          <input id="players_range_radio_exact" class="form-check-input" type="radio" name="players_range" value="exact" bind:group={players_range} />
           <label class="form-check-label" for="players_range_radio_exact">Exact</label>
         </div>
       </div>
