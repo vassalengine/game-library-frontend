@@ -24,12 +24,11 @@
   }
 
   function addImage(file) {
-    const filename = file.name;
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (e) => {
       gallery_edit.push({
-        filename: filename,
+        filename: file.name,
         description: "",
         data: e.target.result,
         file: file
