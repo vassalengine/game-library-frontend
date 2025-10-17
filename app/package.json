@@ -10,6 +10,7 @@
     "test": "vitest run"
   },
   "devDependencies": {
+    "@jhubbardsf/svelte-sortablejs": "^1.1.0",
     "@smui-extra/autocomplete": "^8.0.3",
     "@smui-extra/chip-input": "^8.0.3",
     "@sveltejs/vite-plugin-svelte": "^6",

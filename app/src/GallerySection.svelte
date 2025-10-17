@@ -1,8 +1,9 @@
 <script>
   import markdownIt from 'https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/+esm';
-  import DOMPurify from 'https://cdn.jsdelivr.net/npm/dompurify@3.2.6/+esm';
 
   import ErrorBox from './ErrorBox.svelte';
+  import GalleryItem from './GalleryItem.svelte';
+  import GalleryEditor from './GalleryEditor.svelte';
 
   let {
     proj,
@@ -10,6 +11,10 @@
     username,
     editing = $bindable()
   } = $props();
+
+  function user_is_owner() {
+     return username && proj.owners.includes(username);
+  }
 
   function mdInit() {
     const defaults = {
@@ -33,7 +38,7 @@
   // edit mode
   //
 
-  let edit = false;
+  let edit = $state(false);
   let error = $state(null);
 
   function startEdit(event) {
@@ -47,26 +52,47 @@
     error = null;
   }
 
+  function submitEdit(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const fdata = new FormData(event.target);
+
+    const filenames = fdata.getAll('filename');
+    const descriptions = fdata.getAll('description');
+    const files = fdata.getAll('file');
+
+    const imgs = [];
+    for (let i = 0; i < filenames.length; ++i) {
+      imgs[i] = {
+        filename: filenames[i],
+        description: descriptions[i],
+        file: files[i]
+      };
+    }
+
+    console.log(imgs);
+
+    edit = false;
+    editing = false;
+  }
+
 </script>
-
-<style>
-
-figure:hover img {
-  transition: filter 0.15s ease-in-out;
-  filter: brightness(0.75);
-}
-
-</style>
 
 {#if error}
 <ErrorBox {error} />
 {/if}
+<button class="edit_button fs-2" class:is_editable={!editing && user_is_owner()} type="button" aria-label="Edit" onclick={startEdit}>
+  <svg class="svg-icon edit_icon"><use xlink:href="#pencil"></use></svg>
+</button>
+
+{#if edit}
+<GalleryEditor gallery={proj.gallery} {client} {md} {submitEdit} {cancelEdit} />
+{:else}
 <div class="d-flex flex-wrap align-items-center justify-content-evenly">
 {#each proj.gallery as img}
   {@const src = client.imageUrl(img.filename)}
-  <figure class="figure col-lg-3 col-md-4 col-6 px-1">
-    <a href="{src}"><img class="figure-img img-fluid img-thumbnail" src="{src}" alt=""></a>
-    <figcaption class="figure-caption text-center">{@html DOMPurify.sanitize(md.renderInline(img.description))}</figcaption>
-  </figure>
+  <GalleryItem {img} {src} {md} />
 {/each}
 </div>
+{/if}
