@@ -11,6 +11,7 @@
     cancelEdit
   } = $props();
 
+  // gallery items must be keyed so the each loop can identify them
   let gallery_edit = $state(gallery.map((g, i) => ({ ...g, id: i })));
   let max_id = gallery.length - 1;
 
