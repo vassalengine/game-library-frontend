@@ -67,11 +67,12 @@
       imgs[i] = {
         filename: filenames[i],
         description: descriptions[i],
-        file: files[i]
       };
-    }
 
-    console.log(imgs);
+      if (files[i].name !== '') {
+        imgs[i].files = files[i];
+      }
+    }
 
     edit = false;
     editing = false;
