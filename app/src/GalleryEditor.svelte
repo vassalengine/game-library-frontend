@@ -11,7 +11,8 @@
     cancelEdit
   } = $props();
 
-  let gallery_edit = $state(gallery);
+  let gallery_edit = $state(gallery.map((g, i) => ({ ...g, id: i })));
+  let max_id = gallery.length - 1;
 
   function is_single_image(files) {
     return files.length == 1 && files[0].type.startsWith('image/');
@@ -28,12 +29,24 @@
     reader.readAsDataURL(file);
     reader.onload = (e) => {
       gallery_edit.push({
+        id: ++max_id,
         filename: file.name,
         description: "",
         data: e.target.result,
         file: file
       });
     };
+  }
+
+  function deleteItem(event) {
+    // items have their id stashed in a hidden input
+    const del_el = event.target
+      .closest("figure")
+      .querySelector("input[name='id']")
+
+    const del_id = parseInt(del_el.value);
+    const del_idx = gallery_edit.findIndex((g) => g.id === del_id);
+    gallery_edit.splice(del_idx, 1);
   }
 
 </script>
@@ -81,9 +94,9 @@ figure:hover #new_image_label {
 
 <form action="" onsubmit={submitEdit}>
   <SortableList id="image_list" class="d-flex flex-wrap align-items-center justify-content-evenly" animation={150} draggable=".draggable">
-  {#each gallery_edit as img}
+  {#each gallery_edit as img (img.id)}
     {@const src = img?.data ?? client.imageUrl(img.filename)}
-    <GalleryEditorItem {img} {src} />
+    <GalleryEditorItem {img} {src} {deleteItem} />
   {/each}
     <figure id="new_image_figure" class="figure col-lg-3 col-md-4 col-6 px-1">
       <label id="new_image_label" for="new_image_input" class="figure-img img-fluid img-thumbnail">
