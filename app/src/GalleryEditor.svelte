@@ -11,9 +11,8 @@
     cancelEdit
   } = $props();
 
-  // gallery items must be keyed so the each loop can identify them
-  let gallery_edit = $state(gallery.map((g, i) => ({ ...g, id: i })));
-  let max_id = gallery.length - 1;
+  let gallery_edit = $state([...gallery]);
+  let new_id = 0;
 
   function is_single_image(files) {
     return files.length == 1 && files[0].type.startsWith('image/');
@@ -30,7 +29,7 @@
     reader.readAsDataURL(file);
     reader.onload = (e) => {
       gallery_edit.push({
-        id: ++max_id,
+        id: --new_id,
         filename: file.name,
         description: "",
         data: e.target.result,
