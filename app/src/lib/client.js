@@ -374,6 +374,18 @@ class Client {
     return `${this.gls_api}/projects/${this.project}/images/${enc_filename}`;
   }
 
+  async updateGallery(data) {
+    await this.refreshTokenIfExpired();
+    return this.fetchOk(
+      `${this.gls_api}/projects/${this.project}/gallery`,
+      {
+        method: 'PATCH',
+        headers: this.authJSONHeaders(),
+        body: JSON.stringify(data)
+      }
+    );
+  }
+
   async addFlag(flag, message) {
     await this.refreshTokenIfExpired();
     return this.fetchOk(
