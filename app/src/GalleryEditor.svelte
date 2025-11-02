@@ -12,7 +12,7 @@
     submitImage
   } = $props();
 
-  let gallery_edit = $state([...proj.gallery]);
+  let gallery_edit = $derived([...proj.gallery]);
 
   function deleteItem(event) {
     // items have their id stashed in a hidden input
