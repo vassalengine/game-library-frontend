@@ -182,7 +182,6 @@
     return files.length == 1 && files[0].type.startsWith('image/');
   }
 
-
   async function submitImage(event) {
     if (!is_single_image(event.target.files)) {
       return;
@@ -200,7 +199,7 @@
         }
       };
 
-      const [_, promise] = await client.addImage(
+      const [_, promise] = await client.addGalleryImage(
         file.name,
         file,
         file.type,

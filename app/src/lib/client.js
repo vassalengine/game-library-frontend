@@ -374,6 +374,17 @@ class Client {
     return `${this.gls_api}/projects/${this.project}/images/${enc_filename}`;
   }
 
+  async addGalleryImage(imgname, file, type, callbacks={}) {
+    await this.refreshTokenIfExpired();
+    return doUpload(
+      file,
+      type,
+      `${this.gls_api}/projects/${this.project}/gallery/${imgname}`,
+      this.token,
+      callbacks
+    );
+  }
+
   async updateGallery(data) {
     await this.refreshTokenIfExpired();
     return this.fetchOk(
