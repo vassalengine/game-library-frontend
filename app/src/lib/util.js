@@ -16,7 +16,8 @@ export function setCookie(name, value, attributes = {}) {
 
   let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
 
-  for (const attributeKey of attributes) {
+  // NB: this is supposed to be 'in': attributes is not iterable with 'of'
+  for (const attributeKey in attributes) {
     updatedCookie += "; " + attributeKey;
     let attributeValue = attributes[attributeKey];
     if (attributeValue !== true) {
