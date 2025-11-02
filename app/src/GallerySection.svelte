@@ -150,9 +150,6 @@
       updated.push({ op: 'delete', id: id });
     }
 
-    console.log(updated);
-
-/*
     // update the gallery
     try {
       await client.updateGallery(updated);
@@ -172,7 +169,6 @@
       error = err;
       return;
     }
-*/
 
     edit = false;
     editing = false;
