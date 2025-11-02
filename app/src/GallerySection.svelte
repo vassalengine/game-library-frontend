@@ -150,6 +150,12 @@
       updated.push({ op: 'delete', id: parseInt(id) });
     }
 
+    if (updated.length == 0) {
+      edit = false;
+      editing = false;
+      return;
+    }
+
     // update the gallery
     try {
       await client.updateGallery({ ops: updated });
