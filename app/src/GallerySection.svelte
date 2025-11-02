@@ -152,7 +152,7 @@
 
     // update the gallery
     try {
-      await client.updateGallery(updated);
+      await client.updateGallery({ ops: updated });
       error = null;
     }
     catch (err) {
