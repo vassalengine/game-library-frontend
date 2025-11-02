@@ -23,6 +23,8 @@
     const del_id = parseInt(del_el.value);
     const del_idx = gallery_edit.findIndex((g) => g.id === del_id);
     gallery_edit.splice(del_idx, 1);
+    // reassigning forces an update
+    gallery_edit = [...gallery_edit];
   }
 
 </script>
