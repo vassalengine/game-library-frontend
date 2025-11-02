@@ -71,7 +71,8 @@ figure:hover #new_image_label {
 <form action="" onsubmit={submitEdit}>
   <SortableList id="image_list" class="d-flex flex-wrap align-items-center justify-content-evenly" animation={150} draggable=".draggable">
   {#each gallery_edit as img (img.id)}
-    <GalleryEditorItem {img} src={client.imageUrl(img.filename)} {deleteItem} />
+    {@const src = client.imageUrl(img.filename)}
+    <GalleryEditorItem {img} {src} {deleteItem} />
   {/each}
     <figure id="new_image_figure" class="figure col-lg-3 col-md-4 col-6 px-1">
       <label id="new_image_label" for="new_image_input" class="figure-img img-fluid img-thumbnail">
