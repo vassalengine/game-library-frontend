@@ -13,62 +13,6 @@
   } = $props();
 
   let gallery_edit = $state([...proj.gallery]);
-  let new_id = 0;
-
-  async function addImage(event) {
-    if (!is_single_image(event.target.files)) {
-      return;
-    }
-
-    const file = event.target.files[0];
-
-    try {
-      const [_, promise] = await client.addImage(
-        file.name,
-        file,
-        file.type
-      );
-
-      const result = await promise;
-      error = null;
-
-      switch (result) {
-        case Client.UPLOAD_OK:
-          break;
-        case Client.UPLOAD_ABORTED:
-          return;
-      }
-    }
-    catch (err) {
-      error = err;
-      return;
-    }
-
-    // update the project data
-    try {
-      proj = await client.getProject();
-      error = null;
-    }
-    catch (err) {
-      error = err;
-      return;
-    }
-
-/*
-    const reader = new FileReader();
-
-    reader.readAsDataURL(file);
-    reader.onload = (e) => {
-      gallery_edit.push({
-        id: --new_id,
-        filename: file.name,
-        description: "",
-        data: e.target.result,
-        file: file
-      });
-    };
-*/
-  }
 
   function deleteItem(event) {
     // items have their id stashed in a hidden input
@@ -127,8 +71,7 @@ figure:hover #new_image_label {
 <form action="" onsubmit={submitEdit}>
   <SortableList id="image_list" class="d-flex flex-wrap align-items-center justify-content-evenly" animation={150} draggable=".draggable">
   {#each gallery_edit as img (img.id)}
-    {@const src = img?.data ?? client.imageUrl(img.filename)}
-    <GalleryEditorItem {img} {src} {deleteItem} />
+    <GalleryEditorItem {img} src={client.imageUrl(img.filename)} {deleteItem} />
   {/each}
     <figure id="new_image_figure" class="figure col-lg-3 col-md-4 col-6 px-1">
       <label id="new_image_label" for="new_image_input" class="figure-img img-fluid img-thumbnail">

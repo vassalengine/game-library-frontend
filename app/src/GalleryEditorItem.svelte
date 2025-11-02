@@ -1,33 +1,15 @@
 <script>
-  import { onMount } from 'svelte';
-
   let {
     img,
     src,
     deleteItem
   } = $props();
-
-  let file_input = $state();
-
-  onMount(() => {
-    // set the file for the file input if there is one
-    if (img?.file) {
-      const dt = new DataTransfer();
-      dt.items.add(img.file);
-      file_input.files = dt.files;
-    }
-  });
-
 </script>
 
 <style>
 
 .draggable {
   cursor: grab;
-}
-
-figure input[type="file"] {
-  display: none;
 }
 
 .image_inner {
@@ -86,6 +68,5 @@ figure input[type="file"] {
     <input type="hidden" name="id" value={img.id}>
     <input type="hidden" name="filename" value={img.filename}>
     <input type="text" name="description" value={img.description}>
-    <input bind:this={file_input} type="file" name="file">
   </figcaption>
 </figure>

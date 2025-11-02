@@ -52,19 +52,14 @@
     error = null;
   }
 
-  function isModified(ids, descriptions, files) {
-    if (files.length > 0) {
-      // there is a new image to upload
-      return true;
-    }
-
+  function isModified(ids, descriptions) {
     if (ids.length !== proj.gallery.length) {
       // an image was removed
       return true;
     }
 
     if (!ids.every((id, i) => id === proj.gallery[i].id)) {
-      // id mismatch => some combination of reordering, creation, deletion
+      // id mismatch => some combination of reordering, deletion
       return true;
     }
 
@@ -76,100 +71,30 @@
     return false;
   }
 
-  function submitEdit(event) {
+  async function submitEdit(event) {
     event.preventDefault();
     event.stopPropagation();
 
     const fdata = new FormData(event.target);
 
     const ids = fdata.getAll('id');
-    const filenames = fdata.getAll('filename');
     const descriptions = fdata.getAll('description');
-    const files = fdata.getAll('file').filter((f) => f.name !== '');
 
     // check if there are any changes
-    if (!isModified(ids, descriptions, files)) {
+    if (!isModified(ids, descriptions)) {
       edit = false;
       editing = false;
       return;
     }
 
-    // upload new files
-
-/*
-    for (const file in files) {
-      const callbacks = {
-        progress: (e) => {
-          if (e.lengthComputable) {
-//            uploadProgress = Math.floor((e.loaded / e.total) * 100);
-            console.log(Math.floor((e.loaded / e.total) * 100));
-          }
-        }
-      };
-
-      try {
-        const [xhr, promise] = await client.addImage(
-          file.name,
-          file,
-          file.type,
-          callbacks
-        );
-
-        const result = await promise;
-        error = null;
-
-        switch (result) {
-          case Client.UPLOAD_OK:
-            break;
-          case Client.UPLOAD_ABORTED:
-            return;
-        }
-      }
-      catch (err) {
-        error = err;
-        return;
-      }
-    }
-*/
-
-/*
-    try {
-      const results = await Promise.all(
-        files.map((file) => client.addImage(
-          file.name,
-          file,
-          file.type
-          )
-          .then((r) => r[1])
-        )
-      );
-
-        const result = await promise;
-          error = null;
-
-          switch (result) {
-            case Client.UPLOAD_OK:
-              break;
-            case Client.UPLOAD_ABORTED:
-              return;
-          }
-        }
-        catch (err) {
-          error = err;
-          return;
-        }
-*/
-
     // assmble the data into a new items list
     const data = Array(ids.length).fill().map((_, i) => ({
         id: parseInt(ids[i]),
-        filename: filenames[i],
         description: descriptions[i],
     }));
 
-    // set the prev, next ids
+    // set the next ids
     for (const [i, item] of data.entries()) {
-      item.prev_id = i === 0 ? null : data[i - 1].id;
       item.next_id = i === data.length - 1 ? null : data[i + 1].id;
     }
 
@@ -178,49 +103,49 @@
       (prev, cur, i) => ({...prev, [cur.id]: i}), {}
     );
 
+    const patches = [];
+
+/*
+  Operations:
+
+    { op: 'update', id: item.id, description: item.description }
+    { op: 'delete', id: item.id }
+    { op: 'move', id: item.id, next: item.next_id }
+
+*/
+
     // collect the updated items
     const updated = [];
     for (const item of data) {
-      if (item.id < 0) {
-        // this is a new item
-        updated.push(item);
+      // get the original version
+      const opos = orig_pos[item.id];
+      delete orig_pos[item.id];
+      const oitem = proj.gallery[opos];
+
+      const uitem = {};
+
+      if (item.description !== oitem.description) {
+        // description has changed
+        uitem.op = 'update';
+        uitem.description = item.description;
       }
-      else {
-        // this is a preexisting item
 
-        // get the original version
-        const opos = orig_pos[item.id];
-        delete orig_pos[item.id];
-        const oitem = proj.gallery[opos];
+      if (item.next_id !== (opos < proj.gallery.length - 1 ? proj.gallery[opos + 1].id : null)) {
+        // next has changed
+        uitem.op = 'move';
+        uitem.next_id = item.next_id;
+      }
 
-        const uitem = {};
-
-        if (item.description !== oitem.description) {
-          // description has changed
-          uitem.description = item.description;
-        }
-
-        if (item.prev_id !== (opos > 0 ? proj.gallery[opos - 1].id : null)) {
-          // prev has changed
-          uitem.prev_id = item.prev_id;
-        }
-
-        if (item.next_id !== (opos < proj.gallery.length - 1 ? proj.gallery[opos + 1].id : null)) {
-          // next has changed
-          uitem.next_id = item.next_id;
-        }
-
-        if (Object.keys(uitem).length > 0) {
-          // something changed, record it
-          uitem.id = item.id;
-          updated.push(uitem);
-        }
+      if (Object.keys(uitem).length > 0) {
+        // something changed, record it
+        uitem.id = item.id;
+        updated.push(uitem);
       }
     }
 
     // anything remaining in orig_pos was deleted
     for (const id of Object.keys(orig_pos)) {
-      updated.push({ id: id, filename: null, description: null });
+      updated.push({ op: 'delete', id: id });
     }
 
     console.log(updated);
@@ -251,6 +176,61 @@
     editing = false;
   }
 
+  function is_single_image(files) {
+    return files.length == 1 && files[0].type.startsWith('image/');
+  }
+
+
+  async function submitImage(event) {
+    if (!is_single_image(event.target.files)) {
+      return;
+    }
+
+    const file = event.target.files[0];
+
+    try {
+      const callbacks = {
+        progress: (e) => {
+          if (e.lengthComputable) {
+//              uploadProgress = Math.floor((e.loaded / e.total) * 100);
+            console.log(Math.floor((e.loaded / e.total) * 100));
+          }
+        }
+      };
+
+      const [_, promise] = await client.addImage(
+        file.name,
+        file,
+        file.type,
+        callbacks
+      );
+
+      const result = await promise;
+      error = null;
+
+      switch (result) {
+        case Client.UPLOAD_OK:
+          break;
+        case Client.UPLOAD_ABORTED:
+          return;
+      }
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
+
+    // update the project data
+    try {
+      proj = await client.getProject();
+      error = null;
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
+  }
+
 </script>
 
 {#if error}
@@ -261,7 +241,7 @@
 </button>
 
 {#if edit}
-<GalleryEditor gallery={proj.gallery} {client} {md} {submitEdit} {cancelEdit} />
+<GalleryEditor {proj} {client} {md} {submitEdit} {cancelEdit} {submitImage} />
 {:else}
 <div class="d-flex flex-wrap align-items-center justify-content-evenly">
 {#each proj.gallery as img}
