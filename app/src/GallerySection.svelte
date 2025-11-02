@@ -147,7 +147,7 @@
 
     // anything remaining in orig_pos was deleted
     for (const id of Object.keys(orig_pos)) {
-      updated.push({ op: 'delete', id: id });
+      updated.push({ op: 'delete', id: parseInt(id) });
     }
 
     // update the gallery
