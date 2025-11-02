@@ -245,7 +245,7 @@
 <GalleryEditor {proj} {client} {md} {submitEdit} {cancelEdit} {submitImage} />
 {:else}
 <div class="d-flex flex-wrap align-items-center justify-content-evenly">
-{#each proj.gallery as img}
+{#each proj.gallery as img (img.id)}
   {@const src = client.imageUrl(img.filename)}
   <GalleryItem {img} {src} {md} />
 {/each}
