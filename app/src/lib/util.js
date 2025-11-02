@@ -16,7 +16,7 @@ export function setCookie(name, value, attributes = {}) {
 
   let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
 
-  for (const attributeKey in attributes) {
+  for (const attributeKey of attributes) {
     updatedCookie += "; " + attributeKey;
     let attributeValue = attributes[attributeKey];
     if (attributeValue !== true) {
