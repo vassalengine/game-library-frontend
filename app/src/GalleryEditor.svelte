@@ -4,28 +4,59 @@
   import GalleryEditorItem from './GalleryEditorItem.svelte';
 
   let {
-    gallery,
+    proj = $bindable(),
     client,
     md,
     submitEdit,
-    cancelEdit
+    cancelEdit,
+    submitImage
   } = $props();
 
-  let gallery_edit = $state([...gallery]);
+  let gallery_edit = $state([...proj.gallery]);
   let new_id = 0;
 
-  function is_single_image(files) {
-    return files.length == 1 && files[0].type.startsWith('image/');
-  }
-
-  function selectImage(event) {
-    if (is_single_image(event.target.files)) {
-      addImage(event.target.files[0]);
+  async function addImage(event) {
+    if (!is_single_image(event.target.files)) {
+      return;
     }
-  }
 
-  function addImage(file) {
+    const file = event.target.files[0];
+
+    try {
+      const [_, promise] = await client.addImage(
+        file.name,
+        file,
+        file.type
+      );
+
+      const result = await promise;
+      error = null;
+
+      switch (result) {
+        case Client.UPLOAD_OK:
+          break;
+        case Client.UPLOAD_ABORTED:
+          return;
+      }
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
+
+    // update the project data
+    try {
+      proj = await client.getProject();
+      error = null;
+    }
+    catch (err) {
+      error = err;
+      return;
+    }
+
+/*
     const reader = new FileReader();
+
     reader.readAsDataURL(file);
     reader.onload = (e) => {
       gallery_edit.push({
@@ -36,6 +67,7 @@
         file: file
       });
     };
+*/
   }
 
   function deleteItem(event) {
@@ -104,7 +136,7 @@ figure:hover #new_image_label {
           <svg><use xlink:href="#plus"></use></svg>
         </div>
       </label>
-      <input id="new_image_input" type="file" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/avif" onchange={selectImage}>
+      <input id="new_image_input" type="file" accept="image/png, image/jpeg, image/svg+xml, image/webp, image/avif" onchange={submitImage}>
     </figure>
   </SortableList>
 
