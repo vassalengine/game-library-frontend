@@ -1,6 +1,8 @@
 <script>
   import markdownIt from 'https://cdn.jsdelivr.net/npm/markdown-it@14.1.0/+esm';
 
+  import Client from './lib/client.js';
+
   import ErrorBox from './ErrorBox.svelte';
   import GalleryItem from './GalleryItem.svelte';
   import GalleryEditor from './GalleryEditor.svelte';
