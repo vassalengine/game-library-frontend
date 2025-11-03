@@ -42,123 +42,67 @@
 
   let edit = $state(false);
   let error = $state(null);
+  let changes = $state([]);
 
   function startEdit(event) {
     edit = true;
     editing = true;
+    changes = [];
   }
 
   function cancelEdit(event) {
     edit = false;
     editing = false;
+    changes = [];
     error = null;
-  }
-
-  function isModified(ids, descriptions) {
-    if (ids.length !== proj.gallery.length) {
-      // an image was removed
-      return true;
-    }
-
-    if (!ids.every((id, i) => id === proj.gallery[i].id)) {
-      // id mismatch => some combination of reordering, deletion
-      return true;
-    }
-
-    if (!descriptions.every((d, i) => d === proj.gallery[i].description)) {
-      // an image description changed
-      return true;
-    }
-
-    return false;
   }
 
   async function submitEdit(event) {
     event.preventDefault();
     event.stopPropagation();
 
+    /*
+      Operations:
+
+      { op: 'update', id: item.id, description: item.description }
+      { op: 'delete', id: item.id }
+      { op: 'move', id: item.id, next: item.next_id }
+
+    */
+
     const fdata = new FormData(event.target);
 
-    const ids = fdata.getAll('id');
+    const ids = fdata.getAll('id').map((i) => parseInt(i));
     const descriptions = fdata.getAll('description');
-
-    // check if there are any changes
-    if (!isModified(ids, descriptions)) {
-      edit = false;
-      editing = false;
-      return;
-    }
-
-    // assmble the data into a new items list
-    const data = Array(ids.length).fill().map((_, i) => ({
-        id: parseInt(ids[i]),
-        description: descriptions[i],
-    }));
-
-    // set the next ids
-    for (const [i, item] of data.entries()) {
-      item.next_id = i === data.length - 1 ? null : data[i + 1].id;
-    }
 
     // make an id map for original items
     const orig_pos = proj.gallery.reduce(
       (prev, cur, i) => ({...prev, [cur.id]: i}), {}
     );
 
-    const patches = [];
-
-/*
-  Operations:
-
-    { op: 'update', id: item.id, description: item.description }
-    { op: 'delete', id: item.id }
-    { op: 'move', id: item.id, next: item.next_id }
-
-*/
-
-    // collect the updated items
-    const updated = [];
-    for (const item of data) {
-      // get the original version
-      const opos = orig_pos[item.id];
-      delete orig_pos[item.id];
-      const oitem = proj.gallery[opos];
-
-      const uitem = {};
-
-      if (item.description !== oitem.description) {
-        // description has changed
-        uitem.op = 'update';
-        uitem.description = item.description;
-      }
-
-      if (item.next_id !== (opos < proj.gallery.length - 1 ? proj.gallery[opos + 1].id : null)) {
-        // next has changed
-        uitem.op = 'move';
-        uitem.next_id = item.next_id;
-      }
-
-      if (Object.keys(uitem).length > 0) {
-        // something changed, record it
-        uitem.id = item.id;
-        updated.push(uitem);
+    // find all updated items
+    for (let i = 0, j = 0; i < ids.length; ++i) {
+      // check if the description changed
+      const opos = orig_pos[ids[i]];
+      if (descriptions[i] !== proj.gallery[opos].description) {
+          changes.push({
+            op: 'update',
+            id: ids[i],
+            description: descriptions[i]
+          });
       }
     }
 
-    // anything remaining in orig_pos was deleted
-    for (const id of Object.keys(orig_pos)) {
-      updated.push({ op: 'delete', id: parseInt(id) });
-    }
-
-    if (updated.length == 0) {
+    if (changes.length == 0) {
       edit = false;
       editing = false;
+      changes = [];
       return;
     }
 
     // update the gallery
     try {
-      await client.updateGallery({ ops: updated });
+      await client.updateGallery({ ops: changes });
       error = null;
     }
     catch (err) {
@@ -178,6 +122,7 @@
 
     edit = false;
     editing = false;
+    changes = [];
   }
 
   function is_single_image(files) {
@@ -244,7 +189,7 @@
 </button>
 
 {#if edit}
-<GalleryEditor {proj} {client} {md} {submitEdit} {cancelEdit} {submitImage} />
+<GalleryEditor {proj} {client} {md} {submitEdit} {cancelEdit} {submitImage} {changes} />
 {:else}
 <div class="d-flex flex-wrap align-items-center justify-content-evenly">
 {#each proj.gallery as img (img.id)}

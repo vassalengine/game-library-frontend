@@ -9,7 +9,8 @@
     md,
     submitEdit,
     cancelEdit,
-    submitImage
+    submitImage,
+    changes = $bindable()
   } = $props();
 
   let gallery_edit = $derived([...proj.gallery]);
@@ -21,10 +22,30 @@
       .querySelector("input[name='id']")
 
     const del_id = parseInt(del_el.value);
+
+    changes.push({ op: 'delete', id: parseInt(del_id) });
+
     const del_idx = gallery_edit.findIndex((g) => g.id === del_id);
     gallery_edit.splice(del_idx, 1);
     // reassigning forces an update
     gallery_edit = [...gallery_edit];
+  }
+
+  function moveItem(event) {
+    // get the id of the mover
+    const id_input = event.item.querySelector('input[name="id"]');
+    const id = parseInt(id_input.value);
+
+    // get the id of the item after the mover
+    const next_item = event.item.nextElementSibling;
+    const next_id_input = next_item.querySelector('input[name="id"]');
+    const next_id = next_id_input ? parseInt(next_id_input.value) : null;
+
+    changes.push({
+      op: 'move',
+      id: id,
+      next_id: next_id
+    });
   }
 
 </script>
@@ -71,7 +92,7 @@ figure:hover #new_image_label {
 </style>
 
 <form action="" onsubmit={submitEdit}>
-  <SortableList id="image_list" class="d-flex flex-wrap align-items-center justify-content-evenly" animation={150} draggable=".draggable">
+  <SortableList id="image_list" class="d-flex flex-wrap align-items-center justify-content-evenly" animation={150} draggable=".draggable" onUpdate={moveItem}>
   {#each gallery_edit as img (img.id)}
     {@const src = client.imageUrl(img.filename)}
     <GalleryEditorItem {img} {src} {deleteItem} />
