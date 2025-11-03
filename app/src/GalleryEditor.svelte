@@ -44,7 +44,7 @@
     changes.push({
       op: 'move',
       id: id,
-      next_id: next_id
+      next: next_id
     });
   }
 
