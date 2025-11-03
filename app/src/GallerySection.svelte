@@ -73,7 +73,7 @@
     const fdata = new FormData(event.target);
 
     const ids = fdata.getAll('id').map((i) => parseInt(i));
-    const descriptions = fdata.getAll('description');
+    const descriptions = fdata.getAll('description').map((d) => d.trim());
 
     // make an id map for original items
     const orig_pos = proj.gallery.reduce(
