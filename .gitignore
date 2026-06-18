@@ -1,4 +1,5 @@
 .*.swp
-/target
+/log
 /site/project.html
 /site/projects.html
+/target
