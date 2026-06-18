@@ -1,0 +1,53 @@
+name: Tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  tests:
+    name: Tests
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: Update container
+        run: sudo apt update
+
+      - name: Install Rust nightly
+        run: rustup override set nightly
+
+      - name: Cache cargo
+        uses:  Swatinem/rust-cache@v2
+        id: cache-cargo
+
+      - name: Cache npm
+        uses: actions/cache@v5
+        id: cache-npm
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-
+
+      - name: Install JavaScript dependencies
+        run: |
+          cd app
+          npm install
+
+      - name: Build GLF app
+        run: |
+          cd app
+          npm run build
+
+      - name: Test GLF app
+        run: |
+          cd app
+          npm run test
+
+      - name: Run tests
+        run: cargo test
