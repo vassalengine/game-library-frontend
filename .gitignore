@@ -1,4 +1,5 @@
 .*.swp
+/config.toml
 /log
 /site/project.html
 /site/projects.html
