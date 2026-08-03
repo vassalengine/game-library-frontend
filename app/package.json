@@ -15,7 +15,7 @@
     "@smui-extra/chip-input": "^9",
     "@sveltejs/vite-plugin-svelte": "7.2.0",
     "svelte": "5.55.10",
-    "vite": "8.1.5",
+    "vite": "8.2.0",
     "vitest": "^4.1.10"
   },
   "dependencies": {
