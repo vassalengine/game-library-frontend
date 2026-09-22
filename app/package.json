@@ -14,7 +14,7 @@
     "@smui-extra/autocomplete": "^9",
     "@smui-extra/chip-input": "^9",
     "@sveltejs/vite-plugin-svelte": "7.3.0",
-    "svelte": "5.57.0",
+    "svelte": "5.57.1",
     "vite": "8.3.0",
     "vitest": "^5.0.1"
   },
